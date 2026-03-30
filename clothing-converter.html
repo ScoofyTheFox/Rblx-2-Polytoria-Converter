@@ -760,6 +760,11 @@ kbd{
       <span class="nb-text">Old → PT 2.0</span>
       <span class="nav-tag tag-new">UPGRADE</span>
     </button>
+    <button class="nav-btn" id="nbtn-pt2rbx" data-p="pt2rbx" onclick="goTo(this,'pt2rbx')">
+      <span class="nav-ico" style="background:rgba(255,209,102,0.12)">🔁</span>
+      <span class="nb-text">PT 2.0 → Roblox</span>
+      <span class="nav-tag tag-tool">NEW</span>
+    </button>
     <div class="sb-div"></div>
     <div class="nav-lbl">Tools</div>
     <button class="nav-btn" data-p="preview" onclick="goTo(this,'preview')">
@@ -890,6 +895,44 @@ kbd{
       </div>
     </div>
 
+    <!-- ── PANEL: PT2RBX ── -->
+    <div class="panel" id="panel-pt2rbx">
+      <div class="conv-layout">
+        <div class="drop-card" id="pt2rbx-in-card">
+          <div>
+            <div class="drop-title" id="pt2rbx-title">PT 2.0 → Roblox</div>
+            <div class="drop-sub" id="pt2rbx-desc">Drop your PT 2.0 template and hit Convert.</div>
+          </div>
+          <div class="dz" id="pt2rbx-dz" ondragover="dzo(event,this)" ondragleave="dzl(this)" ondrop="dzd(event,'pt2rbx')">
+            <input type="file" accept="image/*" onchange="lf(event,'pt2rbx')" id="pt2rbx-file-input">
+            <div class="dz-inner">
+              <span class="dz-ico" id="pt2rbx-dz-ico">🔁</span>
+              <div class="dz-t" id="pt2rbx-dz-t">Drop PT 2.0 template here</div>
+              <div class="dz-s">or click to browse · PNG / JPG</div>
+            </div>
+          </div>
+          <div class="inp-prev" id="pw-pt2rbx"><canvas id="cv-pt2rbx"></canvas><span class="prev-badge" id="pt2rbx-pw-badge">INPUT</span></div>
+          <div class="status" id="st-pt2rbx"></div>
+          <button class="btn-conv" id="btn-pt2rbx" onclick="convPt2rbx()" disabled style="background:linear-gradient(135deg,#e05a00,#f59e0b);box-shadow:0 3px 14px rgba(224,90,0,0.3);">🔁 <span id="pt2rbx-btn-label">Convert to Roblox Shirt</span></button>
+          <div class="hint-box" id="pt2rbx-ib">Shirt: remaps torso, both arms + caps to Roblox 585×559 format. Torso back face is preserved.</div>
+        </div>
+        <div class="out-card">
+          <div class="hidden" id="out-pt2rbx">
+            <div class="out-head">
+              <span class="out-title" id="pt2rbx-out-head">Output · Roblox Template</span>
+              <a class="btn-dl" id="dl-pt2rbx" href="#" download="roblox_shirt.png">⬇ <span id="pt2rbx-dl-label">Download</span></a>
+            </div>
+            <div class="cmp-row">
+              <div class="cmp-item"><canvas id="cmp-pt2rbx-i"></canvas><span class="cmp-lbl">INPUT</span></div>
+              <div class="cmp-item"><canvas id="cmp-pt2rbx-o"></canvas><span class="cmp-lbl">OUTPUT</span></div>
+            </div>
+            <div class="out-wrap"><canvas id="out-pt2rbx-cv" width="585" height="559"></canvas><span class="prev-badge" id="pt2rbx-out-badge">ROBLOX · 585×559</span></div>
+          </div>
+          <div class="empty" id="em-pt2rbx"><span class="empty-ico" id="pt2rbx-em-ico">🎮</span><span id="pt2rbx-em-text">Output appears here after conversion</span></div>
+        </div>
+      </div>
+    </div>
+
     <!-- ── PANEL: PREVIEW ── -->
     <div class="panel" id="panel-preview">
       <div class="sec-h">Region Preview</div>
@@ -963,6 +1006,18 @@ kbd{
           <div class="tool-name">Old PT Pants → PT 2.0</div>
           <div class="tool-desc">Legs + waist remapped</div>
           <span class="tool-badge tb-u">UPGRADE</span>
+        </div>
+        <div class="tool-card" onclick="setMode('shirt');goTo(document.getElementById('nbtn-pt2rbx'),'pt2rbx')">
+          <span class="tool-ico">🔁</span>
+          <div class="tool-name">PT 2.0 Shirt → Roblox</div>
+          <div class="tool-desc">Export back to Roblox 585×559 format</div>
+          <span class="tool-badge tb-s">NEW</span>
+        </div>
+        <div class="tool-card" onclick="setMode('pants');goTo(document.getElementById('nbtn-pt2rbx'),'pt2rbx')">
+          <span class="tool-ico">🔁</span>
+          <div class="tool-name">PT 2.0 Pants → Roblox</div>
+          <div class="tool-desc">Export legs back to Roblox pants format</div>
+          <span class="tool-badge tb-p">NEW</span>
         </div>
         <div class="tool-card" onclick="goTo(document.querySelector('[data-p=preview]'),'preview')">
           <span class="tool-ico">🔍</span>
@@ -1327,6 +1382,7 @@ document.addEventListener('keydown',e=>{
     const ap=document.querySelector('.panel.active');
     if(ap?.id==='panel-rbx'&&!document.getElementById('btn-rbx')?.disabled)convRbx();
     else if(ap?.id==='panel-old'&&!document.getElementById('btn-old')?.disabled)convOld();
+    else if(ap?.id==='panel-pt2rbx'&&!document.getElementById('btn-pt2rbx')?.disabled)convPt2rbx();
   }else if(ctrl&&k==='o'){e.preventDefault();document.getElementById('rbx-file-input')?.click();}
   else if(ctrl&&k==='s'){e.preventDefault();const dl=document.getElementById('dl-rbx');if(dl&&dl.href!=='#')dl.click();}
   else if(k==='Tab'&&!ctrl&&!e.shiftKey){e.preventDefault();setMode(MODE==='shirt'?'pants':'shirt');showToast('Switched to '+(MODE==='shirt'?'👕 Shirt':'👖 Pants'));}
@@ -1342,10 +1398,12 @@ const MODE_TEXT={
   shirt:{
     rbx:{title:'Roblox → PT 2.0 · Shirt',desc:'Upload your Roblox shirt template (585×559).',dzIco:'📤',dzT:'Drop Roblox shirt here',pwBadge:'ROBLOX SHIRT',btn:'Convert Shirt to PT 2.0',outHead:'Output · PT 2.0 Shirt',outBadge:'PT 2.0 SHIRT · 1024×1024',dl:'Download Shirt',emIco:'👕',emTxt:'Output appears after conversion',ib:'<strong>Roblox shirt</strong> (585×559) — torso (6 faces incl. back), both arms + caps.',fname:'shirt.png'},
     old:{title:'Old PT → PT 2.0 · Shirt',desc:'Upgrade from the old compact cross layout.',dzIco:'🔄',dzT:'Drop Old PT shirt here',pwBadge:'OLD PT SHIRT',btn:'Upgrade Shirt to PT 2.0',outHead:'Output · PT 2.0 Shirt',outBadge:'PT 2.0 SHIRT · 1024×1024',dl:'Download Upgraded Shirt',emIco:'🔄',emTxt:'Output appears after upgrade',ib:'<strong>Old PT shirt</strong> (1024×1024) — compact cross layout, all faces remapped.',fname:'shirt_upgraded.png'},
+    pt2rbx:{title:'PT 2.0 → Roblox · Shirt',desc:'Export your PT 2.0 shirt back to Roblox 585×559 format.',dzIco:'🔁',dzT:'Drop PT 2.0 shirt here',pwBadge:'PT 2.0 SHIRT',btn:'Convert to Roblox Shirt',outHead:'Output · Roblox Shirt',outBadge:'ROBLOX SHIRT · 585×559',dl:'Download Roblox Shirt',emIco:'🎮',emTxt:'Output appears after conversion',ib:'Converts PT 2.0 shirt back to the standard <strong>Roblox 585×559</strong> template. Torso back is preserved.',fname:'roblox_shirt.png'},
   },
   pants:{
     rbx:{title:'Roblox → PT 2.0 · Pants',desc:'Upload your Roblox pants template (585×559).',dzIco:'👖',dzT:'Drop Roblox pants here',pwBadge:'ROBLOX PANTS',btn:'Convert Pants to PT 2.0',outHead:'Output · PT 2.0 Pants',outBadge:'PT 2.0 PANTS · 1024×1024',dl:'Download Pants',emIco:'👖',emTxt:'Output appears after conversion',ib:'<strong>Roblox pants</strong> (585×559) — both legs, 4 faces + caps. Torso back goes in the shirt file.',fname:'pants.png'},
     old:{title:'Old PT → PT 2.0 · Pants',desc:'Upgrade old Polytoria pants to 2.0 layout.',dzIco:'🩳',dzT:'Drop Old PT pants here',pwBadge:'OLD PT PANTS',btn:'Upgrade Pants to PT 2.0',outHead:'Output · PT 2.0 Pants',outBadge:'PT 2.0 PANTS · 1024×1024',dl:'Download Upgraded Pants',emIco:'🩳',emTxt:'Output appears after upgrade',ib:'<strong>Old PT pants</strong> (1024×1024) — legs and waist remapped to PT 2.0.',fname:'pants_upgraded.png'},
+    pt2rbx:{title:'PT 2.0 → Roblox · Pants',desc:'Export your PT 2.0 pants back to Roblox 585×559 format.',dzIco:'🔁',dzT:'Drop PT 2.0 pants here',pwBadge:'PT 2.0 PANTS',btn:'Convert to Roblox Pants',outHead:'Output · Roblox Pants',outBadge:'ROBLOX PANTS · 585×559',dl:'Download Roblox Pants',emIco:'🎮',emTxt:'Output appears after conversion',ib:'Converts PT 2.0 pants back to the standard <strong>Roblox 585×559</strong> template. Both legs remapped.',fname:'roblox_pants.png'},
   }
 };
 
@@ -1353,9 +1411,9 @@ function setMode(m){
   MODE=m;
   document.getElementById('mode-shirt').classList.toggle('active',m==='shirt');
   document.getElementById('mode-pants').classList.toggle('active',m==='pants');
-  updatePanelText('rbx');updatePanelText('old');
-  S.rbx=null;S.old=null;
-  ['rbx','old'].forEach(p=>{
+  updatePanelText('rbx');updatePanelText('old');updatePanelText('pt2rbx');
+  S.rbx=null;S.old=null;S.pt2rbx=null;
+  ['rbx','old','pt2rbx'].forEach(p=>{
     const pw=document.getElementById('pw-'+p);
     const btn=document.getElementById('btn-'+p);
     const out=document.getElementById('out-'+p);
@@ -1388,13 +1446,14 @@ function updatePanelText(panel){
   setEl(panel+'-ib','innerHTML',t.ib);
 }
 
-const S={rbx:null,old:null,preview:null};
-updatePanelText('rbx');updatePanelText('old');
+const S={rbx:null,old:null,pt2rbx:null,preview:null};
+updatePanelText('rbx');updatePanelText('old');updatePanelText('pt2rbx');
 
 // ── NAV ──
 const META={
   rbx:{sec:'Roblox → Polytoria',page:'Convert'},
   old:{sec:'Polytoria Upgrade',page:'Old → PT 2.0'},
+  pt2rbx:{sec:'Polytoria → Roblox',page:'Export'},
   preview:{sec:'Tools',page:'Region Preview'},
   tools:{sec:'App',page:'All Tools'},
   settings:{sec:'App',page:'Settings'},
@@ -1469,7 +1528,11 @@ const PTOLDP={
 function dzo(e,el){e.preventDefault();el.classList.add('hover');}
 function dzl(el){el.classList.remove('hover');}
 function dzd(e,panel){e.preventDefault();e.currentTarget.classList.remove('hover');const f=e.dataTransfer.files[0];if(f)pf(f,panel);}
-function lf(e,panel){const f=e.target.files[0];if(f)pf(f,panel);}
+function lf(e,panel){
+  const f=e.target.files[0];
+  e.target.value=''; // reset so same file can be picked again
+  if(f)pf(f,panel);
+}
 function pf(file,panel){
   const r=new FileReader();
   r.onload=ev=>{
@@ -1483,9 +1546,20 @@ function pf(file,panel){
   };
   r.readAsDataURL(file);
 }
+function clearPanelOutput(panel){
+  const out=document.getElementById('out-'+panel);
+  const em=document.getElementById('em-'+panel);
+  const st=document.getElementById('st-'+panel);
+  const mq=document.getElementById('mq-'+panel);
+  if(out){out.classList.add('hidden');out.style.display='';}
+  if(em)em.style.display='';
+  if(st)st.className='status';
+  if(mq)mq.classList.remove('show');
+}
 function showPrev(img,panel){
   const pw=document.getElementById('pw-'+panel);
   if(!pw)return;
+  if(CFG.clearOut)clearPanelOutput(panel);
   pw.style.display='block';
   const c=document.getElementById('cv-'+panel);
   c.width=img.width;c.height=img.height;
@@ -1494,6 +1568,7 @@ function showPrev(img,panel){
   if(CFG.autoConv){
     if(panel==='rbx')setTimeout(convRbx,100);
     else if(panel==='old')setTimeout(convOld,100);
+    else if(panel==='pt2rbx')setTimeout(convPt2rbx,100);
   }
 }
 
@@ -1514,13 +1589,14 @@ function setSt(id,msg,type='info'){
   el.textContent=msg;el.className='status '+type+' show';
 }
 function showOut(outC,panel,basefname){
+  const ow=outC.width,oh=outC.height;
   if(CFG.bgFill&&CFG.bgFill!=='transparent'){
-    const bg=mkOut(1024,1024);const bctx=bg.getContext('2d');
+    const bg=mkOut(ow,oh);const bctx=bg.getContext('2d');
     bctx.fillStyle=CFG.bgFill==='black'?'#000':'#fff';
-    bctx.fillRect(0,0,1024,1024);bctx.drawImage(outC,0,0);outC=bg;
+    bctx.fillRect(0,0,ow,oh);bctx.drawImage(outC,0,0);outC=bg;
   }
   const cv=document.getElementById('out-'+panel+'-cv');
-  cv.width=1024;cv.height=1024;cv.getContext('2d').drawImage(outC,0,0);
+  cv.width=ow;cv.height=oh;cv.getContext('2d').drawImage(outC,0,0);
   const sec=document.getElementById('out-'+panel);
   sec.style.display='block';sec.classList.remove('hidden');
   const em=document.getElementById('em-'+panel);
@@ -1602,6 +1678,34 @@ function convOld(){
   showOut(out,'old',MODE_TEXT[MODE].old.fname);
   showCmp(S.old,out,'old');
   setSt('st-old','✓ Done'+(CFG.autodl?' — downloaded automatically.':' — click download above.'),'ok');
+}
+
+// ── PT 2.0 → ROBLOX ──
+function applyShirtToRbx(src,ctx){
+  // Invert the RBX→PT2 mapping: PT2 coords are source, RBX coords are destination
+  const R=RBXS,P=PT2S,cp=(s,d)=>cr(src,s.x,s.y,s.w,s.h,ctx,d.x,d.y,d.w,d.h);
+  cp(P.T_F,R.TF); cp(P.T_R,R.TR); cp(P.T_L,R.TL);
+  cp(P.T_Top,R.TT); cp(P.T_Bot,R.TB); cp(P.T_Bk,R.TBk);
+  cp(P.RArm_L,R.RAL); cp(P.RArm_B,R.RABk); cp(P.RArm_R,R.RAR); cp(P.RArm_F,R.RAF);
+  cp(P.RArm_Top,R.RAT); cp(P.RArm_Bot,R.RAB);
+  cp(P.LArm_F,R.LAF); cp(P.LArm_L,R.LAL); cp(P.LArm_B,R.LABk); cp(P.LArm_R,R.LAR);
+  cp(P.LArm_Top,R.LAT); cp(P.LArm_Bot,R.LAB);
+}
+function applyPantsToRbx(src,ctx){
+  const R=RBXP,P=PT2P,cp=(s,d)=>cr(src,s.x,s.y,s.w,s.h,ctx,d.x,d.y,d.w,d.h);
+  cp(P.RLT,R.RLT); cp(P.RL_F,R.RLF); cp(P.RL_L,R.RLL); cp(P.RL_B,R.RLBk); cp(P.RL_R,R.RLR); cp(P.RL_Bt,R.RLB);
+  cp(P.LLT,R.LLT); cp(P.LL_F,R.LLF); cp(P.LL_L,R.LLL); cp(P.LL_B,R.LLBk); cp(P.LL_R,R.LLR); cp(P.LL_Bt,R.LLB);
+}
+function convPt2rbx(){
+  if(!S.pt2rbx)return;
+  setSt('st-pt2rbx','⚙ Converting to Roblox '+MODE+'…','info');
+  // Roblox templates are 585×559
+  const src=mkSrc(S.pt2rbx),out=mkOut(585,559),ctx=out.getContext('2d');
+  if(MODE==='shirt')applyShirtToRbx(src,ctx);
+  else applyPantsToRbx(src,ctx);
+  showOut(out,'pt2rbx',MODE_TEXT[MODE].pt2rbx.fname);
+  showCmp(S.pt2rbx,out,'pt2rbx');
+  setSt('st-pt2rbx','✓ Done'+(CFG.autodl?' — downloaded automatically.':' — click download above.'),'ok');
 }
 
 // ── MANNEQUIN ──
