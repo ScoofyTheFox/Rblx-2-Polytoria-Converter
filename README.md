@@ -1,34 +1,34 @@
 # 🧥 PT Clothing Converter
 
-> **✋ Hey — please give this a quick read before jumping in. It'll save you a lot of confusion, I promise.**
+> ✋ **Quick read before you dive in — takes 30 seconds, saves a lot of headache.**
 
-I didn't want to gatekeep this. Converting Polytoria clothing should be free, fast, and accessible to everyone — so here it is. No downloads, no sign-ups, no nonsense. Just open it in your browser and go.
+I didn't want to gatekeep this. Polytoria clothing conversion should be free and accessible to everyone — so here it is. No installs, no accounts, no BS. Open the file, use it, done.
 
 ![PT Clothing Converter UI](SCREENSHOT_main_ui.png)
-> 📸 *Screenshot: full app interface*
+> 📸 *Replace with a screenshot of the full app*
 
 ---
 
-## ✨ What It Does
+## ✨ What's Inside
 
-| Tool | What it's for |
+| Tool | Does what |
 |---|---|
-| 🔁 **Roblox → PT 2.0** | Converts any Roblox shirt or pants template into PT 2.0 format |
-| ⬆️ **Old PT → PT 2.0** | Upgrades your old Polytoria templates to the new standard |
-| 🔍 **Region Preview** | See exactly which pixels map to which body part, with color overlays |
-| 🧍 **Mannequin Preview** | Instantly visualize your shirt on a front & back character view |
-| 📐 **Coord Reference** | Every PT 2.0 pixel coordinate, all in one place |
+| 🎮 **Roblox → PT 2.0** | Converts Roblox shirt/pants templates to the new PT 2.0 format |
+| 🔄 **Old PT → PT 2.0** | Upgrades your old Polytoria templates to the current standard |
+| 🔍 **Region Preview** | Color-coded overlay showing exactly which pixels map to which body part |
+| 🧍 **Mannequin Preview** | See your shirt rendered on a front & back character view in real time |
+| 📐 **Coord Reference** | Full pixel coordinate table for PT 2.0 shirts and pants — all in one place |
 
 ---
 
-## 📖 Please Read First
+## 📖 Read This First
 
-A few things worth knowing before you use it:
+> These are the things I wish someone told me.
 
-- 🎯 **Pixel-perfect accuracy** — every region is mapped precisely. What goes in is what comes out.
-- 👕 **PT 2.0 shirts have no torso back.** That face simply doesn't exist in the format — don't panic if it looks empty.
-- 🔒 **Nothing is uploaded anywhere.** Everything runs locally in your browser. Your files stay yours.
-- 🖥️ Works in any modern browser. No installs required.
+- 🎯 **Pixel-perfect, not approximate.** Every single region is mapped exactly — what goes in comes out correctly.
+- 👕 **PT 2.0 shirts don't have a torso back.** This isn't a bug. The face doesn't exist in the format. If it looks empty, that's correct.
+- 🔒 **Your files never leave your computer.** Everything runs locally in the browser — nothing is uploaded, ever.
+- ⚡ **No install needed.** Just open `clothing-converter.html` in any modern browser and it works.
 
 ---
 
@@ -37,58 +37,58 @@ A few things worth knowing before you use it:
 ### Roblox → Polytoria 2.0
 
 1. Open `clothing-converter.html` in your browser
-2. Pick **Shirt** or **Pants** from the toggle up top
-3. Drop your Roblox template onto the drop zone
-4. Hit **Convert** — output appears instantly on the right
-5. Download your file (or let auto-download handle it)
+2. Select **Shirt** or **Pants** from the toggle in the top bar
+3. Drop your Roblox template onto the drop zone (or click to browse)
+4. Hit **Convert** — output appears on the right instantly
+5. Download the file, or let auto-download handle it automatically
 
 ![Roblox conversion example](SCREENSHOT_rbx_convert.png)
-> 📸 *Screenshot: before & after of a Roblox shirt conversion*
-
----
+> 📸 *Replace with a before/after screenshot of a Roblox shirt being converted*
 
 ### Old Polytoria → PT 2.0
 
-1. Head to **Old PT → PT 2.0** in the sidebar
-2. Drop your old template and select Shirt or Pants
-3. Hit **Upgrade** — done
-
----
+1. Click **Old → PT 2.0** in the sidebar
+2. Drop your old template, pick Shirt or Pants
+3. Hit **Upgrade** — that's it
 
 ### Region Preview
 
-1. Open **Region Preview** from the sidebar
+1. Click **Region Preview** in the sidebar
 2. Drop any PT 2.0 template
-3. See the full color-coded overlay + mannequin views
+3. See a full color-coded overlay + front, back, and side mannequin views
 
 ![Region preview overlay](SCREENSHOT_region_preview.png)
-> 📸 *Screenshot: region overlay with color labels*
+> 📸 *Replace with a screenshot of the region overlay*
 
 ---
 
-## ⚙️ Settings Highlights
+## ⚙️ Settings Worth Knowing
 
-A few settings worth tweaking in the ⚙ menu:
+Open the ⚙ menu in the top right. A few things you'll want to configure:
 
-- **Auto-download** — saves the file the moment conversion finishes
-- **Output format** — PNG or WebP
-- **Scaling mode** — Pixelated (sharp) or Bilinear (smooth)
-- **Canvas background** — Transparent, Black, or White fill
-- **Filename prefix** — customize what your files get named
+| Setting | What it does |
+|---|---|
+| **Auto-download** | Saves the output file the moment conversion finishes |
+| **Output format** | PNG (recommended) or WebP |
+| **Scaling mode** | Pixelated for sharp edges, Bilinear for smooth scaling |
+| **Canvas background** | Transparent, Black, or White — fills empty regions |
+| **Filename prefix** | Controls what your downloaded files get named |
+
+> All settings save to your browser automatically — they'll be there next time you open it.
 
 ---
 
 ## ⚠️ Known Limitations
 
-- PT 2.0 shirts have **no torso back region** — this is a Polytoria format limitation, not a bug
-- Old Polytoria templates use a compact cross layout — the upgrader handles this automatically
+- **No torso back in PT 2.0 shirts** — this is a Polytoria format limitation, not something the converter can fix
+- **Old PT templates use a compact cross layout** — the upgrader remaps this automatically, no prep needed
 
 ---
 
-## 🎥 Support the Creator
+## 🎥 Made by @scoofyx
 
-If this saved you time, consider showing some love — it genuinely means a lot. 💜
+If this tool saved you time, showing some support genuinely means a lot. 💜
 
-### 👉 [Subscribe to @scoofyx on YouTube](https://www.youtube.com/@scoofyx) 🔔
+### 👉 [Subscribe on YouTube — @scoofyx](https://www.youtube.com/@scoofyx) 🔔
 
-Polytoria content, tutorials, and more. Hit that bell so you don't miss anything.
+Polytoria tutorials, content, and more. Hit the bell so you don't miss anything.
