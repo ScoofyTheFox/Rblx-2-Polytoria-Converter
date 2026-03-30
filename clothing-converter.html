@@ -4,785 +4,847 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>PT Clothing Converter</title>
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-:root{
-  --a1:#7c5cfc;--a2:#e040a0;--a3:#00d4b8;--a4:#ff8c42;--a5:#4fc3f7;
-  --ok:#00e5a0;--err:#ff4d6d;--warn:#ffb347;
-  --glass:rgba(255,255,255,0.04);
-  --glass2:rgba(255,255,255,0.07);
-  --glass3:rgba(255,255,255,0.10);
-  --gb:rgba(255,255,255,0.08);
-  --text:#f0f0ff;--sub:#a0a0c0;--muted:#55556e;
-  --blur:saturate(180%) blur(20px);
+:root {
+  --c1: #5b8dee;
+  --c2: #a78bfa;
+  --c3: #06d6a0;
+  --err: #f94144;
+  --warn: #ffd166;
+  --bg: #06060f;
+  --bg2: #0c0c1a;
+  --glass: rgba(255,255,255,0.04);
+  --glass2: rgba(255,255,255,0.075);
+  --border: rgba(255,255,255,0.08);
+  --border2: rgba(255,255,255,0.14);
+  --text: #eeeeff;
+  --sub: #8888aa;
+  --muted: #44445a;
+  --r: 10px;
+  --blur: saturate(160%) blur(22px);
+  --sbw: 210px;
 }
-*{box-sizing:border-box;margin:0;padding:0;-webkit-font-smoothing:antialiased}
-html,body{height:100%;overflow:hidden}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;overflow:hidden;-webkit-font-smoothing:antialiased;}
+
+/* ── CUSTOM CURSOR ── */
+*{cursor:none!important;}
+#cur{
+  position:fixed;width:10px;height:10px;border-radius:50%;
+  background:var(--c1);pointer-events:none;z-index:99999;
+  transform:translate(-50%,-50%);
+  transition:width 0.12s,height 0.12s,background 0.12s,opacity 0.12s;
+  mix-blend-mode:screen;
+}
+#cur-ring{
+  position:fixed;width:28px;height:28px;border-radius:50%;
+  border:1.5px solid rgba(91,141,238,0.5);pointer-events:none;z-index:99998;
+  transform:translate(-50%,-50%);
+  transition:width 0.18s cubic-bezier(.4,0,.2,1),height 0.18s cubic-bezier(.4,0,.2,1),
+             left 0.07s linear,top 0.07s linear,border-color 0.15s;
+}
+body:has(button:hover) #cur,
+body:has(a:hover) #cur,
+body:has(.nav-btn:hover) #cur,
+body:has(.dz:hover) #cur { width:16px;height:16px;background:var(--c2); }
+body:has(button:hover) #cur-ring,
+body:has(a:hover) #cur-ring { width:40px;height:40px;border-color:rgba(167,139,250,0.6); }
+
 body{
-  font-family:'Inter',sans-serif;font-size:13px;color:var(--text);
-  background:#07070e;
+  font-family:'Space Grotesk',sans-serif;
+  font-size:13px;color:var(--text);
+  background:var(--bg);
   display:flex;
 }
 
-/* ═══ ANIMATED BACKGROUND ═══ */
-body::before{
-  content:'';position:fixed;inset:0;z-index:0;
+/* ── BG ── */
+.bg-blobs{position:fixed;inset:0;z-index:0;pointer-events:none;}
+.bg-blobs::before{
+  content:'';position:absolute;inset:0;
   background:
-    radial-gradient(ellipse 80% 60% at 15% 20%, rgba(124,92,252,0.12) 0%, transparent 60%),
-    radial-gradient(ellipse 60% 50% at 85% 80%, rgba(224,64,160,0.09) 0%, transparent 55%),
-    radial-gradient(ellipse 50% 40% at 50% 50%, rgba(0,212,184,0.05) 0%, transparent 60%),
-    radial-gradient(ellipse 40% 60% at 75% 10%, rgba(79,195,247,0.07) 0%, transparent 50%);
-  pointer-events:none;
+    radial-gradient(ellipse 60% 50% at 8% 15%,rgba(91,141,238,0.12) 0%,transparent 65%),
+    radial-gradient(ellipse 50% 40% at 92% 85%,rgba(167,139,250,0.10) 0%,transparent 60%),
+    radial-gradient(ellipse 40% 30% at 50% 50%,rgba(6,214,160,0.04) 0%,transparent 65%);
 }
-body::after{
-  content:'';position:fixed;inset:0;z-index:0;
+.bg-blobs::after{
+  content:'';position:absolute;inset:0;
   background-image:
-    linear-gradient(rgba(255,255,255,0.015) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(255,255,255,0.015) 1px,transparent 1px);
-  background-size:40px 40px;
+    linear-gradient(rgba(255,255,255,0.01) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,0.01) 1px,transparent 1px);
+  background-size:48px 48px;
+}
+
+/* ══════════════════════════════════
+   SPLASH / START MENU
+══════════════════════════════════ */
+#splash{
+  position:fixed;inset:0;z-index:1000;
+  display:flex;align-items:center;justify-content:center;
+  background:var(--bg);
+}
+#splash::before{
+  content:'';position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 70% 60% at 30% 30%,rgba(91,141,238,0.15) 0%,transparent 60%),
+    radial-gradient(ellipse 60% 50% at 75% 75%,rgba(167,139,250,0.12) 0%,transparent 60%);
   pointer-events:none;
 }
-
-/* ═══ SIDEBAR ═══ */
-.sidebar{
-  width:236px;min-width:236px;
-  height:100vh;
-  position:relative;z-index:10;
-  display:flex;flex-direction:column;
-  background:rgba(8,8,18,0.85);
+.splash-box{
+  position:relative;
+  background:rgba(12,12,26,0.75);
   backdrop-filter:var(--blur);
-  border-right:1px solid rgba(255,255,255,0.06);
-  flex-shrink:0;
-  overflow:hidden;
+  border:1px solid var(--border2);
+  border-radius:20px;
+  padding:48px 52px 44px;
+  text-align:center;
+  max-width:420px;width:90%;
+  box-shadow:
+    0 0 0 1px rgba(91,141,238,0.08),
+    0 40px 80px rgba(0,0,0,0.6),
+    inset 0 1px 0 rgba(255,255,255,0.08),
+    inset 0 0 60px rgba(91,141,238,0.03);
+  animation:splashIn 0.5s cubic-bezier(.4,0,.2,1) both;
 }
-
-/* glow accent line at top of sidebar */
-.sidebar::before{
-  content:'';position:absolute;top:0;left:0;right:0;height:1px;
-  background:linear-gradient(90deg,transparent,var(--a1),var(--a2),transparent);
-  opacity:0.6;
+@keyframes splashIn{
+  from{opacity:0;transform:translateY(18px) scale(0.97);}
+  to{opacity:1;transform:translateY(0) scale(1);}
 }
-
-.sb-header{
-  padding:20px 16px 16px;
-  border-bottom:1px solid rgba(255,255,255,0.05);
+.splash-box::before{
+  content:'';position:absolute;top:0;left:20%;right:20%;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(91,141,238,0.6),rgba(167,139,250,0.6),transparent);
+  border-radius:1px;
 }
-.sb-logo-row{display:flex;align-items:center;gap:12px;margin-bottom:0}
-.sb-logo{
-  width:36px;height:36px;border-radius:10px;flex-shrink:0;
-  background:linear-gradient(135deg,var(--a1),var(--a2));
-  display:flex;align-items:center;justify-content:center;font-size:18px;
-  box-shadow:0 0 20px rgba(124,92,252,0.4),0 4px 12px rgba(0,0,0,0.3);
+.splash-icon{
+  font-size:3.2rem;margin-bottom:18px;display:block;
+  filter:drop-shadow(0 0 18px rgba(91,141,238,0.5));
+  animation:float 3s ease-in-out infinite;
 }
-.sb-title{
-  font-weight:800;font-size:0.9rem;letter-spacing:-0.3px;
-  background:linear-gradient(90deg,var(--text),var(--sub));
+@keyframes float{
+  0%,100%{transform:translateY(0);}
+  50%{transform:translateY(-6px);}
+}
+.splash-title{
+  font-size:1.75rem;font-weight:700;letter-spacing:-0.5px;
+  margin-bottom:6px;
+  background:linear-gradient(135deg,#fff 30%,var(--c2));
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;
 }
-.sb-ver{font-size:0.6rem;color:var(--muted);font-family:'JetBrains Mono',monospace;margin-top:1px}
+.splash-by{
+  font-size:0.72rem;color:var(--sub);font-family:'JetBrains Mono',monospace;
+  margin-bottom:5px;letter-spacing:0.3px;
+}
+.splash-by a{color:var(--c1);text-decoration:none;}
+.splash-by a:hover{color:var(--c2);}
+.splash-desc{
+  font-size:0.82rem;color:var(--sub);line-height:1.65;
+  margin:16px 0 28px;font-family:'JetBrains Mono',monospace;
+}
+.splash-desc strong{color:var(--text);font-weight:600;}
+.splash-start{
+  width:100%;padding:13px;border:none;border-radius:10px;
+  background:linear-gradient(135deg,var(--c1),var(--c2));
+  color:#fff;font-family:'Space Grotesk',sans-serif;
+  font-size:0.95rem;font-weight:700;letter-spacing:0.2px;
+  cursor:pointer;
+  box-shadow:0 4px 24px rgba(91,141,238,0.4),inset 0 1px 0 rgba(255,255,255,0.15);
+  transition:transform 0.12s,box-shadow 0.12s,opacity 0.12s;
+  position:relative;overflow:hidden;
+}
+.splash-start::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,0.15),transparent);
+  pointer-events:none;
+}
+.splash-start:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(91,141,238,0.5),inset 0 1px 0 rgba(255,255,255,0.15);}
+.splash-start:active{transform:scale(0.98);}
+.splash-note{
+  margin-top:14px;font-size:0.62rem;color:var(--muted);
+  font-family:'JetBrains Mono',monospace;letter-spacing:0.3px;
+}
+.splash-note a{color:var(--c1);text-decoration:none;}
+#splash.out{animation:splashOut 0.35s cubic-bezier(.4,0,.2,1) both;}
+@keyframes splashOut{
+  from{opacity:1;transform:scale(1);}
+  to{opacity:0;transform:scale(1.04);}
+}
 
-.nav-scroll{flex:1;overflow-y:auto;padding:10px 8px;scrollbar-width:none}
-.nav-scroll::-webkit-scrollbar{display:none}
+/* ══════════════════════════════════
+   APP LAYOUT
+══════════════════════════════════ */
+.app{
+  display:flex;width:100%;height:100vh;
+  position:relative;z-index:5;
+  opacity:0;pointer-events:none;
+  transition:opacity 0.3s 0.1s;
+}
+.app.visible{opacity:1;pointer-events:all;}
 
-.nav-group-label{
-  font-size:0.58rem;font-weight:700;letter-spacing:1.8px;text-transform:uppercase;
-  color:var(--muted);padding:10px 10px 5px;
-  font-family:'JetBrains Mono',monospace;
+/* ── SIDEBAR ── */
+.sidebar{
+  width:var(--sbw);min-width:var(--sbw);height:100vh;
+  position:relative;z-index:10;
+  display:flex;flex-direction:column;
+  background:rgba(6,6,15,0.9);
+  backdrop-filter:var(--blur);
+  border-right:1px solid var(--border);
+  flex-shrink:0;overflow:hidden;
+}
+.sidebar::after{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--c1) 35%,var(--c2) 65%,transparent);
+  opacity:0.45;
+}
+.sb-head{
+  padding:16px 13px 13px;
+  border-bottom:1px solid var(--border);
+}
+.sb-logo-row{display:flex;align-items:center;gap:10px;}
+.sb-logo{
+  width:32px;height:32px;border-radius:8px;flex-shrink:0;
+  background:linear-gradient(135deg,var(--c1),var(--c2));
+  display:flex;align-items:center;justify-content:center;font-size:15px;
+  box-shadow:0 0 16px rgba(91,141,238,0.5),0 4px 8px rgba(0,0,0,0.4);
+}
+.sb-name{
+  font-weight:700;font-size:0.82rem;letter-spacing:-0.2px;
+  background:linear-gradient(90deg,#fff,var(--sub));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.sb-ver{font-size:0.56rem;color:var(--muted);font-family:'JetBrains Mono',monospace;margin-top:1px;}
+
+.nav-scroll{flex:1;overflow-y:auto;padding:7px 6px;scrollbar-width:none;}
+.nav-scroll::-webkit-scrollbar{display:none;}
+
+.nav-lbl{
+  font-size:0.53rem;font-weight:700;letter-spacing:1.8px;
+  text-transform:uppercase;color:var(--muted);
+  padding:9px 8px 4px;font-family:'JetBrains Mono',monospace;
 }
 .nav-btn{
-  display:flex;align-items:center;gap:10px;
-  width:100%;padding:9px 10px;border-radius:10px;
+  display:flex;align-items:center;gap:8px;
+  width:100%;padding:7px 8px;border-radius:8px;
   background:transparent;border:1px solid transparent;
-  color:var(--sub);cursor:pointer;font-family:'Inter',sans-serif;
-  font-size:0.82rem;font-weight:500;text-align:left;
-  transition:all 0.18s cubic-bezier(.4,0,.2,1);
-  position:relative;overflow:hidden;margin-bottom:2px;
+  color:var(--sub);cursor:none;
+  font-family:'Space Grotesk',sans-serif;font-size:0.78rem;font-weight:600;
+  text-align:left;margin-bottom:1px;
+  transition:background 0.13s,color 0.13s,border-color 0.13s;
+  position:relative;
 }
-.nav-btn::before{
-  content:'';position:absolute;inset:0;border-radius:10px;
-  background:linear-gradient(135deg,var(--a1),var(--a2));
-  opacity:0;transition:opacity 0.18s;
-}
-.nav-btn:hover{
-  background:var(--glass2);color:var(--text);
-  border-color:rgba(255,255,255,0.06);
-}
+.nav-btn:hover{background:var(--glass2);color:var(--text);border-color:var(--border);}
 .nav-btn.active{
-  background:rgba(124,92,252,0.15);
-  border-color:rgba(124,92,252,0.3);
+  background:rgba(91,141,238,0.12);
+  border-color:rgba(91,141,238,0.25);
   color:var(--text);
-  box-shadow:0 0 16px rgba(124,92,252,0.15),inset 0 0 12px rgba(124,92,252,0.05);
 }
-.nav-btn.active .ni{box-shadow:0 0 10px rgba(124,92,252,0.5)}
-.ni{
-  width:28px;height:28px;border-radius:8px;
-  display:flex;align-items:center;justify-content:center;
-  font-size:14px;flex-shrink:0;z-index:1;
-  transition:all 0.18s;
-  background:rgba(255,255,255,0.05);
-}
-.nb-text{z-index:1;flex:1}
-.nb-tag{
-  z-index:1;font-size:0.54rem;font-family:'JetBrains Mono',monospace;
-  font-weight:700;padding:2px 5px;border-radius:4px;letter-spacing:0.4px;
-  flex-shrink:0;
-}
-.tag-s{background:rgba(124,92,252,0.2);color:#a78bfa}
-.tag-p{background:rgba(79,195,247,0.15);color:#67d5ff}
-.tag-u{background:rgba(0,229,160,0.15);color:var(--ok)}
-.tag-t{background:rgba(255,140,66,0.15);color:var(--a4)}
-
-/* active indicator bar */
-.nav-btn.active::after{
+.nav-btn.active::before{
   content:'';position:absolute;left:0;top:20%;bottom:20%;
-  width:3px;border-radius:0 3px 3px 0;
-  background:linear-gradient(180deg,var(--a1),var(--a2));
+  width:2.5px;border-radius:0 2px 2px 0;
+  background:linear-gradient(180deg,var(--c1),var(--c2));
 }
+.nav-ico{
+  width:24px;height:24px;border-radius:6px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;flex-shrink:0;
+  background:rgba(255,255,255,0.05);
+  transition:box-shadow 0.13s;
+}
+.nav-btn.active .nav-ico{box-shadow:0 0 8px rgba(91,141,238,0.4);}
+.nav-tag{
+  margin-left:auto;font-size:0.48rem;font-family:'JetBrains Mono',monospace;
+  font-weight:700;padding:2px 5px;border-radius:4px;letter-spacing:0.4px;
+}
+.tag-new{background:rgba(6,214,160,0.15);color:var(--c3);}
+.tag-tool{background:rgba(255,209,102,0.12);color:var(--warn);}
+.sb-div{height:1px;background:var(--border);margin:3px 8px;}
 
-/* ═══ NAV DROPDOWN ═══ */
-.nav-group-wrap{position:relative}
-.nav-sub{
-  overflow:hidden;max-height:0;
-  transition:max-height 0.22s cubic-bezier(.4,0,.2,1),opacity 0.18s;
-  opacity:0;
-}
-.nav-sub.open{max-height:200px;opacity:1}
-.nav-sub-btn{
-  display:flex;align-items:center;gap:9px;
-  width:100%;padding:7px 10px 7px 22px;border-radius:8px;
-  background:transparent;border:1px solid transparent;
-  color:var(--muted);cursor:pointer;font-family:'Inter',sans-serif;
-  font-size:0.78rem;font-weight:500;text-align:left;
-  transition:all 0.14s;margin-bottom:1px;
-}
-.nav-sub-btn:hover{background:var(--glass2);color:var(--sub)}
-.nav-sub-btn.active{
-  background:rgba(124,92,252,0.1);color:var(--text);
-  border-color:rgba(124,92,252,0.2);
-}
-.nav-sub-dot{
-  width:6px;height:6px;border-radius:50%;flex-shrink:0;
-  background:currentColor;opacity:0.5;
-}
-.nav-sub-btn.active .nav-sub-dot{opacity:1;background:var(--a1)}
-.nav-chevron{
-  margin-left:auto;font-size:10px;color:var(--muted);
-  transition:transform 0.2s;
-}
-.nav-btn.open .nav-chevron{transform:rotate(180deg)}
-
-/* divider */
-.sb-divider{height:1px;background:rgba(255,255,255,0.04);margin:4px 10px}
-
-.sb-footer{
-  padding:12px 14px;border-top:1px solid rgba(255,255,255,0.05);
+.sb-foot{
+  padding:9px 13px 11px;border-top:1px solid var(--border);
   display:flex;flex-direction:column;gap:4px;
 }
 .sb-stat{
   display:flex;justify-content:space-between;align-items:center;
-  font-size:0.62rem;font-family:'JetBrains Mono',monospace;
+  font-size:0.58rem;font-family:'JetBrains Mono',monospace;
 }
-.sb-stat-k{color:var(--muted)}
+.sb-stat-k{color:var(--muted);}
 .sb-stat-v{
-  color:var(--ok);background:rgba(0,229,160,0.08);
-  padding:1px 6px;border-radius:4px;font-weight:700;
+  color:var(--c3);background:rgba(6,214,160,0.08);
+  padding:1px 5px;border-radius:3px;font-weight:700;
 }
 
-/* ═══ MAIN ═══ */
-.main{
-  flex:1;display:flex;flex-direction:column;
-  height:100vh;overflow:hidden;position:relative;z-index:5;
-}
+/* ── MAIN ── */
+.main{flex:1;display:flex;flex-direction:column;height:100vh;overflow:hidden;position:relative;}
 
 /* TOPBAR */
 .topbar{
-  height:52px;flex-shrink:0;
-  display:flex;align-items:center;padding:0 24px;gap:14px;
-  background:rgba(7,7,14,0.6);
+  height:46px;flex-shrink:0;
+  display:flex;align-items:center;padding:0 18px;gap:10px;
+  background:rgba(6,6,15,0.7);
   backdrop-filter:var(--blur);
-  border-bottom:1px solid rgba(255,255,255,0.05);
+  border-bottom:1px solid var(--border);
 }
-.tb-breadcrumb{display:flex;align-items:center;gap:8px}
-.tb-section{font-size:0.72rem;color:var(--muted);font-family:'JetBrains Mono',monospace}
-.tb-sep{color:var(--muted);opacity:0.4}
-.tb-page{font-weight:700;font-size:0.88rem;letter-spacing:-0.2px}
-.tb-right{margin-left:auto;display:flex;align-items:center;gap:8px}
-.tb-chip{
-  font-size:0.6rem;font-family:'JetBrains Mono',monospace;font-weight:700;
-  padding:3px 9px;border-radius:20px;letter-spacing:0.5px;
-  border:1px solid rgba(255,255,255,0.08);
-  background:rgba(255,255,255,0.04);color:var(--sub);
+.tb-crumb{display:flex;align-items:center;gap:6px;}
+.tb-sec{font-size:0.67rem;color:var(--muted);font-family:'JetBrains Mono',monospace;}
+.tb-sep{color:var(--muted);opacity:0.3;}
+.tb-page{font-weight:700;font-size:0.82rem;letter-spacing:-0.2px;}
+.tb-r{margin-left:auto;display:flex;align-items:center;gap:7px;}
+
+.mode-toggle{
+  display:flex;align-items:center;
+  background:rgba(255,255,255,0.04);
+  border:1px solid var(--border);
+  border-radius:8px;padding:2px;gap:2px;
 }
-.tb-chip.active{
-  background:rgba(124,92,252,0.15);border-color:rgba(124,92,252,0.3);color:#a78bfa;
+.mode-btn{
+  display:flex;align-items:center;gap:4px;
+  padding:4px 11px;border-radius:6px;
+  background:transparent;border:none;
+  color:var(--muted);font-family:'Space Grotesk',sans-serif;
+  font-size:0.73rem;font-weight:700;cursor:none;
+  transition:all 0.13s;white-space:nowrap;
 }
-.tb-icon-btn{
-  width:30px;height:30px;border-radius:8px;
-  background:var(--glass);border:1px solid rgba(255,255,255,0.07);
+.mode-btn:hover{color:var(--text);}
+.mode-btn.active{
+  background:linear-gradient(135deg,var(--c1),var(--c2));color:#fff;
+  box-shadow:0 2px 8px rgba(91,141,238,0.35);
+}
+.tb-icon{
+  width:28px;height:28px;border-radius:7px;
+  background:var(--glass);border:1px solid var(--border);
   display:flex;align-items:center;justify-content:center;
-  cursor:pointer;font-size:14px;transition:all 0.15s;color:var(--sub);
+  cursor:none;font-size:13px;color:var(--sub);
+  transition:background 0.12s,color 0.12s;
 }
-.tb-icon-btn:hover{background:var(--glass3);color:var(--text)}
+.tb-icon:hover{background:var(--glass2);color:var(--text);}
 
-/* ═══ CONTENT SCROLL ═══ */
-.content{flex:1;overflow-y:auto;padding:20px 22px;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,0.08) transparent}
-.content::-webkit-scrollbar{width:4px}
-.content::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.08);border-radius:4px}
+/* ── CONTENT ── */
+.content{
+  flex:1;overflow-y:auto;padding:16px;
+  scrollbar-width:thin;scrollbar-color:rgba(255,255,255,0.06) transparent;
+}
+.content::-webkit-scrollbar{width:3px;}
+.content::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.06);border-radius:3px;}
 
-/* ═══ PANELS ═══ */
-.panel{display:none;animation:fadeIn 0.2s ease}
-.panel.active{display:block}
-@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+/* ── PANELS ── */
+.panel{display:none;animation:fadeUp 0.16s ease;}
+.panel.active{display:block;}
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(6px);}
+  to{opacity:1;transform:translateY(0);}
+}
 
-/* ═══ GRID ═══ */
-.g2{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start}
-.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;align-items:start}
-.gap{margin-bottom:16px}
+/* ── GRID ── */
+.conv-layout{display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:start;}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:start;}
+.gap{margin-bottom:12px;}
 
-/* ═══ GLASS CARD ═══ */
+/* ── GLOSSY CARD ── */
 .card{
-  background:rgba(15,15,30,0.6);
-  backdrop-filter:saturate(150%) blur(16px);
-  border:1px solid rgba(255,255,255,0.07);
-  border-radius:16px;padding:18px;
+  background:rgba(10,10,22,0.72);
+  backdrop-filter:var(--blur);
+  border:1px solid var(--border);
+  border-radius:var(--r);padding:15px;
   position:relative;overflow:hidden;
 }
 .card::before{
   content:'';position:absolute;top:0;left:0;right:0;height:1px;
-  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.08),transparent);
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.1),transparent);
 }
-.card-head{
-  font-size:0.6rem;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;
-  color:var(--muted);font-family:'JetBrains Mono',monospace;
-  margin-bottom:14px;display:flex;align-items:center;gap:8px;
-}
-.card-head::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,rgba(255,255,255,0.06),transparent)}
-.card-accent{
-  position:absolute;top:-30px;right:-30px;width:80px;height:80px;border-radius:50%;
-  filter:blur(30px);opacity:0.3;pointer-events:none;
+/* glossy sheen */
+.card::after{
+  content:'';position:absolute;top:0;left:0;right:0;height:40%;
+  background:linear-gradient(180deg,rgba(255,255,255,0.025),transparent);
+  pointer-events:none;border-radius:var(--r) var(--r) 0 0;
 }
 
-/* glow variants */
-.card-glow-p .card-accent{background:var(--a1)}
-.card-glow-b .card-accent{background:var(--a5)}
-.card-glow-g .card-accent{background:var(--a3)}
-.card-glow-o .card-accent{background:var(--a4)}
+.drop-card{
+  background:rgba(10,10,22,0.72);
+  backdrop-filter:var(--blur);
+  border:1px solid var(--border);
+  border-radius:var(--r);padding:14px;
+  display:flex;flex-direction:column;gap:10px;
+  position:relative;overflow:hidden;
+}
+.drop-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.1),transparent);
+}
+.drop-card::after{
+  content:'';position:absolute;top:0;left:0;right:0;height:35%;
+  background:linear-gradient(180deg,rgba(255,255,255,0.022),transparent);
+  pointer-events:none;
+}
 
-/* ═══ DROP ZONE ═══ */
+.card-lbl{
+  font-size:0.55rem;font-weight:700;letter-spacing:1.6px;
+  text-transform:uppercase;color:var(--muted);
+  font-family:'JetBrains Mono',monospace;
+  display:flex;align-items:center;gap:7px;margin-bottom:12px;
+}
+.card-lbl::after{
+  content:'';flex:1;height:1px;
+  background:linear-gradient(90deg,var(--border),transparent);
+}
+
+.drop-title{font-size:0.98rem;font-weight:700;letter-spacing:-0.2px;}
+.drop-sub{font-size:0.67rem;color:var(--sub);font-family:'JetBrains Mono',monospace;margin-top:2px;line-height:1.5;}
+
+/* ── DROP ZONE ── */
 .dz{
-  border:2px dashed rgba(255,255,255,0.1);border-radius:12px;
-  padding:26px 16px;text-align:center;cursor:pointer;
-  transition:all 0.2s cubic-bezier(.4,0,.2,1);
-  background:rgba(255,255,255,0.02);position:relative;
+  border:1.5px dashed rgba(255,255,255,0.1);border-radius:9px;
+  padding:22px 14px;text-align:center;cursor:none;
+  transition:border-color 0.15s,background 0.15s;
+  background:rgba(255,255,255,0.015);position:relative;
+  min-height:120px;display:flex;align-items:center;justify-content:center;
 }
 .dz:hover,.dz.hover{
-  border-color:rgba(124,92,252,0.5);
-  background:rgba(124,92,252,0.05);
-  transform:scale(1.005);
+  border-color:rgba(91,141,238,0.5);
+  background:rgba(91,141,238,0.055);
 }
-.dz.hover{box-shadow:0 0 24px rgba(124,92,252,0.15)}
-.dz input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
-.dz-ico{font-size:1.8rem;display:block;margin-bottom:7px;opacity:0.45}
-.dz-t{font-weight:600;font-size:0.85rem;color:var(--text)}
-.dz-s{font-size:0.68rem;color:var(--muted);margin-top:3px;font-family:'JetBrains Mono',monospace}
+.dz input[type=file]{position:absolute;inset:0;opacity:0;cursor:none;width:100%;height:100%;}
+.dz-inner{display:flex;flex-direction:column;align-items:center;gap:5px;pointer-events:none;}
+.dz-ico{font-size:1.8rem;opacity:0.45;}
+.dz-t{font-weight:700;font-size:0.83rem;color:var(--text);}
+.dz-s{font-size:0.62rem;color:var(--muted);font-family:'JetBrains Mono',monospace;}
 
-/* ═══ PREVIEW WRAP ═══ */
-.pw{
-  margin-top:12px;border-radius:10px;overflow:hidden;
-  background:#000;display:none;position:relative;
-  border:1px solid rgba(255,255,255,0.06);
+/* ── INPUT PREVIEW ── */
+.inp-prev{
+  display:none;border-radius:8px;overflow:hidden;
+  background:#000;position:relative;border:1px solid var(--border);
 }
-.pw canvas,.pw img{width:100%;display:block;image-rendering:pixelated}
-.pw-badge{
-  position:absolute;top:7px;left:7px;
-  background:rgba(0,0,0,0.7);backdrop-filter:blur(8px);
-  color:var(--sub);font-size:0.57rem;font-family:'JetBrains Mono',monospace;
-  padding:2px 8px;border-radius:5px;letter-spacing:0.4px;
-  border:1px solid rgba(255,255,255,0.07);
+.inp-prev canvas{width:100%;display:block;image-rendering:pixelated;}
+.prev-badge{
+  position:absolute;top:6px;left:6px;
+  background:rgba(0,0,0,0.8);backdrop-filter:blur(8px);
+  color:var(--sub);font-size:0.52rem;font-family:'JetBrains Mono',monospace;
+  padding:2px 7px;border-radius:4px;letter-spacing:0.5px;border:1px solid var(--border);
 }
 
-/* ═══ BUTTONS ═══ */
-.btn{
-  width:100%;padding:11px 16px;border:none;border-radius:10px;
-  font-family:'Inter',sans-serif;font-size:0.84rem;font-weight:700;
-  cursor:pointer;transition:all 0.2s cubic-bezier(.4,0,.2,1);
-  display:flex;align-items:center;justify-content:center;gap:8px;
-  position:relative;overflow:hidden;margin-top:12px;letter-spacing:0.1px;
+/* ── STATUS ── */
+.status{
+  display:none;padding:8px 11px;border-radius:7px;
+  font-size:0.66rem;font-family:'JetBrains Mono',monospace;
+  line-height:1.5;
 }
-.btn::before{
-  content:'';position:absolute;inset:0;
-  background:linear-gradient(135deg,rgba(255,255,255,0.15),transparent);
-  opacity:0;transition:opacity 0.2s;
+.status.show{display:block;}
+.status.info{background:rgba(6,214,160,0.06);border:1px solid rgba(6,214,160,0.18);color:var(--c3);}
+.status.ok{background:rgba(6,214,160,0.07);border:1px solid rgba(6,214,160,0.2);color:var(--c3);}
+.status.err{background:rgba(249,65,68,0.07);border:1px solid rgba(249,65,68,0.2);color:var(--err);}
+
+/* ── BUTTONS ── */
+.btn-conv{
+  width:100%;padding:10px 14px;border:none;border-radius:8px;
+  font-family:'Space Grotesk',sans-serif;font-size:0.82rem;font-weight:700;
+  cursor:none;display:flex;align-items:center;justify-content:center;gap:7px;
+  background:linear-gradient(135deg,var(--c1),var(--c2));
+  color:#fff;
+  box-shadow:0 3px 14px rgba(91,141,238,0.3),inset 0 1px 0 rgba(255,255,255,0.14);
+  transition:opacity 0.12s,transform 0.1s,box-shadow 0.12s;
+  position:relative;overflow:hidden;
 }
-.btn:hover::before{opacity:1}
-.btn:hover{transform:translateY(-1px)}
-.btn:active{transform:translateY(0) scale(0.99)}
-.btn:disabled{opacity:0.25;cursor:not-allowed;transform:none!important}
-
-.btn-p{background:linear-gradient(135deg,#6d4ff0,#c837a1);color:#fff;box-shadow:0 4px 20px rgba(109,79,240,0.3)}
-.btn-p:hover{box-shadow:0 6px 28px rgba(109,79,240,0.45)}
-.btn-b{background:linear-gradient(135deg,#0073cc,#0099e0);color:#fff;box-shadow:0 4px 20px rgba(0,115,204,0.3)}
-.btn-b:hover{box-shadow:0 6px 28px rgba(0,115,204,0.45)}
-.btn-g{background:linear-gradient(135deg,#007a5e,#00c49a);color:#fff;box-shadow:0 4px 20px rgba(0,122,94,0.3)}
-.btn-g:hover{box-shadow:0 6px 28px rgba(0,122,94,0.45)}
-.btn-o{background:linear-gradient(135deg,#c05a00,#e8820a);color:#fff;box-shadow:0 4px 20px rgba(192,90,0,0.3)}
-
-.btn-ghost{
-  margin-top:10px;background:rgba(255,255,255,0.04);
-  border:1px solid rgba(255,255,255,0.08);color:var(--sub);
-  transition:all 0.18s;
+.btn-conv::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:50%;
+  background:linear-gradient(180deg,rgba(255,255,255,0.12),transparent);
+  pointer-events:none;
 }
-.btn-ghost:hover{background:rgba(255,255,255,0.08);color:var(--text);border-color:rgba(255,255,255,0.14)}
-.btn-ghost a{color:inherit;text-decoration:none}
+.btn-conv:hover:not(:disabled){opacity:0.9;transform:translateY(-1px);box-shadow:0 5px 20px rgba(91,141,238,0.45),inset 0 1px 0 rgba(255,255,255,0.14);}
+.btn-conv:active:not(:disabled){transform:scale(0.99);}
+.btn-conv:disabled{opacity:0.22;cursor:none;transform:none!important;box-shadow:none;}
+.btn-conv.teal{background:linear-gradient(135deg,#0a7b6a,#06d6a0);box-shadow:0 3px 14px rgba(6,214,160,0.25),inset 0 1px 0 rgba(255,255,255,0.14);}
+.btn-conv.teal:hover:not(:disabled){box-shadow:0 5px 20px rgba(6,214,160,0.4),inset 0 1px 0 rgba(255,255,255,0.14);}
 
-/* small inline button */
-.btn-sm{
-  padding:6px 12px;border-radius:7px;font-size:0.74rem;font-weight:600;
-  cursor:pointer;border:1px solid rgba(255,255,255,0.08);
-  background:rgba(255,255,255,0.04);color:var(--sub);
-  transition:all 0.15s;font-family:'Inter',sans-serif;
+.hint{
+  font-size:0.6rem;color:var(--muted);
+  font-family:'JetBrains Mono',monospace;
+  text-align:center;line-height:1.5;
 }
-.btn-sm:hover{background:rgba(255,255,255,0.1);color:var(--text)}
-.btn-sm.active{background:rgba(124,92,252,0.2);border-color:rgba(124,92,252,0.4);color:#a78bfa}
+.hint strong{color:var(--sub);font-weight:600;}
 
-/* ═══ STATUS ═══ */
-.st{
-  margin-top:9px;padding:8px 12px;border-radius:8px;
-  font-size:0.71rem;font-family:'JetBrains Mono',monospace;
-  display:none;line-height:1.4;animation:fadeIn 0.15s ease;
+/* ── OUTPUT CARD ── */
+.out-card{
+  background:rgba(8,8,18,0.65);
+  backdrop-filter:var(--blur);
+  border:1px solid var(--border);
+  border-radius:var(--r);padding:15px;
+  min-height:180px;display:flex;flex-direction:column;
+  position:relative;overflow:hidden;
 }
-.st.show{display:block}
-.st.info{background:rgba(0,212,184,0.07);border:1px solid rgba(0,212,184,0.2);color:var(--a3)}
-.st.ok{background:rgba(0,229,160,0.07);border:1px solid rgba(0,229,160,0.2);color:var(--ok)}
-.st.err{background:rgba(255,77,109,0.07);border:1px solid rgba(255,77,109,0.2);color:var(--err)}
+.out-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.07),transparent);
+}
+.out-card::after{
+  content:'';position:absolute;top:0;left:0;right:0;height:30%;
+  background:linear-gradient(180deg,rgba(255,255,255,0.018),transparent);
+  pointer-events:none;
+}
+.out-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+.out-title{font-size:0.76rem;font-weight:700;color:var(--sub);}
 
-/* ═══ OUTPUT ═══ */
-.hidden{display:none}
-.cmp-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
-.cmp-it{border-radius:10px;overflow:hidden;background:#000;position:relative;border:1px solid rgba(255,255,255,0.06)}
-.cmp-it canvas{width:100%;display:block;image-rendering:pixelated}
+.btn-dl{
+  display:inline-flex;align-items:center;gap:4px;
+  padding:5px 11px;border-radius:7px;
+  background:rgba(6,214,160,0.1);border:1px solid rgba(6,214,160,0.22);
+  color:var(--c3);font-size:0.69rem;font-weight:700;
+  font-family:'Space Grotesk',sans-serif;text-decoration:none;
+  transition:all 0.13s;cursor:none;
+  box-shadow:inset 0 1px 0 rgba(6,214,160,0.1);
+}
+.btn-dl:hover{background:rgba(6,214,160,0.16);border-color:rgba(6,214,160,0.4);}
+
+.cmp-row{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px;}
+.cmp-item{
+  border-radius:7px;overflow:hidden;background:#000;
+  position:relative;border:1px solid var(--border);
+}
+.cmp-item canvas{width:100%;display:block;image-rendering:pixelated;}
 .cmp-lbl{
-  position:absolute;bottom:6px;left:6px;
-  background:rgba(0,0,0,0.75);backdrop-filter:blur(6px);
-  color:#fff;font-size:0.57rem;font-family:'JetBrains Mono',monospace;
-  padding:2px 7px;border-radius:4px;letter-spacing:0.3px;
-  border:1px solid rgba(255,255,255,0.07);
+  position:absolute;bottom:5px;left:5px;
+  background:rgba(0,0,0,0.85);backdrop-filter:blur(6px);
+  color:#fff;font-size:0.51rem;font-family:'JetBrains Mono',monospace;
+  padding:1px 6px;border-radius:3px;border:1px solid var(--border);letter-spacing:0.3px;
 }
-.out-wrap{
-  border-radius:10px;overflow:hidden;background:#000;position:relative;
-  margin-bottom:10px;border:1px solid rgba(255,255,255,0.06);
-}
-.out-wrap canvas{width:100%;display:block;image-rendering:pixelated}
 
-/* ═══ EMPTY STATE ═══ */
+.out-wrap{border-radius:7px;overflow:hidden;background:#000;position:relative;border:1px solid var(--border);}
+.out-wrap canvas{width:100%;display:block;image-rendering:pixelated;}
+
 .empty{
-  text-align:center;padding:40px 20px;color:var(--muted);
-  font-family:'JetBrains Mono',monospace;font-size:0.69rem;line-height:2;
+  flex:1;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  text-align:center;color:var(--muted);
+  font-family:'JetBrains Mono',monospace;font-size:0.64rem;gap:8px;padding:24px 0;
 }
-.empty-ico{font-size:2rem;display:block;margin-bottom:10px;opacity:0.3}
+.empty-ico{font-size:2rem;opacity:0.18;}
+.hidden{display:none!important;}
 
-/* ═══ MANNEQUIN ═══ */
-.mq-section{
-  background:rgba(15,15,30,0.5);backdrop-filter:blur(12px);
-  border:1px solid rgba(255,255,255,0.06);border-radius:16px;
-  padding:18px;margin-top:16px;display:none;
+/* ── MANNEQUIN ── */
+.mq-sec{
+  background:rgba(10,10,22,0.65);
+  border:1px solid var(--border);border-radius:var(--r);
+  padding:14px;margin-top:12px;display:none;
+  position:relative;overflow:hidden;
 }
-.mq-section.show{display:block;animation:fadeIn 0.25s ease}
-.mq-row{display:flex;gap:14px;flex-wrap:wrap;align-items:flex-start;margin-top:12px}
-.mq-view{text-align:center;flex:1;min-width:160px}
+.mq-sec::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.08),transparent);
+}
+.mq-sec.show{display:block;animation:fadeUp 0.2s ease;}
+.mq-row{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-start;margin-top:10px;}
+.mq-view{text-align:center;flex:1;min-width:130px;}
 .mq-view canvas{
-  image-rendering:pixelated;background:#080814;border-radius:10px;
-  border:1px solid rgba(255,255,255,0.06);
-  width:100%;max-width:240px;display:block;margin:0 auto;
+  image-rendering:pixelated;background:#06060f;
+  border-radius:8px;border:1px solid var(--border);
+  width:100%;max-width:220px;display:block;margin:0 auto;
 }
-.mq-lbl{font-size:0.6rem;color:var(--muted);font-family:'JetBrains Mono',monospace;margin-top:5px;letter-spacing:0.5px}
+.mq-lbl{font-size:0.56rem;color:var(--muted);font-family:'JetBrains Mono',monospace;margin-top:4px;letter-spacing:0.5px;}
 
-/* ═══ INFO BOX ═══ */
-.ib{
-  background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);
-  border-radius:9px;padding:10px 13px;font-size:0.72rem;color:var(--sub);
-  line-height:1.6;margin-bottom:13px;font-family:'JetBrains Mono',monospace;
+/* ── INFO HINT ── */
+.hint-box{
+  background:rgba(255,255,255,0.022);
+  border:1px solid var(--border);border-radius:7px;
+  padding:8px 11px;font-size:0.65rem;color:var(--sub);
+  line-height:1.55;font-family:'JetBrains Mono',monospace;
 }
-.ib strong{color:var(--text);font-weight:600}
-.ib .tag{display:inline-block;background:rgba(124,92,252,0.15);color:#a78bfa;padding:1px 6px;border-radius:4px;font-size:0.62rem;font-weight:700}
+.hint-box strong{color:var(--text);font-weight:600;}
 
-/* ═══ LEGEND ═══ */
-.legend{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
-.leg{font-size:0.65rem;font-family:'JetBrains Mono',monospace;color:var(--sub);display:flex;align-items:center;gap:4px}
-.ldot{width:8px;height:8px;border-radius:2px;flex-shrink:0}
+/* ── SECTION HEADER ── */
+.sec-h{font-weight:700;font-size:0.95rem;letter-spacing:-0.2px;margin-bottom:3px;}
+.sec-s{font-size:0.65rem;color:var(--muted);font-family:'JetBrains Mono',monospace;margin-bottom:14px;line-height:1.5;}
 
-/* ═══ SETTINGS PAGE ═══ */
-.settings-grid{display:flex;flex-direction:column;gap:14px}
-.setting-row{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:13px 16px;border-radius:10px;
-  background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);
-  gap:16px;
-}
-.setting-info{}
-.setting-name{font-weight:600;font-size:0.84rem;margin-bottom:2px}
-.setting-desc{font-size:0.69rem;color:var(--muted);font-family:'JetBrains Mono',monospace;line-height:1.4}
-.toggle{
-  width:42px;height:24px;border-radius:12px;background:rgba(255,255,255,0.1);
-  border:1px solid rgba(255,255,255,0.12);cursor:pointer;position:relative;
-  transition:all 0.2s;flex-shrink:0;
-}
-.toggle::after{
-  content:'';position:absolute;width:18px;height:18px;border-radius:50%;
-  background:var(--sub);top:2px;left:2px;transition:all 0.2s;
-}
-.toggle.on{background:rgba(124,92,252,0.3);border-color:rgba(124,92,252,0.5)}
-.toggle.on::after{left:20px;background:var(--a1)}
-
-.select-row{display:flex;gap:6px;flex-wrap:wrap}
-.setting-select{
-  background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);
-  color:var(--text);font-family:'JetBrains Mono',monospace;font-size:0.7rem;
-  padding:5px 10px;border-radius:7px;cursor:pointer;
-  appearance:none;outline:none;
-}
-.setting-select option{background:#12121e}
-
-/* ═══ TOOLS PAGE ═══ */
-.tools-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-bottom:20px}
+/* ── TOOLS ── */
+.tools-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:9px;margin-bottom:14px;}
 .tool-card{
-  background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);
-  border-radius:14px;padding:16px;cursor:pointer;
-  transition:all 0.2s;position:relative;overflow:hidden;
+  background:var(--glass);border:1px solid var(--border);
+  border-radius:var(--r);padding:13px;cursor:none;
+  transition:background 0.15s,border-color 0.15s,transform 0.15s,box-shadow 0.15s;
+  position:relative;overflow:hidden;
 }
 .tool-card::before{
   content:'';position:absolute;top:0;left:0;right:0;height:1px;
-  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.06),transparent);
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.07),transparent);
+}
+.tool-card::after{
+  content:'';position:absolute;top:0;left:0;right:0;height:35%;
+  background:linear-gradient(180deg,rgba(255,255,255,0.018),transparent);
+  pointer-events:none;
 }
 .tool-card:hover{
-  background:rgba(255,255,255,0.05);border-color:rgba(255,255,255,0.1);
-  transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,0.3);
+  background:var(--glass2);border-color:var(--border2);
+  transform:translateY(-2px);box-shadow:0 6px 18px rgba(0,0,0,0.35);
 }
-.tool-ico{font-size:1.8rem;margin-bottom:10px;display:block}
-.tool-name{font-weight:700;font-size:0.85rem;margin-bottom:4px}
-.tool-desc{font-size:0.68rem;color:var(--muted);font-family:'JetBrains Mono',monospace;line-height:1.5}
+.tool-ico{font-size:1.5rem;margin-bottom:8px;display:block;}
+.tool-name{font-weight:700;font-size:0.79rem;margin-bottom:3px;}
+.tool-desc{font-size:0.63rem;color:var(--muted);font-family:'JetBrains Mono',monospace;line-height:1.45;}
 .tool-badge{
-  position:absolute;top:10px;right:10px;
-  font-size:0.55rem;font-family:'JetBrains Mono',monospace;font-weight:700;
-  padding:2px 6px;border-radius:4px;letter-spacing:0.5px;
+  position:absolute;top:8px;right:8px;
+  font-size:0.49rem;font-family:'JetBrains Mono',monospace;font-weight:700;
+  padding:2px 5px;border-radius:3px;letter-spacing:0.5px;
 }
-.tb-new{background:rgba(0,229,160,0.15);color:var(--ok)}
-.tb-pro{background:rgba(124,92,252,0.15);color:#a78bfa}
+.tb-s{background:rgba(91,141,238,0.18);color:var(--c1);}
+.tb-p{background:rgba(167,139,250,0.15);color:var(--c2);}
+.tb-u{background:rgba(6,214,160,0.14);color:var(--c3);}
 
-/* ═══ ABOUT PAGE ═══ */
-.about-section{
-  background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);
-  border-radius:14px;padding:20px;margin-bottom:14px;
+/* ── SETTINGS ── */
+.settings-sec{margin-bottom:16px;}
+.settings-sec-title{
+  display:flex;align-items:center;gap:6px;
+  font-size:0.63rem;font-weight:700;letter-spacing:1.2px;
+  text-transform:uppercase;color:var(--sub);
+  font-family:'JetBrains Mono',monospace;
+  margin-bottom:6px;padding-bottom:7px;border-bottom:1px solid var(--border);
 }
-.about-title{font-weight:700;font-size:0.9rem;margin-bottom:6px}
-.about-text{font-size:0.76rem;color:var(--sub);line-height:1.7;font-family:'JetBrains Mono',monospace}
-.coord-table{width:100%;border-collapse:collapse;margin-top:10px}
-.coord-table th,.coord-table td{
-  text-align:left;padding:6px 10px;font-size:0.67rem;font-family:'JetBrains Mono',monospace;
-  border-bottom:1px solid rgba(255,255,255,0.04);
-}
-.coord-table th{color:var(--muted);font-weight:700}
-.coord-table td{color:var(--sub)}
-.coord-table tr:last-child td{border:none}
-.coord-table .hl{color:var(--a1)}
-
-/* ═══ SECTION HEADING ═══ */
-.sec-h{
-  font-weight:700;font-size:0.95rem;letter-spacing:-0.2px;
-  margin-bottom:4px;
-}
-.sec-s{font-size:0.7rem;color:var(--muted);font-family:'JetBrains Mono',monospace;margin-bottom:16px}
-
-/* ═══ PROGRESS BAR ═══ */
-.progress{height:3px;background:rgba(255,255,255,0.06);border-radius:2px;margin-top:8px;overflow:hidden;display:none}
-.progress.show{display:block}
-.progress-bar{height:100%;background:linear-gradient(90deg,var(--a1),var(--a2));border-radius:2px;width:0;transition:width 0.3s}
-
-/* ═══ CONVERTER LAYOUT ═══ */
-.converter-layout{
-  display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start;
-}
-.big-drop-card{
-  background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);
-  border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:14px;
-}
-.big-drop-header{display:flex;flex-direction:column;gap:4px}
-.big-drop-title{font-size:1.1rem;font-weight:700;letter-spacing:-0.3px}
-.big-drop-sub{font-size:0.72rem;color:var(--muted);font-family:'JetBrains Mono',monospace}
-.big-dz{
-  min-height:160px;border-radius:12px;border:2px dashed rgba(255,255,255,0.12);
-  background:rgba(255,255,255,0.02);cursor:pointer;transition:all 0.15s;
-  display:flex;align-items:center;justify-content:center;
-  position:relative;
-}
-.big-dz:hover,.big-dz.hover{
-  border-color:var(--a1);background:rgba(124,92,252,0.06);
-}
-.big-dz input[type=file]{
-  position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;
-}
-.big-dz-inner{display:flex;flex-direction:column;align-items:center;gap:6px;pointer-events:none}
-.big-dz-ico{font-size:2.2rem}
-.big-dz-t{font-size:0.9rem;font-weight:600;color:var(--text)}
-.big-dz-s{font-size:0.68rem;color:var(--muted);font-family:'JetBrains Mono',monospace}
-.btn-convert{
-  width:100%;padding:13px;border-radius:10px;border:none;cursor:pointer;
-  background:linear-gradient(135deg,var(--a1),var(--a2));color:#fff;
-  font-size:0.88rem;font-weight:700;font-family:'Inter',sans-serif;
-  display:flex;align-items:center;justify-content:center;gap:8px;
-  transition:opacity 0.15s,transform 0.1s;
-}
-.btn-convert:hover:not(:disabled){opacity:0.9;transform:translateY(-1px)}
-.btn-convert:disabled{opacity:0.3;cursor:not-allowed;transform:none}
-.btn-convert-g{background:linear-gradient(135deg,#00c896,#0099cc)}
-.btn-convert-ico{font-size:1rem}
-.converter-hint{
-  font-size:0.65rem;color:var(--muted);font-family:'JetBrains Mono',monospace;
-  text-align:center;line-height:1.5;
-}
-/* Output card */
-.big-out-card{
-  background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);
-  border-radius:16px;padding:20px;min-height:200px;
-  display:flex;flex-direction:column;
-}
-.out-header{
+.settings-grid{display:flex;flex-direction:column;gap:4px;}
+.setting-row{
   display:flex;align-items:center;justify-content:space-between;
-  margin-bottom:12px;
+  padding:9px 12px;border-radius:8px;
+  background:var(--glass);border:1px solid var(--border);
+  gap:14px;transition:border-color 0.12s;
+  position:relative;overflow:hidden;
 }
-.out-title{font-size:0.85rem;font-weight:700;color:var(--sub)}
-.btn-dl{
-  display:inline-flex;align-items:center;gap:5px;
-  padding:6px 14px;border-radius:8px;
-  background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);
-  color:var(--text);font-size:0.75rem;font-weight:600;font-family:'Inter',sans-serif;
-  text-decoration:none;transition:all 0.15s;
+.setting-row::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.05),transparent);
 }
-.btn-dl:hover{background:rgba(255,255,255,0.1);border-color:rgba(255,255,255,0.2)}
-@media(max-width:900px){
-  .converter-layout{grid-template-columns:1fr}
+.setting-row:hover{border-color:var(--border2);}
+.setting-name{font-weight:600;font-size:0.79rem;margin-bottom:1px;}
+.setting-desc{font-size:0.63rem;color:var(--muted);font-family:'JetBrains Mono',monospace;line-height:1.4;}
+.toggle{
+  width:36px;height:20px;border-radius:10px;
+  background:rgba(255,255,255,0.07);border:1px solid var(--border);
+  cursor:none;position:relative;transition:all 0.16s;flex-shrink:0;
 }
-.mode-toggle{
-  display:flex;align-items:center;
-  background:rgba(255,255,255,0.05);
-  border:1px solid rgba(255,255,255,0.09);
-  border-radius:10px;padding:3px;gap:2px;
+.toggle::after{
+  content:'';position:absolute;width:14px;height:14px;border-radius:50%;
+  background:var(--sub);top:2px;left:2px;transition:all 0.16s;
 }
-.mode-btn{
-  display:flex;align-items:center;gap:5px;
-  padding:5px 13px;border-radius:7px;
-  background:transparent;border:none;
-  color:var(--muted);font-family:'Inter',sans-serif;
-  font-size:0.78rem;font-weight:600;cursor:pointer;
-  transition:all 0.18s;white-space:nowrap;
+.toggle.on{background:rgba(91,141,238,0.28);border-color:rgba(91,141,238,0.5);}
+.toggle.on::after{left:18px;background:var(--c1);}
+.select-row{display:flex;gap:4px;flex-wrap:wrap;}
+.btn-sm{
+  padding:4px 9px;border-radius:6px;font-size:0.67rem;font-weight:600;
+  cursor:none;border:1px solid var(--border);
+  background:var(--glass);color:var(--sub);
+  transition:all 0.12s;font-family:'Space Grotesk',sans-serif;
 }
-.mode-btn:hover{color:var(--text)}
-.mode-btn.active{
-  background:linear-gradient(135deg,var(--a1),var(--a2));
-  color:#fff;
-  box-shadow:0 2px 12px rgba(124,92,252,0.35);
-}
-
-/* ═══ SETTINGS — SECTIONS ═══ */
-.settings-section{
-  margin-bottom:20px;
-}
-.settings-section-title{
-  display:flex;align-items:center;gap:8px;
-  font-size:0.7rem;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;
-  color:var(--sub);font-family:'JetBrains Mono',monospace;
-  margin-bottom:8px;padding-bottom:8px;
-  border-bottom:1px solid rgba(255,255,255,0.05);
-}
-.sst-ico{font-size:14px}
-.settings-grid{display:flex;flex-direction:column;gap:6px}
-
-/* ═══ SETTINGS — SHORTCUTS ═══ */
-.shortcuts-grid{
-  display:grid;grid-template-columns:1fr 1fr;gap:5px;
-  background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.05);
-  border-radius:10px;padding:12px;margin-bottom:8px;
-}
-.shortcut-row{
-  display:flex;align-items:center;gap:10px;
-  padding:5px 6px;border-radius:6px;
-}
-.shortcut-row:hover{background:rgba(255,255,255,0.03)}
-.shortcut-keys{display:flex;align-items:center;gap:3px;flex-shrink:0;min-width:110px}
-kbd{
-  background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.14);
-  border-bottom:2px solid rgba(255,255,255,0.2);
-  color:var(--text);font-family:'JetBrains Mono',monospace;
-  font-size:0.62rem;font-weight:700;padding:2px 6px;border-radius:5px;
-  white-space:nowrap;
-}
-.shortcut-desc{font-size:0.72rem;color:var(--sub);font-family:'JetBrains Mono',monospace}
-
-/* ═══ SETTINGS — INPUT ═══ */
+.btn-sm:hover{background:var(--glass2);color:var(--text);}
+.btn-sm.active{background:rgba(91,141,238,0.18);border-color:rgba(91,141,238,0.38);color:var(--c1);}
 .setting-input{
-  background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);
-  color:var(--text);border-radius:7px;padding:6px 10px;
-  font-family:'JetBrains Mono',monospace;font-size:0.72rem;
-  width:150px;outline:none;transition:border-color 0.15s;
+  background:var(--glass);border:1px solid var(--border);
+  color:var(--text);border-radius:6px;padding:5px 9px;
+  font-family:'JetBrains Mono',monospace;font-size:0.67rem;
+  width:135px;outline:none;transition:border-color 0.13s;
 }
-.setting-input:focus{border-color:var(--a1)}
-
-/* ═══ SETTINGS — DANGER ═══ */
+.setting-input:focus{border-color:var(--c1);}
 .btn-danger{
-  padding:7px 14px;border-radius:8px;
-  background:rgba(255,77,109,0.1);border:1px solid rgba(255,77,109,0.25);
-  color:var(--err);font-size:0.76rem;font-weight:600;font-family:'Inter',sans-serif;
-  cursor:pointer;transition:all 0.15s;
+  padding:6px 12px;border-radius:7px;
+  background:rgba(249,65,68,0.09);border:1px solid rgba(249,65,68,0.2);
+  color:var(--err);font-size:0.71rem;font-weight:600;
+  font-family:'Space Grotesk',sans-serif;cursor:none;transition:all 0.12s;
 }
-.btn-danger:hover{background:rgba(255,77,109,0.2);border-color:var(--err)}
-  .g2,.g3{grid-template-columns:1fr}
-  .sidebar{width:200px;min-width:200px}
-  .mode-btn span:first-child{display:none}
+.btn-danger:hover{background:rgba(249,65,68,0.16);border-color:var(--err);}
+
+/* ── SHORTCUTS ── */
+.shortcuts-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:3px;
+  background:var(--glass);border:1px solid var(--border);
+  border-radius:9px;padding:10px;margin-bottom:6px;
+}
+.shortcut-row{display:flex;align-items:center;gap:8px;padding:4px 5px;border-radius:5px;}
+.shortcut-row:hover{background:var(--glass2);}
+.shortcut-keys{display:flex;align-items:center;gap:3px;flex-shrink:0;min-width:88px;}
+kbd{
+  background:rgba(255,255,255,0.07);border:1px solid var(--border2);
+  border-bottom:2px solid rgba(255,255,255,0.16);
+  color:var(--text);font-family:'JetBrains Mono',monospace;
+  font-size:0.57rem;font-weight:700;padding:2px 5px;border-radius:4px;white-space:nowrap;
+}
+.shortcut-desc{font-size:0.66rem;color:var(--sub);font-family:'JetBrains Mono',monospace;}
+
+/* ── ABOUT ── */
+.about-sec{
+  background:var(--glass);border:1px solid var(--border);
+  border-radius:var(--r);padding:14px;margin-bottom:10px;
+}
+.about-title{font-weight:700;font-size:0.82rem;margin-bottom:7px;}
+.about-text{font-size:0.69rem;color:var(--sub);line-height:1.75;font-family:'JetBrains Mono',monospace;}
+.coord-table{width:100%;border-collapse:collapse;margin-top:7px;}
+.coord-table th,.coord-table td{
+  text-align:left;padding:5px 9px;
+  font-size:0.62rem;font-family:'JetBrains Mono',monospace;
+  border-bottom:1px solid var(--border);
+}
+.coord-table th{color:var(--muted);font-weight:700;}
+.coord-table td{color:var(--sub);}
+.coord-table tr:last-child td{border:none;}
+.coord-table .hl{color:var(--c1);}
+
+/* ── LEGEND ── */
+.legend{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px;}
+.leg{font-size:0.6rem;font-family:'JetBrains Mono',monospace;color:var(--sub);display:flex;align-items:center;gap:3px;}
+.ldot{width:7px;height:7px;border-radius:2px;flex-shrink:0;}
+
+/* ── TOAST ── */
+#toast{
+  position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(8px);
+  background:rgba(10,10,22,0.97);border:1px solid rgba(255,255,255,0.1);
+  backdrop-filter:blur(18px);color:#fff;
+  font-family:'JetBrains Mono',monospace;
+  font-size:0.7rem;padding:8px 16px;border-radius:9px;
+  opacity:0;z-index:9999;pointer-events:none;white-space:nowrap;
+  transition:opacity 0.18s,transform 0.18s;
+  box-shadow:0 8px 24px rgba(0,0,0,0.5),inset 0 1px 0 rgba(255,255,255,0.07);
+}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+/* ── RESPONSIVE ── */
+@media(max-width:820px){
+  .conv-layout,.g2{grid-template-columns:1fr;}
+  :root{--sbw:56px;}
+  .sb-name,.sb-ver,.nav-lbl,.sb-div,.nav-tag,.sb-foot{display:none;}
+  .nav-btn{padding:9px;justify-content:center;}
+  .nav-ico{width:28px;height:28px;font-size:15px;}
+  .nb-text{display:none;}
 }
 </style>
 </head>
 <body>
+<div class="bg-blobs"></div>
 
-<!-- ═══════════ SIDEBAR ═══════════ -->
+<!-- CUSTOM CURSOR -->
+<div id="cur"></div>
+<div id="cur-ring"></div>
+
+<!-- ══════════════════════════════════
+     SPLASH SCREEN
+══════════════════════════════════ -->
+<div id="splash">
+  <div class="splash-box">
+    <span class="splash-icon">🧥</span>
+    <div class="splash-title">PT Clothing Converter</div>
+    <div class="splash-by">by <a href="https://www.youtube.com/@scoofyx" target="_blank">@scoofyx</a> · free to use, no gatekeeping</div>
+    <div class="splash-desc">
+      Convert <strong>Roblox templates</strong> or upgrade <strong>old Polytoria</strong> clothing to the new PT 2.0 format.<br>
+      Everything runs in your browser — nothing is uploaded anywhere.
+    </div>
+    <button class="splash-start" onclick="enterApp()">Open Converter →</button>
+    <div class="splash-note">
+      Works offline · pixel-perfect accuracy · <a href="https://www.youtube.com/@scoofyx" target="_blank">subscribe for more</a> 🔔
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     APP
+══════════════════════════════════ -->
+<div class="app" id="app">
+
+<!-- ─── SIDEBAR ─── -->
 <nav class="sidebar">
-  <div class="sb-header">
+  <div class="sb-head">
     <div class="sb-logo-row">
       <div class="sb-logo">🧥</div>
       <div>
-        <div class="sb-title">PT Converter</div>
-        <div class="sb-ver">v3.0 · pixel-accurate</div>
+        <div class="sb-name">PT Converter</div>
+        <div class="sb-ver">v3.1 · pixel-accurate</div>
       </div>
     </div>
   </div>
-
   <div class="nav-scroll">
-
-    <div class="nav-group-label">Convert</div>
+    <div class="nav-lbl">Convert</div>
     <button class="nav-btn active" id="nbtn-rbx" data-p="rbx" onclick="goTo(this,'rbx')">
-      <span class="ni" style="background:rgba(124,92,252,0.15)">🎮</span>
+      <span class="nav-ico" style="background:rgba(91,141,238,0.14)">🎮</span>
       <span class="nb-text">Roblox → PT 2.0</span>
     </button>
     <button class="nav-btn" id="nbtn-old" data-p="old" onclick="goTo(this,'old')">
-      <span class="ni" style="background:rgba(0,229,160,0.1)">🔄</span>
+      <span class="nav-ico" style="background:rgba(6,214,160,0.1)">🔄</span>
       <span class="nb-text">Old → PT 2.0</span>
-      <span class="nb-tag tag-u">UPGRADE</span>
+      <span class="nav-tag tag-new">UPGRADE</span>
     </button>
-
-    <div class="sb-divider"></div>
-    <div class="nav-group-label">Tools</div>
+    <div class="sb-div"></div>
+    <div class="nav-lbl">Tools</div>
     <button class="nav-btn" data-p="preview" onclick="goTo(this,'preview')">
-      <span class="ni" style="background:rgba(255,140,66,0.1)">🔍</span>
+      <span class="nav-ico" style="background:rgba(255,209,102,0.1)">🔍</span>
       <span class="nb-text">Region Preview</span>
-      <span class="nb-tag tag-t">TOOL</span>
+      <span class="nav-tag tag-tool">TOOL</span>
     </button>
     <button class="nav-btn" data-p="tools" onclick="goTo(this,'tools')">
-      <span class="ni" style="background:rgba(255,140,66,0.1)">🛠</span>
+      <span class="nav-ico" style="background:rgba(255,209,102,0.1)">🛠</span>
       <span class="nb-text">All Tools</span>
     </button>
-
-    <div class="sb-divider"></div>
-    <div class="nav-group-label">App</div>
+    <div class="sb-div"></div>
+    <div class="nav-lbl">App</div>
     <button class="nav-btn" data-p="settings" onclick="goTo(this,'settings')">
-      <span class="ni" style="background:rgba(255,255,255,0.05)">⚙️</span>
+      <span class="nav-ico">⚙️</span>
       <span class="nb-text">Settings</span>
     </button>
     <button class="nav-btn" data-p="about" onclick="goTo(this,'about')">
-      <span class="ni" style="background:rgba(255,255,255,0.05)">📖</span>
+      <span class="nav-ico">📖</span>
       <span class="nb-text">About & Coords</span>
     </button>
-
   </div>
-
-  <div class="sb-footer">
-    <div class="sb-stat">
-      <span class="sb-stat-k">output size</span>
-      <span class="sb-stat-v">1024×1024</span>
-    </div>
-    <div class="sb-stat">
-      <span class="sb-stat-k">accuracy</span>
-      <span class="sb-stat-v">pixel-perfect</span>
-    </div>
-    <div class="sb-stat" id="sb-conv-stat">
-      <span class="sb-stat-k">conversions</span>
-      <span class="sb-stat-v" id="conv-count">0</span>
-    </div>
+  <div class="sb-foot">
+    <div class="sb-stat"><span class="sb-stat-k">output</span><span class="sb-stat-v">1024×1024</span></div>
+    <div class="sb-stat" id="sb-conv-stat"><span class="sb-stat-k">conversions</span><span class="sb-stat-v" id="conv-count">0</span></div>
   </div>
 </nav>
 
-<!-- ═══════════ MAIN ═══════════ -->
+<!-- ─── MAIN ─── -->
 <div class="main">
-  <!-- Topbar -->
   <div class="topbar">
-    <div class="tb-breadcrumb">
-      <span class="tb-section" id="tb-sec">Roblox → Polytoria</span>
+    <div class="tb-crumb">
+      <span class="tb-sec" id="tb-sec">Roblox → Polytoria</span>
       <span class="tb-sep">›</span>
       <span class="tb-page" id="tb-page">Shirt</span>
     </div>
-    <div class="tb-right">
-      <!-- Global shirt/pants toggle — persists everywhere -->
-      <div class="mode-toggle" id="mode-toggle">
-        <button class="mode-btn active" id="mode-shirt" onclick="setMode('shirt')">
-          <span>👕</span> Shirt
-        </button>
-        <button class="mode-btn" id="mode-pants" onclick="setMode('pants')">
-          <span>👖</span> Pants
-        </button>
+    <div class="tb-r">
+      <div class="mode-toggle">
+        <button class="mode-btn active" id="mode-shirt" onclick="setMode('shirt')">👕 Shirt</button>
+        <button class="mode-btn" id="mode-pants" onclick="setMode('pants')">👖 Pants</button>
       </div>
-      <div class="tb-icon-btn" onclick="goTo(document.querySelector('[data-p=settings]'),'settings')" title="Settings">⚙</div>
+      <div class="tb-icon" onclick="goTo(document.querySelector('[data-p=settings]'),'settings')" title="Settings">⚙</div>
     </div>
   </div>
 
   <div class="content">
 
-        <!-- ══ PANEL: RBX ══ -->
+    <!-- ── PANEL: RBX ── -->
     <div class="panel active" id="panel-rbx">
-      <div class="converter-layout">
-        <!-- DROP ZONE — big and central -->
-        <div class="big-drop-card" id="rbx-in-card">
-          <div class="big-drop-header">
-            <div class="big-drop-title" id="rbx-title">Roblox → Polytoria 2.0</div>
-            <div class="big-drop-sub" id="rbx-desc">Drop your Roblox template and hit Convert.</div>
+      <div class="conv-layout">
+        <div class="drop-card" id="rbx-in-card">
+          <div>
+            <div class="drop-title" id="rbx-title">Roblox → Polytoria 2.0</div>
+            <div class="drop-sub" id="rbx-desc">Drop your Roblox template and hit Convert.</div>
           </div>
-          <div class="dz big-dz" id="rbx-dz" ondragover="dzo(event,this)" ondragleave="dzl(this)" ondrop="dzd(event,'rbx')">
+          <div class="dz" id="rbx-dz" ondragover="dzo(event,this)" ondragleave="dzl(this)" ondrop="dzd(event,'rbx')">
             <input type="file" accept="image/*" onchange="lf(event,'rbx')" id="rbx-file-input">
-            <div class="big-dz-inner">
-              <span class="big-dz-ico" id="rbx-dz-ico">📤</span>
-              <div class="big-dz-t" id="rbx-dz-t">Drop file here</div>
-              <div class="big-dz-s">or click to browse · PNG / JPG</div>
+            <div class="dz-inner">
+              <span class="dz-ico" id="rbx-dz-ico">📤</span>
+              <div class="dz-t" id="rbx-dz-t">Drop file here</div>
+              <div class="dz-s">or click to browse · PNG / JPG</div>
             </div>
           </div>
-          <div class="pw" id="pw-rbx"><canvas id="cv-rbx"></canvas><span class="pw-badge" id="rbx-pw-badge">INPUT</span></div>
-          <div class="st" id="st-rbx"></div>
-          <button class="btn btn-convert" id="btn-rbx" onclick="convRbx()" disabled>
-            <span class="btn-convert-ico">⚡</span>
-            <span id="rbx-btn-label">Convert to Polytoria 2.0</span>
-          </button>
-          <div class="converter-hint" id="rbx-ib">Shirt: torso (6 faces + back), both arms + caps · Pants: both legs only</div>
+          <div class="inp-prev" id="pw-rbx"><canvas id="cv-rbx"></canvas><span class="prev-badge" id="rbx-pw-badge">INPUT</span></div>
+          <div class="status" id="st-rbx"></div>
+          <button class="btn-conv" id="btn-rbx" onclick="convRbx()" disabled>⚡ <span id="rbx-btn-label">Convert to Polytoria 2.0</span></button>
+          <div class="hint-box" id="rbx-ib">Shirt: torso (6 faces + back), both arms + caps · Pants: both legs only</div>
         </div>
-
-        <!-- OUTPUT -->
-        <div class="big-out-card">
+        <div class="out-card">
           <div class="hidden" id="out-rbx">
-            <div class="out-header">
+            <div class="out-head">
               <span class="out-title" id="rbx-out-head">Output</span>
               <a class="btn-dl" id="dl-rbx" href="#" download="polytoria.png">⬇ <span id="rbx-dl-label">Download</span></a>
             </div>
             <div class="cmp-row" id="rbx-cmp-row">
-              <div class="cmp-it"><canvas id="cmp-rbx-i"></canvas><span class="cmp-lbl">INPUT</span></div>
-              <div class="cmp-it"><canvas id="cmp-rbx-o"></canvas><span class="cmp-lbl">OUTPUT</span></div>
+              <div class="cmp-item"><canvas id="cmp-rbx-i"></canvas><span class="cmp-lbl">INPUT</span></div>
+              <div class="cmp-item"><canvas id="cmp-rbx-o"></canvas><span class="cmp-lbl">OUTPUT</span></div>
             </div>
-            <div class="out-wrap"><canvas id="out-rbx-cv" width="1024" height="1024"></canvas><span class="pw-badge" id="rbx-out-badge">PT 2.0 · 1024×1024</span></div>
+            <div class="out-wrap"><canvas id="out-rbx-cv" width="1024" height="1024"></canvas><span class="prev-badge" id="rbx-out-badge">PT 2.0 · 1024×1024</span></div>
           </div>
-          <div class="empty" id="em-rbx">
-            <span class="empty-ico" id="rbx-em-ico">👕</span>
-            <span id="rbx-em-text">Output appears here after conversion</span>
-          </div>
+          <div class="empty" id="em-rbx"><span class="empty-ico" id="rbx-em-ico">👕</span><span id="rbx-em-text">Output appears here after conversion</span></div>
         </div>
       </div>
-
-      <!-- Mannequin preview -->
-      <div class="mq-section" id="mq-rbx">
-        <div class="card-head">Mannequin Preview</div>
+      <div class="mq-sec" id="mq-rbx">
+        <div class="card-lbl">Mannequin Preview</div>
         <div class="mq-row">
           <div class="mq-view"><canvas id="mq-rbx-f" width="240" height="320"></canvas><div class="mq-lbl">front</div></div>
           <div class="mq-view"><canvas id="mq-rbx-b" width="240" height="320"></canvas><div class="mq-lbl">back</div></div>
@@ -790,72 +852,68 @@ kbd{
       </div>
     </div>
 
-        <!-- ══ PANEL: OLD ══ -->
+    <!-- ── PANEL: OLD ── -->
     <div class="panel" id="panel-old">
-      <div class="converter-layout">
-        <div class="big-drop-card" id="old-in-card">
-          <div class="big-drop-header">
-            <div class="big-drop-title" id="old-title">Old Polytoria → PT 2.0</div>
-            <div class="big-drop-sub" id="old-desc">Drop your old PT template and hit Upgrade.</div>
+      <div class="conv-layout">
+        <div class="drop-card" id="old-in-card">
+          <div>
+            <div class="drop-title" id="old-title">Old Polytoria → PT 2.0</div>
+            <div class="drop-sub" id="old-desc">Drop your old PT template and hit Upgrade.</div>
           </div>
-          <div class="dz big-dz" id="old-dz" ondragover="dzo(event,this)" ondragleave="dzl(this)" ondrop="dzd(event,'old')">
+          <div class="dz" id="old-dz" ondragover="dzo(event,this)" ondragleave="dzl(this)" ondrop="dzd(event,'old')">
             <input type="file" accept="image/*" onchange="lf(event,'old')" id="old-file-input">
-            <div class="big-dz-inner">
-              <span class="big-dz-ico" id="old-dz-ico">🔄</span>
-              <div class="big-dz-t" id="old-dz-t">Drop file here</div>
-              <div class="big-dz-s">or click to browse · 1024×1024</div>
+            <div class="dz-inner">
+              <span class="dz-ico" id="old-dz-ico">🔄</span>
+              <div class="dz-t" id="old-dz-t">Drop file here</div>
+              <div class="dz-s">or click to browse · 1024×1024</div>
             </div>
           </div>
-          <div class="pw" id="pw-old"><canvas id="cv-old"></canvas><span class="pw-badge" id="old-pw-badge">INPUT</span></div>
-          <div class="st" id="st-old"></div>
-          <button class="btn btn-convert btn-convert-g" id="btn-old" onclick="convOld()" disabled>
-            <span class="btn-convert-ico">⚡</span>
-            <span id="old-btn-label">Upgrade to PT 2.0</span>
-          </button>
-          <div class="converter-hint" id="old-ib">Upgrades old compact cross layout to new 1024×1024 format</div>
+          <div class="inp-prev" id="pw-old"><canvas id="cv-old"></canvas><span class="prev-badge" id="old-pw-badge">INPUT</span></div>
+          <div class="status" id="st-old"></div>
+          <button class="btn-conv teal" id="btn-old" onclick="convOld()" disabled>⚡ <span id="old-btn-label">Upgrade to PT 2.0</span></button>
+          <div class="hint-box" id="old-ib">Upgrades old compact cross layout to new 1024×1024 format</div>
         </div>
-        <div class="big-out-card">
+        <div class="out-card">
           <div class="hidden" id="out-old">
-            <div class="out-header">
+            <div class="out-head">
               <span class="out-title" id="old-out-head">Output</span>
               <a class="btn-dl" id="dl-old" href="#" download="polytoria_upgraded.png">⬇ <span id="old-dl-label">Download</span></a>
             </div>
             <div class="cmp-row">
-              <div class="cmp-it"><canvas id="cmp-old-i"></canvas><span class="cmp-lbl">INPUT</span></div>
-              <div class="cmp-it"><canvas id="cmp-old-o"></canvas><span class="cmp-lbl">OUTPUT</span></div>
+              <div class="cmp-item"><canvas id="cmp-old-i"></canvas><span class="cmp-lbl">INPUT</span></div>
+              <div class="cmp-item"><canvas id="cmp-old-o"></canvas><span class="cmp-lbl">OUTPUT</span></div>
             </div>
-            <div class="out-wrap"><canvas id="out-old-cv" width="1024" height="1024"></canvas><span class="pw-badge" id="old-out-badge">PT 2.0 · 1024×1024</span></div>
+            <div class="out-wrap"><canvas id="out-old-cv" width="1024" height="1024"></canvas><span class="prev-badge" id="old-out-badge">PT 2.0 · 1024×1024</span></div>
           </div>
-          <div class="empty" id="em-old">
-            <span class="empty-ico" id="old-em-ico">🔄</span>
-            <span id="old-em-text">Output appears here after upgrade</span>
-          </div>
+          <div class="empty" id="em-old"><span class="empty-ico" id="old-em-ico">🔄</span><span id="old-em-text">Output appears here after upgrade</span></div>
         </div>
       </div>
     </div>
 
-    <!-- ══ PANEL: PREVIEW<!-- ══ PANEL: PREVIEW ══ -->
+    <!-- ── PANEL: PREVIEW ── -->
     <div class="panel" id="panel-preview">
-      <div class="sec-h">Region Preview Tool</div>
-      <div class="sec-s">Drop any PT 2.0 template to see exactly which pixels map to which body part, overlaid with color labels.</div>
+      <div class="sec-h">Region Preview</div>
+      <div class="sec-s">Drop any PT 2.0 template to see exactly which pixels map to which body part.</div>
       <div class="card gap">
-        <div class="card-head">Upload PT 2.0 Template</div>
+        <div class="card-lbl">Upload PT 2.0 Template</div>
         <div class="dz" ondragover="dzo(event,this)" ondragleave="dzl(this)" ondrop="dzd(event,'preview')">
           <input type="file" accept="image/*" onchange="lf(event,'preview')">
-          <span class="dz-ico">🔍</span>
-          <div class="dz-t">Drop any PT 2.0 template here</div>
-          <div class="dz-s">shirt or pants · 1024×1024 recommended</div>
+          <div class="dz-inner">
+            <span class="dz-ico">🔍</span>
+            <div class="dz-t">Drop any PT 2.0 template here</div>
+            <div class="dz-s">shirt or pants · 1024×1024 recommended</div>
+          </div>
         </div>
       </div>
       <div id="pv-output" style="display:none">
         <div class="g2 gap">
           <div class="card">
-            <div class="card-head">Your Texture</div>
-            <canvas id="pv-tex" width="1024" height="1024" style="width:100%;image-rendering:pixelated;border-radius:8px;display:block;background:#000"></canvas>
+            <div class="card-lbl">Your Texture</div>
+            <canvas id="pv-tex" width="1024" height="1024" style="width:100%;image-rendering:pixelated;border-radius:7px;display:block;background:#000"></canvas>
           </div>
           <div class="card">
-            <div class="card-head">Region Overlay</div>
-            <canvas id="pv-ov" width="1024" height="1024" style="width:100%;image-rendering:pixelated;border-radius:8px;display:block;background:#000"></canvas>
+            <div class="card-lbl">Region Overlay</div>
+            <canvas id="pv-ov" width="1024" height="1024" style="width:100%;image-rendering:pixelated;border-radius:7px;display:block;background:#000"></canvas>
             <div class="legend">
               <div class="leg"><div class="ldot" style="background:#f05e8c"></div>Left</div>
               <div class="leg"><div class="ldot" style="background:#3ecfcf"></div>Back</div>
@@ -866,8 +924,8 @@ kbd{
             </div>
           </div>
         </div>
-        <div class="mq-section" style="display:block;margin-bottom:16px">
-          <div class="card-head">Mannequin Preview</div>
+        <div class="mq-sec" style="display:block;margin-bottom:12px">
+          <div class="card-lbl">Mannequin Preview</div>
           <div class="mq-row">
             <div class="mq-view"><canvas id="pv-f" width="240" height="320"></canvas><div class="mq-lbl">front</div></div>
             <div class="mq-view"><canvas id="pv-b" width="240" height="320"></canvas><div class="mq-lbl">back</div></div>
@@ -877,95 +935,77 @@ kbd{
       </div>
     </div>
 
-    <!-- ══ PANEL: TOOLS ══ -->
+    <!-- ── PANEL: TOOLS ── -->
     <div class="panel" id="panel-tools">
       <div class="sec-h">All Tools</div>
-      <div class="sec-s">Quick access to every converter and utility in the app.</div>
+      <div class="sec-s">Quick access to every converter and utility.</div>
       <div class="tools-grid gap">
-        <div class="tool-card" onclick="goTo(document.getElementById('nbtn-rbx'),'rbx')">
+        <div class="tool-card" onclick="setMode('shirt');goTo(document.getElementById('nbtn-rbx'),'rbx')">
           <span class="tool-ico">👕</span>
           <div class="tool-name">Roblox Shirt → PT 2.0</div>
-          <div class="tool-desc">Convert Roblox shirt<br>template 585×559 → 1024×1024</div>
-          <span class="tool-badge tb-pro">SHIRT</span>
+          <div class="tool-desc">585×559 → 1024×1024, all faces</div>
+          <span class="tool-badge tb-s">SHIRT</span>
         </div>
         <div class="tool-card" onclick="setMode('pants');goTo(document.getElementById('nbtn-rbx'),'rbx')">
           <span class="tool-ico">👖</span>
           <div class="tool-name">Roblox Pants → PT 2.0</div>
-          <div class="tool-desc">Convert Roblox pants<br>both legs + waist remapped</div>
-          <span class="tool-badge tb-pro">PANTS</span>
+          <div class="tool-desc">Both legs + waist remapped</div>
+          <span class="tool-badge tb-p">PANTS</span>
         </div>
-        <div class="tool-card" onclick="goTo(document.getElementById('nbtn-old'),'old')">
+        <div class="tool-card" onclick="setMode('shirt');goTo(document.getElementById('nbtn-old'),'old')">
           <span class="tool-ico">🔄</span>
           <div class="tool-name">Old PT Shirt → PT 2.0</div>
-          <div class="tool-desc">Upgrade old compact<br>cross layout to new format</div>
-          <span class="tool-badge tb-new">UPGRADE</span>
+          <div class="tool-desc">Compact cross → new format</div>
+          <span class="tool-badge tb-u">UPGRADE</span>
         </div>
         <div class="tool-card" onclick="setMode('pants');goTo(document.getElementById('nbtn-old'),'old')">
           <span class="tool-ico">🩳</span>
           <div class="tool-name">Old PT Pants → PT 2.0</div>
-          <div class="tool-desc">Upgrade old pants format<br>legs + waist remapped</div>
-          <span class="tool-badge tb-new">UPGRADE</span>
+          <div class="tool-desc">Legs + waist remapped</div>
+          <span class="tool-badge tb-u">UPGRADE</span>
         </div>
         <div class="tool-card" onclick="goTo(document.querySelector('[data-p=preview]'),'preview')">
           <span class="tool-ico">🔍</span>
           <div class="tool-name">Region Preview</div>
-          <div class="tool-desc">Overlay region labels<br>on any PT 2.0 template</div>
+          <div class="tool-desc">Color overlay on any PT 2.0 template</div>
         </div>
         <div class="tool-card" onclick="goTo(document.querySelector('[data-p=about]'),'about')">
           <span class="tool-ico">📐</span>
           <div class="tool-name">Coordinate Reference</div>
-          <div class="tool-desc">View all pixel coords<br>for PT 2.0 shirt & pants</div>
+          <div class="tool-desc">All pixel coords for PT 2.0</div>
         </div>
       </div>
     </div>
 
-    <!-- ══ PANEL: SETTINGS ══ -->
+    <!-- ── PANEL: SETTINGS ── -->
     <div class="panel" id="panel-settings">
       <div class="sec-h">Settings</div>
-      <div class="sec-s">Customize every aspect of the converter — output, workflow, display, and shortcuts.</div>
+      <div class="sec-s">All settings are saved to your browser automatically.</div>
 
-      <!-- Section: Output -->
-      <div class="settings-section">
-        <div class="settings-section-title">
-          <span class="sst-ico">📦</span> Output
-        </div>
+      <div class="settings-sec">
+        <div class="settings-sec-title">📦 Output</div>
         <div class="settings-grid">
           <div class="setting-row">
-            <div class="setting-info">
-              <div class="setting-name">Auto-download on convert</div>
-              <div class="setting-desc">Immediately save the output file when conversion finishes</div>
-            </div>
+            <div><div class="setting-name">Auto-download on convert</div><div class="setting-desc">Save file immediately when conversion finishes</div></div>
             <div class="toggle on" id="tog-autodl" onclick="toggleSetting(this,'autodl')"></div>
           </div>
           <div class="setting-row">
-            <div class="setting-info">
-              <div class="setting-name">Output format</div>
-              <div class="setting-desc">File format for downloaded conversions</div>
-            </div>
+            <div><div class="setting-name">Output format</div><div class="setting-desc">File format for downloads</div></div>
             <div class="select-row">
               <button class="btn-sm active" onclick="setSetting(this,'outputFmt','png')">PNG</button>
               <button class="btn-sm" onclick="setSetting(this,'outputFmt','webp')">WebP</button>
             </div>
           </div>
           <div class="setting-row">
-            <div class="setting-info">
-              <div class="setting-name">Output filename prefix</div>
-              <div class="setting-desc">Text added before every downloaded filename</div>
-            </div>
-            <input type="text" value="polytoria_" id="set-prefix" class="setting-input" placeholder="polytoria_">
+            <div><div class="setting-name">Filename prefix</div><div class="setting-desc">Prepended to every downloaded file</div></div>
+            <input type="text" value="polytoria_" id="set-prefix" class="setting-input" placeholder="polytoria_" oninput="saveSettings()">
           </div>
           <div class="setting-row">
-            <div class="setting-info">
-              <div class="setting-name">Include mode in filename</div>
-              <div class="setting-desc">Append _shirt or _pants to downloaded filenames</div>
-            </div>
+            <div><div class="setting-name">Include mode in filename</div><div class="setting-desc">Appends _shirt or _pants</div></div>
             <div class="toggle on" id="tog-fname-mode" onclick="toggleSetting(this,'fnameMode')"></div>
           </div>
           <div class="setting-row">
-            <div class="setting-info">
-              <div class="setting-name">Output canvas background</div>
-              <div class="setting-desc">Fill empty regions with color or leave transparent</div>
-            </div>
+            <div><div class="setting-name">Canvas background</div><div class="setting-desc">Fill empty regions</div></div>
             <div class="select-row">
               <button class="btn-sm active" onclick="setSetting(this,'bgFill','transparent')">Transparent</button>
               <button class="btn-sm" onclick="setSetting(this,'bgFill','black')">Black</button>
@@ -975,82 +1015,40 @@ kbd{
         </div>
       </div>
 
-      <!-- Section: Image Quality -->
-      <div class="settings-section">
-        <div class="settings-section-title">
-          <span class="sst-ico">🎨</span> Image Quality
-        </div>
+      <div class="settings-sec">
+        <div class="settings-sec-title">🎨 Image Quality</div>
         <div class="settings-grid">
           <div class="setting-row">
-            <div class="setting-info">
-              <div class="setting-name">Scaling mode</div>
-              <div class="setting-desc">How faces are resampled when scaling to destination size</div>
-            </div>
+            <div><div class="setting-name">Scaling mode</div><div class="setting-desc">How faces are resampled</div></div>
             <div class="select-row">
               <button class="btn-sm active" onclick="setSetting(this,'smooth','pixelated')">Pixelated</button>
               <button class="btn-sm" onclick="setSetting(this,'smooth','bilinear')">Bilinear</button>
             </div>
           </div>
           <div class="setting-row">
-            <div class="setting-info">
-              <div class="setting-name">Stretch to fill slots</div>
-              <div class="setting-desc">Scale source faces to exactly fit destination slot size (recommended)</div>
-            </div>
+            <div><div class="setting-name">Stretch to fill slots</div><div class="setting-desc">Scale source to fit destination exactly (recommended)</div></div>
             <div class="toggle on" id="tog-stretch" onclick="toggleSetting(this,'stretch')"></div>
           </div>
           <div class="setting-row">
-            <div class="setting-info">
-              <div class="setting-name">Preserve aspect ratio</div>
-              <div class="setting-desc">Letterbox faces instead of stretching when slot proportions differ</div>
-            </div>
-            <div class="toggle" id="tog-aspect" onclick="toggleSetting(this,'aspect')"></div>
-          </div>
-          <div class="setting-row">
-            <div class="setting-info">
-              <div class="setting-name">Mirror left arm from right</div>
-              <div class="setting-desc">Automatically mirror right arm to fill left arm slot (for symmetric clothing)</div>
-            </div>
+            <div><div class="setting-name">Mirror left arm from right</div><div class="setting-desc">Auto-mirror for symmetric clothing</div></div>
             <div class="toggle" id="tog-mirror" onclick="toggleSetting(this,'mirror')"></div>
           </div>
         </div>
       </div>
 
-      <!-- Section: Display -->
-      <div class="settings-section">
-        <div class="settings-section-title">
-          <span class="sst-ico">🖥</span> Display
-        </div>
+      <div class="settings-sec">
+        <div class="settings-sec-title">🖥 Display</div>
         <div class="settings-grid">
           <div class="setting-row">
-            <div class="setting-info">
-              <div class="setting-name">Show before/after comparison</div>
-              <div class="setting-desc">Side-by-side input vs output view after conversion</div>
-            </div>
+            <div><div class="setting-name">Before/after comparison</div><div class="setting-desc">Side-by-side view after conversion</div></div>
             <div class="toggle on" id="tog-cmp" onclick="toggleSetting(this,'cmp')"></div>
           </div>
           <div class="setting-row">
-            <div class="setting-info">
-              <div class="setting-name">Show mannequin preview</div>
-              <div class="setting-desc">Render front/back mannequin after shirt conversion</div>
-            </div>
+            <div><div class="setting-name">Mannequin preview</div><div class="setting-desc">Render front/back after shirt conversion</div></div>
             <div class="toggle on" id="tog-mq" onclick="toggleSetting(this,'mq')"></div>
           </div>
           <div class="setting-row">
-            <div class="setting-info">
-              <div class="setting-name">Mannequin background</div>
-              <div class="setting-desc">Color used behind the mannequin preview canvases</div>
-            </div>
-            <div class="select-row">
-              <button class="btn-sm active" onclick="setSetting(this,'mqBg','dark')">Dark</button>
-              <button class="btn-sm" onclick="setSetting(this,'mqBg','grid')">Grid</button>
-              <button class="btn-sm" onclick="setSetting(this,'mqBg','transparent')">None</button>
-            </div>
-          </div>
-          <div class="setting-row">
-            <div class="setting-info">
-              <div class="setting-name">Overlay opacity</div>
-              <div class="setting-desc">How visible region color overlays are in the preview tool</div>
-            </div>
+            <div><div class="setting-name">Overlay opacity</div><div class="setting-desc">Region overlay visibility in preview tool</div></div>
             <div class="select-row">
               <button class="btn-sm" onclick="setOpacity(this,0.15)">Low</button>
               <button class="btn-sm active" onclick="setOpacity(this,0.35)">Med</button>
@@ -1059,380 +1057,349 @@ kbd{
             </div>
           </div>
           <div class="setting-row">
-            <div class="setting-info">
-              <div class="setting-name">Show overlay labels</div>
-              <div class="setting-desc">Display face name labels (RArm-F, Torso-R etc.) on region overlay</div>
-            </div>
+            <div><div class="setting-name">Overlay labels</div><div class="setting-desc">Show face name labels on region overlay</div></div>
             <div class="toggle on" id="tog-ovlabels" onclick="toggleSetting(this,'ovLabels')"></div>
-          </div>
-          <div class="setting-row">
-            <div class="setting-info">
-              <div class="setting-name">Animate panel transitions</div>
-              <div class="setting-desc">Fade panels when switching between converter sections</div>
-            </div>
-            <div class="toggle on" id="tog-anim" onclick="toggleSetting(this,'anim')"></div>
           </div>
         </div>
       </div>
 
-      <!-- Section: Workflow -->
-      <div class="settings-section">
-        <div class="settings-section-title">
-          <span class="sst-ico">⚡</span> Workflow
-        </div>
+      <div class="settings-sec">
+        <div class="settings-sec-title">⚡ Workflow</div>
         <div class="settings-grid">
           <div class="setting-row">
-            <div class="setting-info">
-              <div class="setting-name">Auto-convert on file drop</div>
-              <div class="setting-desc">Run conversion immediately when a file is dropped (no button press)</div>
-            </div>
+            <div><div class="setting-name">Auto-convert on drop</div><div class="setting-desc">Run conversion immediately on file drop</div></div>
             <div class="toggle" id="tog-autoconv" onclick="toggleSetting(this,'autoConv')"></div>
           </div>
           <div class="setting-row">
-            <div class="setting-info">
-              <div class="setting-name">Clear output on new upload</div>
-              <div class="setting-desc">Reset output panel when a new file is loaded</div>
-            </div>
+            <div><div class="setting-name">Clear output on new upload</div><div class="setting-desc">Reset output when a new file loads</div></div>
             <div class="toggle on" id="tog-clearout" onclick="toggleSetting(this,'clearOut')"></div>
           </div>
           <div class="setting-row">
-            <div class="setting-info">
-              <div class="setting-name">Remember last mode</div>
-              <div class="setting-desc">Restore shirt/pants toggle to last used state on reload</div>
-            </div>
-            <div class="toggle on" id="tog-remmem" onclick="toggleSetting(this,'remMode')"></div>
-          </div>
-          <div class="setting-row">
-            <div class="setting-info">
-              <div class="setting-name">Confirm before switching mode</div>
-              <div class="setting-desc">Ask before clearing loaded image when toggling shirt/pants</div>
-            </div>
-            <div class="toggle" id="tog-confirm" onclick="toggleSetting(this,'confirmSwitch')"></div>
-          </div>
-          <div class="setting-row">
-            <div class="setting-info">
-              <div class="setting-name">Show conversion counter</div>
-              <div class="setting-desc">Display total conversions done this session in the sidebar</div>
-            </div>
+            <div><div class="setting-name">Conversion counter</div><div class="setting-desc">Show total conversions in sidebar</div></div>
             <div class="toggle on" id="tog-counter" onclick="toggleSetting(this,'counter')"></div>
           </div>
         </div>
       </div>
 
-      <!-- Section: Keyboard Shortcuts -->
-      <div class="settings-section">
-        <div class="settings-section-title">
-          <span class="sst-ico">⌨️</span> Keyboard Shortcuts
-        </div>
+      <div class="settings-sec">
+        <div class="settings-sec-title">⌨️ Keyboard Shortcuts</div>
         <div class="shortcuts-grid">
-          <div class="shortcut-row"><span class="shortcut-keys"><kbd>Ctrl</kbd><kbd>Enter</kbd></span><span class="shortcut-desc">Run conversion</span></div>
-          <div class="shortcut-row"><span class="shortcut-keys"><kbd>Ctrl</kbd><kbd>O</kbd></span><span class="shortcut-desc">Open file picker</span></div>
+          <div class="shortcut-row"><span class="shortcut-keys"><kbd>Ctrl</kbd><kbd>↵</kbd></span><span class="shortcut-desc">Run conversion</span></div>
+          <div class="shortcut-row"><span class="shortcut-keys"><kbd>Ctrl</kbd><kbd>O</kbd></span><span class="shortcut-desc">Open file</span></div>
           <div class="shortcut-row"><span class="shortcut-keys"><kbd>Ctrl</kbd><kbd>S</kbd></span><span class="shortcut-desc">Download output</span></div>
-          <div class="shortcut-row"><span class="shortcut-keys"><kbd>Tab</kbd></span><span class="shortcut-desc">Toggle shirt / pants mode</span></div>
-          <div class="shortcut-row"><span class="shortcut-keys"><kbd>1</kbd></span><span class="shortcut-desc">Go to Roblox → PT 2.0</span></div>
-          <div class="shortcut-row"><span class="shortcut-keys"><kbd>2</kbd></span><span class="shortcut-desc">Go to Old → PT 2.0</span></div>
-          <div class="shortcut-row"><span class="shortcut-keys"><kbd>3</kbd></span><span class="shortcut-desc">Go to Region Preview</span></div>
-          <div class="shortcut-row"><span class="shortcut-keys"><kbd>,</kbd></span><span class="shortcut-desc">Open Settings</span></div>
-          <div class="shortcut-row"><span class="shortcut-keys"><kbd>Esc</kbd></span><span class="shortcut-desc">Close / back</span></div>
+          <div class="shortcut-row"><span class="shortcut-keys"><kbd>Tab</kbd></span><span class="shortcut-desc">Toggle shirt/pants</span></div>
+          <div class="shortcut-row"><span class="shortcut-keys"><kbd>1</kbd></span><span class="shortcut-desc">Roblox → PT 2.0</span></div>
+          <div class="shortcut-row"><span class="shortcut-keys"><kbd>2</kbd></span><span class="shortcut-desc">Old → PT 2.0</span></div>
+          <div class="shortcut-row"><span class="shortcut-keys"><kbd>3</kbd></span><span class="shortcut-desc">Region Preview</span></div>
+          <div class="shortcut-row"><span class="shortcut-keys"><kbd>,</kbd></span><span class="shortcut-desc">Settings</span></div>
         </div>
-        <div class="setting-row" style="margin-top:10px">
-          <div class="setting-info">
-            <div class="setting-name">Enable keyboard shortcuts</div>
-            <div class="setting-desc">Use the shortcuts listed above to control the converter</div>
-          </div>
+        <div class="setting-row">
+          <div><div class="setting-name">Enable keyboard shortcuts</div><div class="setting-desc">Use the shortcuts listed above</div></div>
           <div class="toggle on" id="tog-keys" onclick="toggleSetting(this,'keys')"></div>
         </div>
       </div>
 
-      <!-- Section: Reset -->
-      <div class="settings-section">
-        <div class="settings-section-title">
-          <span class="sst-ico">🔁</span> Reset
-        </div>
+      <div class="settings-sec">
+        <div class="settings-sec-title">🔁 Reset</div>
         <div class="settings-grid">
           <div class="setting-row">
-            <div class="setting-info">
-              <div class="setting-name">Reset all settings</div>
-              <div class="setting-desc">Restore every setting on this page to its default value</div>
-            </div>
+            <div><div class="setting-name">Reset all settings</div><div class="setting-desc">Restore every setting to its default</div></div>
             <button class="btn-danger" onclick="resetAllSettings()">Reset to Defaults</button>
           </div>
         </div>
       </div>
-
     </div>
 
-    <!-- ══ PANEL: ABOUT ══ -->
+    <!-- ── PANEL: ABOUT ── -->
     <div class="panel" id="panel-about">
       <div class="sec-h">About & Coordinate Reference</div>
-      <div class="sec-s">Pixel-accurate coordinate maps derived from direct image analysis of the PT 2.0 template.</div>
-
+      <div class="sec-s">Pixel-accurate coordinate maps scanned directly from the PT 2.0 template. Made by <a href="https://www.youtube.com/@scoofyx" style="color:var(--c1);text-decoration:none;">@scoofyx</a> — subscribe if this helped 🔔</div>
       <div class="g2 gap">
-        <div class="about-section">
-          <div class="about-title">PT 2.0 Shirt — Torso (1024×1024)</div>
+        <div class="about-sec">
+          <div class="about-title">PT 2.0 Shirt — Torso</div>
           <table class="coord-table">
             <tr><th>Face</th><th>X</th><th>Y</th><th>W</th><th>H</th></tr>
             <tr><td class="hl">Right (R)</td><td>351</td><td>103</td><td>88</td><td>290</td></tr>
             <tr><td class="hl">Front (F)</td><td>440</td><td>104</td><td>144</td><td>288</td></tr>
             <tr><td class="hl">Left (L)</td><td>587</td><td>104</td><td>84</td><td>288</td></tr>
-            <tr><td class="hl">Top cap (T)</td><td>439</td><td>7</td><td>146</td><td>96</td></tr>
-            <tr><td class="hl">Bot cap (B)</td><td>439</td><td>394</td><td>146</td><td>93</td></tr>
+            <tr><td class="hl">Top cap</td><td>439</td><td>7</td><td>146</td><td>96</td></tr>
+            <tr><td class="hl">Bot cap</td><td>439</td><td>394</td><td>146</td><td>93</td></tr>
           </table>
         </div>
-        <div class="about-section">
-          <div class="about-title">PT 2.0 Shirt — Right Arm (L B R F)</div>
+        <div class="about-sec">
+          <div class="about-title">PT 2.0 Shirt — Right Arm</div>
           <table class="coord-table">
             <tr><th>Face</th><th>X</th><th>Y</th><th>W</th><th>H</th></tr>
             <tr><td class="hl">Left (L)</td><td>7</td><td>71</td><td>66</td><td>290</td></tr>
             <tr><td class="hl">Back (B)</td><td>73</td><td>71</td><td>65</td><td>290</td></tr>
             <tr><td class="hl">Right (R)</td><td>138</td><td>71</td><td>66</td><td>290</td></tr>
             <tr><td class="hl">Front (F)</td><td>204</td><td>71</td><td>66</td><td>290</td></tr>
-            <tr><td class="hl">Top cap (T)</td><td>204</td><td>7</td><td>66</td><td>63</td></tr>
-            <tr><td class="hl">Bot cap (B)</td><td>204</td><td>362</td><td>66</td><td>63</td></tr>
+            <tr><td class="hl">Top cap</td><td>204</td><td>7</td><td>66</td><td>63</td></tr>
+            <tr><td class="hl">Bot cap</td><td>204</td><td>362</td><td>66</td><td>63</td></tr>
           </table>
         </div>
-        <div class="about-section">
-          <div class="about-title">PT 2.0 Shirt — Left Arm (F L B R)</div>
+        <div class="about-sec">
+          <div class="about-title">PT 2.0 Shirt — Left Arm</div>
           <table class="coord-table">
             <tr><th>Face</th><th>X</th><th>Y</th><th>W</th><th>H</th></tr>
             <tr><td class="hl">Front (F)</td><td>754</td><td>71</td><td>66</td><td>290</td></tr>
             <tr><td class="hl">Left (L)</td><td>821</td><td>71</td><td>66</td><td>290</td></tr>
             <tr><td class="hl">Back (B)</td><td>887</td><td>71</td><td>65</td><td>290</td></tr>
             <tr><td class="hl">Right (R)</td><td>952</td><td>71</td><td>66</td><td>290</td></tr>
-            <tr><td class="hl">Top cap (T)</td><td>754</td><td>7</td><td>66</td><td>63</td></tr>
-            <tr><td class="hl">Bot cap (B)</td><td>754</td><td>362</td><td>66</td><td>63</td></tr>
+            <tr><td class="hl">Top cap</td><td>754</td><td>7</td><td>66</td><td>63</td></tr>
+            <tr><td class="hl">Bot cap</td><td>754</td><td>362</td><td>66</td><td>63</td></tr>
           </table>
         </div>
-        <div class="about-section">
-          <div class="about-title">PT 2.0 Pants — Legs (L B R F / F L B R)</div>
+        <div class="about-sec">
+          <div class="about-title">PT 2.0 Pants — Legs</div>
           <table class="coord-table">
             <tr><th>Face</th><th>X</th><th>Y</th><th>W</th><th>H</th></tr>
             <tr><td class="hl">RLeg Top</td><td>206</td><td>597</td><td>64</td><td>63</td></tr>
-            <tr><td class="hl">RLeg L</td><td>14</td><td>661</td><td>64</td><td>292</td></tr>
-            <tr><td class="hl">RLeg B</td><td>78</td><td>661</td><td>64</td><td>292</td></tr>
-            <tr><td class="hl">RLeg R</td><td>142</td><td>661</td><td>64</td><td>292</td></tr>
-            <tr><td class="hl">RLeg F</td><td>206</td><td>661</td><td>64</td><td>292</td></tr>
+            <tr><td class="hl">RLeg L/B/R/F</td><td>14–206</td><td>661</td><td>64</td><td>292</td></tr>
             <tr><td class="hl">RLeg Bot</td><td>206</td><td>954</td><td>64</td><td>63</td></tr>
             <tr><td class="hl">Waist</td><td>439</td><td>519</td><td>146</td><td>290</td></tr>
             <tr><td class="hl">LLeg Top</td><td>754</td><td>597</td><td>64</td><td>63</td></tr>
-            <tr><td class="hl">LLeg F</td><td>754</td><td>661</td><td>64</td><td>292</td></tr>
-            <tr><td class="hl">LLeg L</td><td>819</td><td>661</td><td>63</td><td>292</td></tr>
-            <tr><td class="hl">LLeg B</td><td>882</td><td>661</td><td>64</td><td>292</td></tr>
-            <tr><td class="hl">LLeg R</td><td>946</td><td>661</td><td>64</td><td>292</td></tr>
+            <tr><td class="hl">LLeg F/L/B/R</td><td>754–946</td><td>661</td><td>64</td><td>292</td></tr>
             <tr><td class="hl">LLeg Bot</td><td>754</td><td>954</td><td>64</td><td>63</td></tr>
           </table>
         </div>
       </div>
-
-      <div class="about-section">
-        <div class="about-title">Notes — scanned pixel-by-pixel from template.png</div>
+      <div class="about-sec">
+        <div class="about-title">Notes</div>
         <div class="about-text">
-          • Zero gaps. Faces are flush to each other. All values confirmed by scanning exact first/last colored pixel per column.<br>
-          • PT 2.0 shirt has <strong>no torso back face</strong> — only R, F, L. Roblox back face dropped on conversion.<br>
-          • Arm faces: y=71–360 (h=290). Top caps y=7–69 (h=63). Bottom caps y=362–424 (h=63).<br>
-          • Torso R starts y=103; F and L start y=104. All end around y=391–392.<br>
-          • Pants waist: y=519–808 (h=290). Leg faces: y=661–952 (h=292). Leg caps: h=63.
+          • Zero gaps — faces are flush to each other. All values confirmed by pixel scanning.<br>
+          • PT 2.0 shirts have <strong>no torso back face</strong> — only R, F, L. Roblox back face is dropped on conversion.<br>
+          • Arm faces: y=71–360 (h=290). Top caps y=7–69. Bottom caps y=362–424.<br>
+          • Pants waist: y=519–808 (h=290). Leg faces: y=661–952 (h=292).
         </div>
       </div>
     </div>
 
   </div><!-- /content -->
 </div><!-- /main -->
+</div><!-- /app -->
+
+<div id="toast"></div>
 
 <script>
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-//  SETTINGS STATE
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// ── CUSTOM CURSOR ──
+const cur = document.getElementById('cur');
+const curRing = document.getElementById('cur-ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{
+  mx=e.clientX; my=e.clientY;
+  cur.style.left=mx+'px'; cur.style.top=my+'px';
+});
+function animRing(){
+  rx+=(mx-rx)*0.14; ry+=(my-ry)*0.14;
+  curRing.style.left=rx+'px'; curRing.style.top=ry+'px';
+  requestAnimationFrame(animRing);
+}
+animRing();
+
+// ── SPLASH ──
+function enterApp(){
+  const splash=document.getElementById('splash');
+  splash.classList.add('out');
+  setTimeout(()=>{
+    splash.style.display='none';
+    document.getElementById('app').classList.add('visible');
+  },350);
+}
+
+// ── SETTINGS — defaults & localStorage ──
 const DEFAULTS={
-  autodl:true, mq:true, smooth:false, cmp:true, overlayOpacity:0.35,
-  outputFmt:'png', fnameMode:true, bgFill:'transparent',
-  stretch:true, aspect:false, mirror:false,
-  autoConv:false, clearOut:true, remMode:true, confirmSwitch:false,
-  counter:true, ovLabels:true, anim:true, keys:true, mqBg:'dark',
+  autodl:true,mq:true,smooth:false,cmp:true,overlayOpacity:0.35,
+  outputFmt:'png',fnameMode:true,bgFill:'transparent',
+  stretch:true,mirror:false,
+  autoConv:false,clearOut:true,
+  counter:true,ovLabels:true,keys:true,
 };
 const CFG=Object.assign({},DEFAULTS);
 let convCount=0;
 
+function saveSettings(){
+  try{
+    const data={...CFG,prefix:document.getElementById('set-prefix')?.value||'polytoria_'};
+    localStorage.setItem('ptconv_settings',JSON.stringify(data));
+  }catch(e){}
+}
+
+function loadSettings(){
+  try{
+    const raw=localStorage.getItem('ptconv_settings');
+    if(!raw)return;
+    const saved=JSON.parse(raw);
+    Object.assign(CFG,saved);
+    // Sync toggles
+    const togMap={
+      'tog-autodl':'autodl','tog-mq':'mq','tog-cmp':'cmp',
+      'tog-stretch':'stretch','tog-mirror':'mirror',
+      'tog-autoconv':'autoConv','tog-clearout':'clearOut',
+      'tog-counter':'counter','tog-ovlabels':'ovLabels',
+      'tog-keys':'keys','tog-fname-mode':'fnameMode',
+    };
+    Object.entries(togMap).forEach(([id,key])=>{
+      const el=document.getElementById(id);
+      if(el) el.classList.toggle('on',!!CFG[key]);
+    });
+    // Sync select rows
+    const fmtBtns=document.querySelectorAll('[onclick*="outputFmt"]');
+    fmtBtns.forEach(b=>b.classList.remove('active'));
+    fmtBtns.forEach(b=>{if(b.getAttribute('onclick')?.includes(`'${CFG.outputFmt}'`))b.classList.add('active');});
+    const bgBtns=document.querySelectorAll('[onclick*="bgFill"]');
+    bgBtns.forEach(b=>b.classList.remove('active'));
+    bgBtns.forEach(b=>{if(b.getAttribute('onclick')?.includes(`'${CFG.bgFill}'`))b.classList.add('active');});
+    const smoothBtns=document.querySelectorAll('[onclick*="smooth"]');
+    smoothBtns.forEach(b=>b.classList.remove('active'));
+    smoothBtns.forEach(b=>{if(b.getAttribute('onclick')?.includes(`'${CFG.smooth}'`))b.classList.add('active');});
+    // Opacity
+    const opVals=[0.15,0.35,0.6,0.85];
+    const opBtns=document.querySelectorAll('[onclick^="setOpacity"]');
+    opBtns.forEach((b,i)=>{
+      b.classList.toggle('active',opVals[i]===CFG.overlayOpacity);
+    });
+    // Prefix
+    const pfx=document.getElementById('set-prefix');
+    if(pfx && saved.prefix) pfx.value=saved.prefix;
+  }catch(e){}
+}
+
 function toggleSetting(el,key){
   el.classList.toggle('on');
   CFG[key]=el.classList.contains('on');
-  onSettingChange(key);
+  if(key==='counter') document.getElementById('sb-conv-stat').style.opacity=CFG.counter?'1':'0.3';
+  saveSettings();
 }
 function setSetting(el,key,val){
-  // deactivate siblings in same select-row
   el.closest('.select-row')?.querySelectorAll('.btn-sm').forEach(b=>b.classList.remove('active'));
   el.classList.add('active');
   CFG[key]=val;
-  onSettingChange(key);
+  saveSettings();
 }
 function setOpacity(el,v){
   el.closest('.select-row')?.querySelectorAll('.btn-sm').forEach(b=>b.classList.remove('active'));
   el.classList.add('active');
   CFG.overlayOpacity=v;
-}
-function onSettingChange(key){
-  if(key==='counter'){
-    document.getElementById('sb-conv-stat').style.opacity=CFG.counter?'1':'0.3';
-  }
-  if(key==='anim'){
-    document.documentElement.style.setProperty('--panel-dur', CFG.anim?'0.2s':'0s');
-  }
+  saveSettings();
 }
 function resetAllSettings(){
   Object.assign(CFG,DEFAULTS);
-  // Re-sync all toggles
   const togMap={
     'tog-autodl':'autodl','tog-mq':'mq','tog-cmp':'cmp',
-    'tog-stretch':'stretch','tog-aspect':'aspect','tog-mirror':'mirror',
-    'tog-autoconv':'autoConv','tog-clearout':'clearOut','tog-remmem':'remMode',
-    'tog-confirm':'confirmSwitch','tog-counter':'counter','tog-ovlabels':'ovLabels',
-    'tog-anim':'anim','tog-keys':'keys','tog-fname-mode':'fnameMode',
+    'tog-stretch':'stretch','tog-mirror':'mirror',
+    'tog-autoconv':'autoConv','tog-clearout':'clearOut',
+    'tog-counter':'counter','tog-ovlabels':'ovLabels',
+    'tog-keys':'keys','tog-fname-mode':'fnameMode',
   };
   Object.entries(togMap).forEach(([id,key])=>{
     const el=document.getElementById(id);
     if(el) el.classList.toggle('on',!!CFG[key]);
   });
-  // Re-sync select rows - reset to default active states
-  document.querySelectorAll('.select-row .btn-sm.active').forEach(b=>b.classList.remove('active'));
-  // Reset opacity to Med
-  document.querySelectorAll('[onclick^="setOpacity"]').forEach((b,i)=>{
-    if(i===1) b.classList.add('active');
-  });
-  CFG.overlayOpacity=0.35;
   document.getElementById('set-prefix').value='polytoria_';
+  // Reset selects
+  document.querySelectorAll('[onclick*="outputFmt"]').forEach((b,i)=>b.classList.toggle('active',i===0));
+  document.querySelectorAll('[onclick*="bgFill"]').forEach((b,i)=>b.classList.toggle('active',i===0));
+  document.querySelectorAll('[onclick*="smooth"]').forEach((b,i)=>b.classList.toggle('active',i===0));
+  document.querySelectorAll('[onclick^="setOpacity"]').forEach((b,i)=>b.classList.toggle('active',i===1));
+  localStorage.removeItem('ptconv_settings');
   showToast('Settings reset to defaults');
 }
 
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-//  TOAST NOTIFICATION
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-function showToast(msg, type='ok'){
-  let t=document.getElementById('toast');
-  if(!t){
-    t=document.createElement('div');t.id='toast';
-    document.body.appendChild(t);
-    t.style.cssText='position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(12px);'+
-      'background:rgba(15,15,30,0.95);border:1px solid rgba(255,255,255,0.12);'+
-      'backdrop-filter:blur(16px);color:#fff;font-family:JetBrains Mono,monospace;'+
-      'font-size:0.75rem;padding:10px 18px;border-radius:10px;opacity:0;'+
-      'transition:all 0.2s;z-index:9999;pointer-events:none;white-space:nowrap;';
-  }
+// ── TOAST ──
+function showToast(msg,type='ok'){
+  const t=document.getElementById('toast');
   t.textContent=msg;
-  t.style.borderColor=type==='ok'?'rgba(0,224,154,0.3)':'rgba(255,77,109,0.3)';
-  t.style.opacity='1'; t.style.transform='translateX(-50%) translateY(0)';
+  t.style.borderColor=type==='ok'?'rgba(6,214,160,0.3)':'rgba(249,65,68,0.3)';
+  t.classList.add('show');
   clearTimeout(t._timer);
-  t._timer=setTimeout(()=>{t.style.opacity='0';t.style.transform='translateX(-50%) translateY(8px)';},2200);
+  t._timer=setTimeout(()=>t.classList.remove('show'),2400);
 }
 
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-//  KEYBOARD SHORTCUTS
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// ── KEYBOARD ──
 document.addEventListener('keydown',e=>{
-  if(!CFG.keys) return;
+  if(!CFG.keys)return;
   const tag=document.activeElement.tagName;
-  if(tag==='INPUT'||tag==='TEXTAREA') return;
-  const k=e.key; const ctrl=e.ctrlKey||e.metaKey;
-  if(ctrl && k==='Enter'){e.preventDefault();
-    const ab=document.getElementById('btn-rbx');
-    const ob=document.getElementById('btn-old');
-    const av=document.querySelector('.panel.active');
-    if(av?.id==='panel-rbx'&&!ab?.disabled) convRbx();
-    else if(av?.id==='panel-old'&&!ob?.disabled) convOld();
-  }
-  else if(ctrl && k==='o'){e.preventDefault();
-    document.getElementById('rbx-file-input')?.click();
-  }
-  else if(ctrl && k==='s'){e.preventDefault();
-    const dl=document.getElementById('dl-rbx');
-    if(dl&&dl.href&&dl.href!='#') dl.click();
-  }
-  else if(k==='Tab'&&!ctrl&&!e.shiftKey){e.preventDefault();
-    setMode(MODE==='shirt'?'pants':'shirt');
-    showToast('Switched to '+(MODE==='shirt'?'👕 Shirt':'👖 Pants'));
-  }
-  else if(k==='1'&&!ctrl){goTo(document.getElementById('nbtn-rbx'),'rbx');}
-  else if(k==='2'&&!ctrl){goTo(document.getElementById('nbtn-old'),'old');}
-  else if(k==='3'&&!ctrl){goTo(document.querySelector('[data-p=preview]'),'preview');}
-  else if(k===','&&!ctrl){goTo(document.querySelector('[data-p=settings]'),'settings');}
+  if(tag==='INPUT'||tag==='TEXTAREA')return;
+  const k=e.key,ctrl=e.ctrlKey||e.metaKey;
+  if(ctrl&&k==='Enter'){
+    e.preventDefault();
+    const ap=document.querySelector('.panel.active');
+    if(ap?.id==='panel-rbx'&&!document.getElementById('btn-rbx')?.disabled)convRbx();
+    else if(ap?.id==='panel-old'&&!document.getElementById('btn-old')?.disabled)convOld();
+  }else if(ctrl&&k==='o'){e.preventDefault();document.getElementById('rbx-file-input')?.click();}
+  else if(ctrl&&k==='s'){e.preventDefault();const dl=document.getElementById('dl-rbx');if(dl&&dl.href!=='#')dl.click();}
+  else if(k==='Tab'&&!ctrl&&!e.shiftKey){e.preventDefault();setMode(MODE==='shirt'?'pants':'shirt');showToast('Switched to '+(MODE==='shirt'?'👕 Shirt':'👖 Pants'));}
+  else if(k==='1'&&!ctrl)goTo(document.getElementById('nbtn-rbx'),'rbx');
+  else if(k==='2'&&!ctrl)goTo(document.getElementById('nbtn-old'),'old');
+  else if(k==='3'&&!ctrl)goTo(document.querySelector('[data-p=preview]'),'preview');
+  else if(k===','&&!ctrl)goTo(document.querySelector('[data-p=settings]'),'settings');
 });
 
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-//  GLOBAL MODE (shirt / pants)
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-let MODE = 'shirt'; // 'shirt' | 'pants'
-
-const MODE_TEXT = {
-  shirt: {
-    rbx: { title:'Roblox → PT 2.0 · Shirt', desc:'Upload your Roblox shirt template (585×559). Converts all faces and caps to the new 1024×1024 format.', inHead:'Input · Roblox Shirt Template', ib:'Standard <strong>Roblox shirt</strong> format (585×559).<br>Torso (6 faces incl. back), both arms + caps.', dzIco:'📤', dzT:'Drop Roblox shirt here', pwBadge:'ROBLOX SHIRT INPUT', btn:'Convert Shirt to PT 2.0', outHead:'Output · Polytoria 2.0 Shirt', outBadge:'PT 2.0 SHIRT · 1024×1024', dl:'Download PT 2.0 Shirt', emIco:'👕', emTxt:'output appears after conversion', fname:'polytoria_shirt.png' },
-    old: { title:'Old PT → PT 2.0 · Shirt', desc:'Upgrade from the old compact cross layout to the new wide PT 2.0 format.', inHead:'Input · Old Polytoria Shirt', ib:'<strong>Old PT shirt</strong> format (1024×1024).<br>Compact cross layout. All faces remapped exactly.', dzIco:'🔄', dzT:'Drop Old PT shirt here', pwBadge:'OLD PT SHIRT', btn:'Upgrade Shirt to PT 2.0', outHead:'Output · Polytoria 2.0 Shirt', outBadge:'PT 2.0 SHIRT · 1024×1024', dl:'Download Upgraded Shirt', emIco:'🔄', emTxt:'output appears after upgrade', fname:'polytoria_upgraded_shirt.png' },
+// ── MODE ──
+let MODE='shirt';
+const MODE_TEXT={
+  shirt:{
+    rbx:{title:'Roblox → PT 2.0 · Shirt',desc:'Upload your Roblox shirt template (585×559).',dzIco:'📤',dzT:'Drop Roblox shirt here',pwBadge:'ROBLOX SHIRT',btn:'Convert Shirt to PT 2.0',outHead:'Output · PT 2.0 Shirt',outBadge:'PT 2.0 SHIRT · 1024×1024',dl:'Download Shirt',emIco:'👕',emTxt:'Output appears after conversion',ib:'<strong>Roblox shirt</strong> (585×559) — torso (6 faces incl. back), both arms + caps.',fname:'shirt.png'},
+    old:{title:'Old PT → PT 2.0 · Shirt',desc:'Upgrade from the old compact cross layout.',dzIco:'🔄',dzT:'Drop Old PT shirt here',pwBadge:'OLD PT SHIRT',btn:'Upgrade Shirt to PT 2.0',outHead:'Output · PT 2.0 Shirt',outBadge:'PT 2.0 SHIRT · 1024×1024',dl:'Download Upgraded Shirt',emIco:'🔄',emTxt:'Output appears after upgrade',ib:'<strong>Old PT shirt</strong> (1024×1024) — compact cross layout, all faces remapped.',fname:'shirt_upgraded.png'},
   },
-  pants: {
-    rbx: { title:'Roblox → PT 2.0 · Pants', desc:'Upload your Roblox pants template (585×559). Converts both legs (legs only — torso back goes in the shirt).', inHead:'Input · Roblox Pants Template', ib:'Standard <strong>Roblox pants</strong> format (585×559).<br>Both legs, 4 faces + caps. Legs only — torso back is in the shirt file.', dzIco:'👖', dzT:'Drop Roblox pants here', pwBadge:'ROBLOX PANTS INPUT', btn:'Convert Pants to PT 2.0', outHead:'Output · Polytoria 2.0 Pants', outBadge:'PT 2.0 PANTS · 1024×1024', dl:'Download PT 2.0 Pants', emIco:'👖', emTxt:'output appears after conversion', fname:'polytoria_pants.png' },
-    old: { title:'Old PT → PT 2.0 · Pants', desc:'Upgrade old Polytoria pants format to the new 2.0 layout.', inHead:'Input · Old Polytoria Pants', ib:'<strong>Old PT pants</strong> format (1024×1024).<br>Leg faces and waist remapped to PT 2.0 positions.', dzIco:'🩳', dzT:'Drop Old PT pants here', pwBadge:'OLD PT PANTS', btn:'Upgrade Pants to PT 2.0', outHead:'Output · Polytoria 2.0 Pants', outBadge:'PT 2.0 PANTS · 1024×1024', dl:'Download Upgraded Pants', emIco:'🩳', emTxt:'output appears after upgrade', fname:'polytoria_upgraded_pants.png' },
+  pants:{
+    rbx:{title:'Roblox → PT 2.0 · Pants',desc:'Upload your Roblox pants template (585×559).',dzIco:'👖',dzT:'Drop Roblox pants here',pwBadge:'ROBLOX PANTS',btn:'Convert Pants to PT 2.0',outHead:'Output · PT 2.0 Pants',outBadge:'PT 2.0 PANTS · 1024×1024',dl:'Download Pants',emIco:'👖',emTxt:'Output appears after conversion',ib:'<strong>Roblox pants</strong> (585×559) — both legs, 4 faces + caps. Torso back goes in the shirt file.',fname:'pants.png'},
+    old:{title:'Old PT → PT 2.0 · Pants',desc:'Upgrade old Polytoria pants to 2.0 layout.',dzIco:'🩳',dzT:'Drop Old PT pants here',pwBadge:'OLD PT PANTS',btn:'Upgrade Pants to PT 2.0',outHead:'Output · PT 2.0 Pants',outBadge:'PT 2.0 PANTS · 1024×1024',dl:'Download Upgraded Pants',emIco:'🩳',emTxt:'Output appears after upgrade',ib:'<strong>Old PT pants</strong> (1024×1024) — legs and waist remapped to PT 2.0.',fname:'pants_upgraded.png'},
   }
 };
 
-function setMode(m) {
-  MODE = m;
-  // Update toggle buttons
-  document.getElementById('mode-shirt').classList.toggle('active', m==='shirt');
-  document.getElementById('mode-pants').classList.toggle('active', m==='pants');
-  // Update both panels text
-  updatePanelText('rbx');
-  updatePanelText('old');
-  // Clear state so old images don't get converted in wrong mode
-  if(S){S['rbx']=null; S['old']=null;}
-  const $=id=>document.getElementById(id);
-  if($('pw-rbx'))$('pw-rbx').style.display='none';
-  if($('pw-old'))$('pw-old').style.display='none';
-  if($('btn-rbx'))$('btn-rbx').disabled=true;
-  if($('btn-old'))$('btn-old').disabled=true;
-  if($('out-rbx'))$('out-rbx').classList.add('hidden');
-  if($('out-old'))$('out-old').classList.add('hidden');
-  if($('em-rbx'))$('em-rbx').style.display='';
-  if($('em-old'))$('em-old').style.display='';
-  if($('mq-rbx'))$('mq-rbx').classList.remove('show');
-  if($('st-rbx'))$('st-rbx').className='st';
-  if($('st-old'))$('st-old').className='st';
+function setMode(m){
+  MODE=m;
+  document.getElementById('mode-shirt').classList.toggle('active',m==='shirt');
+  document.getElementById('mode-pants').classList.toggle('active',m==='pants');
+  updatePanelText('rbx');updatePanelText('old');
+  S.rbx=null;S.old=null;
+  ['rbx','old'].forEach(p=>{
+    const pw=document.getElementById('pw-'+p);
+    const btn=document.getElementById('btn-'+p);
+    const out=document.getElementById('out-'+p);
+    const em=document.getElementById('em-'+p);
+    const st=document.getElementById('st-'+p);
+    const mq=document.getElementById('mq-'+p);
+    if(pw)pw.style.display='none';
+    if(btn)btn.disabled=true;
+    if(out)out.classList.add('hidden');
+    if(em)em.style.display='';
+    if(st)st.className='status';
+    if(mq)mq.classList.remove('show');
+  });
 }
 
-function set(id,prop,val){const e=document.getElementById(id);if(e)e[prop]=val;}
-function updatePanelText(panel) {
-  const t = MODE_TEXT[MODE][panel];
-  set(panel+'-title','textContent',t.title);
-  set(panel+'-desc','textContent',t.desc);
-  set(panel+'-in-head','textContent',t.inHead);
-  set(panel+'-ib','innerHTML',t.ib);
-  set(panel+'-dz-ico','textContent',t.dzIco);
-  set(panel+'-dz-t','textContent',t.dzT);
-  set(panel+'-pw-badge','textContent',t.pwBadge);
-  set(panel+'-btn-label','textContent',t.btn);
-  set(panel+'-out-head','textContent',t.outHead);
-  set(panel+'-out-badge','textContent',t.outBadge);
-  set(panel+'-dl-label','textContent',t.dl);
-  set(panel+'-em-ico','textContent',t.emIco);
-  set(panel+'-em-text','textContent',t.emTxt);
+function setEl(id,prop,val){const e=document.getElementById(id);if(e)e[prop]=val;}
+function updatePanelText(panel){
+  const t=MODE_TEXT[MODE][panel];
+  setEl(panel+'-title','textContent',t.title);
+  setEl(panel+'-desc','textContent',t.desc);
+  setEl(panel+'-dz-ico','textContent',t.dzIco);
+  setEl(panel+'-dz-t','textContent',t.dzT);
+  setEl(panel+'-pw-badge','textContent',t.pwBadge);
+  setEl(panel+'-btn-label','textContent',t.btn);
+  setEl(panel+'-out-head','textContent',t.outHead);
+  setEl(panel+'-out-badge','textContent',t.outBadge);
+  setEl(panel+'-dl-label','textContent',t.dl);
+  setEl(panel+'-em-ico','textContent',t.emIco);
+  setEl(panel+'-em-text','textContent',t.emTxt);
+  setEl(panel+'-ib','innerHTML',t.ib);
 }
 
-// State — must be declared before any function calls that use it
 const S={rbx:null,old:null,preview:null};
+updatePanelText('rbx');updatePanelText('old');
 
-// Init panel text on load
-updatePanelText('rbx');
-updatePanelText('old');
-
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-//  NAVIGATION
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// ── NAV ──
 const META={
-  'rbx':      {sec:'Roblox → Polytoria',page:'Convert'},
-  'old':      {sec:'Polytoria Upgrade', page:'Old → PT 2.0'},
-  'preview':  {sec:'Tools',page:'Region Preview'},
-  'tools':    {sec:'App', page:'All Tools'},
-  'settings': {sec:'App', page:'Settings'},
-  'about':    {sec:'App', page:'About & Coords'},
+  rbx:{sec:'Roblox → Polytoria',page:'Convert'},
+  old:{sec:'Polytoria Upgrade',page:'Old → PT 2.0'},
+  preview:{sec:'Tools',page:'Region Preview'},
+  tools:{sec:'App',page:'All Tools'},
+  settings:{sec:'App',page:'Settings'},
+  about:{sec:'App',page:'About & Coords'},
 };
-
 function goTo(el,id){
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
   if(el)el.classList.add('active');
@@ -1440,65 +1407,30 @@ function goTo(el,id){
   const panel=document.getElementById('panel-'+id);
   if(panel)panel.classList.add('active');
   const m=META[id]||{sec:'',page:id};
-  const ts=document.getElementById('tb-sec'); if(ts)ts.textContent=m.sec;
-  const tp=document.getElementById('tb-page'); if(tp)tp.textContent=m.page;
+  setEl('tb-sec','textContent',m.sec);
+  setEl('tb-page','textContent',m.page);
 }
 
-function toggleSetting(el,key){
-  el.classList.toggle('on');
-  CFG[key]=el.classList.contains('on');
-}
-function setOpacity(el,v){
-  document.querySelectorAll('[onclick^="setOpacity"]').forEach(b=>b.classList.remove('active'));
-  el.classList.add('active');
-  CFG.overlayOpacity=v;
-}
-
-// STATE — declared earlier, before updatePanelText calls
-
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-//  COORDINATE MAPS
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// PT2 SHIRT — seamless verified
+// ── COORDINATE MAPS ──
 const PT2S={
-  // RIGHT ARM — 7+65=72, 72+66=138, 138+66=204, 204+66=270 ✓
-  RArm_L:{x:7,   y:71, w:65,  h:290},
-  RArm_B:{x:72,  y:71, w:66,  h:290},
-  RArm_R:{x:138, y:71, w:66,  h:290},
-  RArm_F:{x:204, y:71, w:66,  h:290},
-  RArm_Top:{x:204,y:7,  w:66,  h:64},
-  RArm_Bot:{x:204,y:362,w:66,  h:63},
-  // TORSO SHIRT — 350+89=439, 439+146=585, 585+87=672 ✓
-  T_R:  {x:350, y:103,w:89,  h:290},
-  T_F:  {x:439, y:104,w:146, h:289},
-  T_L:  {x:585, y:104,w:87,  h:288},
-  T_Top:{x:439, y:7,  w:146, h:97},
-  T_Bot:{x:439, y:394,w:146, h:94},
-  T_Bk: {x:439, y:519,w:146, h:290}, // TORSO BACK — in shirt section, not pants!
-  // LEFT ARM — 754+66=820, 820+65=885, 885+66=951, 951+67=1018 ✓
-  LArm_F:{x:754, y:71, w:66,  h:290},
-  LArm_L:{x:820, y:71, w:65,  h:290},
-  LArm_B:{x:885, y:71, w:66,  h:290},
-  LArm_R:{x:951, y:71, w:67,  h:290},
-  LArm_Top:{x:754,y:7,  w:66,  h:64},
-  LArm_Bot:{x:754,y:362,w:66,  h:63},
+  RArm_L:{x:7,y:71,w:65,h:290},RArm_B:{x:72,y:71,w:66,h:290},
+  RArm_R:{x:138,y:71,w:66,h:290},RArm_F:{x:204,y:71,w:66,h:290},
+  RArm_Top:{x:204,y:7,w:66,h:64},RArm_Bot:{x:204,y:362,w:66,h:63},
+  T_R:{x:350,y:103,w:89,h:290},T_F:{x:439,y:104,w:146,h:289},
+  T_L:{x:585,y:104,w:87,h:288},T_Top:{x:439,y:7,w:146,h:97},
+  T_Bot:{x:439,y:394,w:146,h:94},T_Bk:{x:439,y:519,w:146,h:290},
+  LArm_F:{x:754,y:71,w:66,h:290},LArm_L:{x:820,y:71,w:65,h:290},
+  LArm_B:{x:885,y:71,w:66,h:290},LArm_R:{x:951,y:71,w:67,h:290},
+  LArm_Top:{x:754,y:7,w:66,h:64},LArm_Bot:{x:754,y:362,w:66,h:63},
 };
-// PT2 PANTS — LEGS ONLY (torso back is in PT2S above, not here!)
 const PT2P={
-  // RIGHT LEG — 14+64=78, 78+64=142, 142+64=206, 206+64=270 ✓
-  RLT:  {x:206, y:597, w:64,  h:64},
-  RL_L: {x:14,  y:661, w:64,  h:292},
-  RL_B: {x:78,  y:661, w:64,  h:292},
-  RL_R: {x:142, y:661, w:64,  h:292},
-  RL_F: {x:206, y:661, w:64,  h:292},
-  RL_Bt:{x:206, y:954, w:64,  h:63},
-  // LEFT LEG — 754+64=818, 818+63=881, 881+65=946, 946+64=1010 ✓
-  LLT:  {x:754, y:597, w:64,  h:64},
-  LL_F: {x:754, y:661, w:64,  h:292},
-  LL_L: {x:818, y:661, w:63,  h:292},
-  LL_B: {x:881, y:661, w:65,  h:292},
-  LL_R: {x:946, y:661, w:64,  h:292},
-  LL_Bt:{x:754, y:954, w:64,  h:63},
+  RLT:{x:206,y:597,w:64,h:64},RL_L:{x:14,y:661,w:64,h:292},
+  RL_B:{x:78,y:661,w:64,h:292},RL_R:{x:142,y:661,w:64,h:292},
+  RL_F:{x:206,y:661,w:64,h:292},RL_Bt:{x:206,y:954,w:64,h:63},
+  LLT:{x:754,y:597,w:64,h:64},LL_F:{x:754,y:661,w:64,h:292},
+  LL_L:{x:818,y:661,w:63,h:292},LL_B:{x:881,y:661,w:65,h:292},
+  LL_R:{x:946,y:661,w:64,h:292},LL_Bt:{x:754,y:954,w:64,h:63},
+  Waist:{x:439,y:519,w:146,h:290},
 };
 const RBXS={
   TF:{x:231,y:74,w:128,h:128},TT:{x:231,y:8,w:128,h:64},TB:{x:231,y:204,w:128,h:64},
@@ -1523,7 +1455,6 @@ const PTOLD={
   RAT:{x:538,y:557,w:102,h:102},RAF:{x:538,y:667,w:102,h:202},RAL:{x:649,y:667,w:102,h:202},
   RABk:{x:759,y:667,w:102,h:202},RAR:{x:870,y:667,w:102,h:202},RAB:{x:538,y:877,w:102,h:102},
 };
-// Old PT pants (approximate positions based on PT old format mirroring shirt structure)
 const PTOLDP={
   Waist:{x:199,y:184,w:202,h:102},
   RLT:{x:538,y:557,w:102,h:102},RLF:{x:538,y:667,w:102,h:202},
@@ -1534,37 +1465,39 @@ const PTOLDP={
   LLR:{x:52,y:667,w:102,h:202},LLBt:{x:382,y:877,w:102,h:102},
 };
 
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-//  FILE HANDLING
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-function dzo(e,el){e.preventDefault();el.classList.add('hover')}
-function dzl(el){el.classList.remove('hover')}
+// ── FILE HANDLING ──
+function dzo(e,el){e.preventDefault();el.classList.add('hover');}
+function dzl(el){el.classList.remove('hover');}
 function dzd(e,panel){e.preventDefault();e.currentTarget.classList.remove('hover');const f=e.dataTransfer.files[0];if(f)pf(f,panel);}
 function lf(e,panel){const f=e.target.files[0];if(f)pf(f,panel);}
 function pf(file,panel){
-  if(panel==='preview'){const r=new FileReader();r.onload=ev=>{const img=new Image();img.onload=()=>{S.preview=img;doPreview(img);};img.src=ev.target.result;};r.readAsDataURL(file);return;}
   const r=new FileReader();
-  r.onload=ev=>{const img=new Image();img.onload=()=>{S[panel]=img;showPrev(img,panel);};img.src=ev.target.result;};
+  r.onload=ev=>{
+    const img=new Image();
+    img.onload=()=>{
+      S[panel]=img;
+      if(panel==='preview'){doPreview(img);return;}
+      showPrev(img,panel);
+    };
+    img.src=ev.target.result;
+  };
   r.readAsDataURL(file);
 }
 function showPrev(img,panel){
-  const wid='pw-'+panel, cid='cv-'+panel, bid='btn-'+panel;
-  const w=document.getElementById(wid);if(!w)return;
-  w.style.display='block';
-  const c=document.getElementById(cid);
+  const pw=document.getElementById('pw-'+panel);
+  if(!pw)return;
+  pw.style.display='block';
+  const c=document.getElementById('cv-'+panel);
   c.width=img.width;c.height=img.height;
   c.getContext('2d').drawImage(img,0,0);
-  document.getElementById(bid).disabled=false;
-  // Auto-convert if setting enabled
+  document.getElementById('btn-'+panel).disabled=false;
   if(CFG.autoConv){
-    if(panel==='rbx') setTimeout(convRbx,100);
-    else if(panel==='old') setTimeout(convOld,100);
+    if(panel==='rbx')setTimeout(convRbx,100);
+    else if(panel==='old')setTimeout(convOld,100);
   }
 }
 
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-//  CANVAS UTILS
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// ── CANVAS UTILS ──
 function cr(src,sx,sy,sw,sh,dctx,dx,dy,dw,dh){
   const t=document.createElement('canvas');t.width=sw;t.height=sh;
   const tc=t.getContext('2d');tc.imageSmoothingEnabled=CFG.smooth;
@@ -1575,109 +1508,107 @@ function cr(src,sx,sy,sw,sh,dctx,dx,dy,dw,dh){
 function mkSrc(img){const c=document.createElement('canvas');c.width=img.width;c.height=img.height;c.getContext('2d').drawImage(img,0,0);return c;}
 function mkOut(w,h){const c=document.createElement('canvas');c.width=w;c.height=h;return c;}
 
-function setSt(id,msg,type='info'){const el=document.getElementById(id);if(!el)return;el.textContent=msg;el.className='st '+type+' show';}
+function setSt(id,msg,type='info'){
+  const el=document.getElementById(id);
+  if(!el)return;
+  el.textContent=msg;el.className='status '+type+' show';
+}
 function showOut(outC,panel,basefname){
-  // Apply background fill
   if(CFG.bgFill&&CFG.bgFill!=='transparent'){
     const bg=mkOut(1024,1024);const bctx=bg.getContext('2d');
     bctx.fillStyle=CFG.bgFill==='black'?'#000':'#fff';
     bctx.fillRect(0,0,1024,1024);bctx.drawImage(outC,0,0);outC=bg;
   }
-  const cvId=`out-${panel}-cv`,secId=`out-${panel}`,emId=`em-${panel}`,dlId=`dl-${panel}`;
-  const el=document.getElementById(cvId);el.width=1024;el.height=1024;el.getContext('2d').drawImage(outC,0,0);
-  const sec=document.getElementById(secId);sec.style.display='block';sec.classList.remove('hidden');
-  if(emId)document.getElementById(emId).style.display='none';
-  const dl=document.getElementById(dlId);
+  const cv=document.getElementById('out-'+panel+'-cv');
+  cv.width=1024;cv.height=1024;cv.getContext('2d').drawImage(outC,0,0);
+  const sec=document.getElementById('out-'+panel);
+  sec.style.display='block';sec.classList.remove('hidden');
+  const em=document.getElementById('em-'+panel);
+  if(em)em.style.display='none';
+  const dl=document.getElementById('dl-'+panel);
   const prefix=document.getElementById('set-prefix')?.value||'polytoria_';
-  const modeStr=CFG.fnameMode?`_${MODE}`:'';
+  const modeStr=CFG.fnameMode?'_'+MODE:'';
   const ext=CFG.outputFmt==='webp'?'webp':'png';
   const fname=prefix+basefname.replace(/\.\w+$/,'')+modeStr+'.'+ext;
   const mime=ext==='webp'?'image/webp':'image/png';
   const url=outC.toDataURL(mime);
   dl.href=url;dl.download=fname;
   if(CFG.autodl){const a=document.createElement('a');a.href=url;a.download=fname;a.click();}
-  convCount++;document.getElementById('conv-count').textContent=convCount;
-  showToast(`✓ ${fname}`);
+  convCount++;
+  document.getElementById('conv-count').textContent=convCount;
+  showToast('✓ '+fname);
+  saveSettings();
 }
 function showCmp(si,oc,panel){
   if(!CFG.cmp)return;
-  const ic=document.getElementById(`cmp-${panel}-i`);
+  const ic=document.getElementById('cmp-'+panel+'-i');
   if(ic){ic.width=si.width;ic.height=si.height;ic.getContext('2d').drawImage(si,0,0);}
-  const oc2=document.getElementById(`cmp-${panel}-o`);
+  const oc2=document.getElementById('cmp-'+panel+'-o');
   if(oc2){oc2.width=1024;oc2.height=1024;oc2.getContext('2d').drawImage(oc,0,0);}
 }
 
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-//  CONVERSIONS — dispatch by MODE
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// ── CONVERSIONS ──
 function applyShirtFromRbx(src,ctx){
   const R=RBXS,P=PT2S,cp=(s,d)=>cr(src,s.x,s.y,s.w,s.h,ctx,d.x,d.y,d.w,d.h);
-  cp(R.TF,P.T_F); cp(R.TR,P.T_R); cp(R.TL,P.T_L);
-  cp(R.TT,P.T_Top); cp(R.TB,P.T_Bot); cp(R.TBk,P.T_Bk); // torso back!
-  cp(R.RAL,P.RArm_L); cp(R.RABk,P.RArm_B); cp(R.RAR,P.RArm_R); cp(R.RAF,P.RArm_F);
-  cp(R.RAT,P.RArm_Top); cp(R.RAB,P.RArm_Bot);
-  cp(R.LAF,P.LArm_F); cp(R.LAL,P.LArm_L); cp(R.LABk,P.LArm_B); cp(R.LAR,P.LArm_R);
-  cp(R.LAT,P.LArm_Top); cp(R.LAB,P.LArm_Bot);
+  cp(R.TF,P.T_F);cp(R.TR,P.T_R);cp(R.TL,P.T_L);
+  cp(R.TT,P.T_Top);cp(R.TB,P.T_Bot);cp(R.TBk,P.T_Bk);
+  cp(R.RAL,P.RArm_L);cp(R.RABk,P.RArm_B);cp(R.RAR,P.RArm_R);cp(R.RAF,P.RArm_F);
+  cp(R.RAT,P.RArm_Top);cp(R.RAB,P.RArm_Bot);
+  cp(R.LAF,P.LArm_F);cp(R.LAL,P.LArm_L);cp(R.LABk,P.LArm_B);cp(R.LAR,P.LArm_R);
+  cp(R.LAT,P.LArm_Top);cp(R.LAB,P.LArm_Bot);
 }
 function applyPantsFromRbx(src,ctx){
-  // Pants = LEGS ONLY. Torso back is in the shirt file.
   const R=RBXP,P=PT2P,cp=(s,d)=>cr(src,s.x,s.y,s.w,s.h,ctx,d.x,d.y,d.w,d.h);
   cp(R.RLT,P.RLT);cp(R.RLF,P.RL_F);cp(R.RLL,P.RL_L);cp(R.RLBk,P.RL_B);cp(R.RLR,P.RL_R);cp(R.RLB,P.RL_Bt);
   cp(R.LLT,P.LLT);cp(R.LLF,P.LL_F);cp(R.LLL,P.LL_L);cp(R.LLBk,P.LL_B);cp(R.LLR,P.LL_R);cp(R.LLB,P.LL_Bt);
 }
 function applyShirtFromOld(src,ctx){
   const O=PTOLD,P=PT2S,cp=(s,d)=>cr(src,s.x,s.y,s.w,s.h,ctx,d.x,d.y,d.w,d.h);
-  cp(O.TF,P.T_F); cp(O.TR,P.T_R); cp(O.TL,P.T_L);
-  cp(O.TT,P.T_Top); cp(O.TB,P.T_Bot); cp(O.TBk,P.T_Bk); // torso back!
-  cp(O.RAL,P.RArm_L); cp(O.RABk,P.RArm_B); cp(O.RAR,P.RArm_R); cp(O.RAF,P.RArm_F);
-  cp(O.RAT,P.RArm_Top); cp(O.RAB,P.RArm_Bot);
-  cp(O.LAF,P.LArm_F); cp(O.LAL,P.LArm_L); cp(O.LABk,P.LArm_B); cp(O.LAR,P.LArm_R);
-  cp(O.LAT,P.LArm_Top); cp(O.LAB,P.LArm_Bot);
+  cp(O.TF,P.T_F);cp(O.TR,P.T_R);cp(O.TL,P.T_L);
+  cp(O.TT,P.T_Top);cp(O.TB,P.T_Bot);cp(O.TBk,P.T_Bk);
+  cp(O.RAL,P.RArm_L);cp(O.RABk,P.RArm_B);cp(O.RAR,P.RArm_R);cp(O.RAF,P.RArm_F);
+  cp(O.RAT,P.RArm_Top);cp(O.RAB,P.RArm_Bot);
+  cp(O.LAF,P.LArm_F);cp(O.LAL,P.LArm_L);cp(O.LABk,P.LArm_B);cp(O.LAR,P.LArm_R);
+  cp(O.LAT,P.LArm_Top);cp(O.LAB,P.LArm_Bot);
 }
 function applyPantsFromOld(src,ctx){
-  // Pants = LEGS ONLY.
   const O=PTOLDP,P=PT2P,cp=(s,d)=>cr(src,s.x,s.y,s.w,s.h,ctx,d.x,d.y,d.w,d.h);
   cp(O.RLT,P.RLT);cp(O.RLF,P.RL_F);cp(O.RLL,P.RL_L);cp(O.RLBk,P.RL_B);cp(O.RLR,P.RL_R);cp(O.RLBt,P.RL_Bt);
   cp(O.LLT,P.LLT);cp(O.LLF,P.LL_F);cp(O.LLL,P.LL_L);cp(O.LLBk,P.LL_B);cp(O.LLR,P.LL_R);cp(O.LLBt,P.LL_Bt);
 }
-
-// Single entry point for RBX converter — dispatches on global MODE
 function convRbx(){
   if(!S.rbx)return;
-  const fname=MODE_TEXT[MODE].rbx.fname;
-  setSt('st-rbx',`⚙ Converting ${MODE}…`,'info');
+  setSt('st-rbx','⚙ Converting '+MODE+'…','info');
   const src=mkSrc(S.rbx),out=mkOut(1024,1024),ctx=out.getContext('2d');
-  if(MODE==='shirt') applyShirtFromRbx(src,ctx);
-  else               applyPantsFromRbx(src,ctx);
-  showOut(out,'rbx',fname);
+  if(MODE==='shirt')applyShirtFromRbx(src,ctx);
+  else applyPantsFromRbx(src,ctx);
+  showOut(out,'rbx',MODE_TEXT[MODE].rbx.fname);
   showCmp(S.rbx,out,'rbx');
-  if(CFG.mq && MODE==='shirt'){const mf=document.getElementById('mq-rbx-f'),mb=document.getElementById('mq-rbx-b'),ms=document.getElementById('mq-rbx');if(mf&&mb){drawMF(mf,out);drawMB(mb,out);}if(ms)ms.classList.add('show');}
-  setSt('st-rbx','✓ Done'+(CFG.autodl?' — downloaded automatically.':' — click download below.'),'ok');
+  if(CFG.mq&&MODE==='shirt'){
+    const mf=document.getElementById('mq-rbx-f');
+    const mb=document.getElementById('mq-rbx-b');
+    const ms=document.getElementById('mq-rbx');
+    if(mf&&mb){drawMF(mf,out);drawMB(mb,out);}
+    if(ms)ms.classList.add('show');
+  }
+  setSt('st-rbx','✓ Done'+(CFG.autodl?' — downloaded automatically.':' — click download above.'),'ok');
 }
-
-// Single entry point for OLD converter — dispatches on global MODE
 function convOld(){
   if(!S.old)return;
-  const fname=MODE_TEXT[MODE].old.fname;
-  setSt('st-old',`⚙ Upgrading ${MODE}…`,'info');
+  setSt('st-old','⚙ Upgrading '+MODE+'…','info');
   const src=mkSrc(S.old),out=mkOut(1024,1024),ctx=out.getContext('2d');
-  if(MODE==='shirt') applyShirtFromOld(src,ctx);
-  else               applyPantsFromOld(src,ctx);
-  showOut(out,'old',fname);
+  if(MODE==='shirt')applyShirtFromOld(src,ctx);
+  else applyPantsFromOld(src,ctx);
+  showOut(out,'old',MODE_TEXT[MODE].old.fname);
   showCmp(S.old,out,'old');
-  setSt('st-old','✓ Done'+(CFG.autodl?' — downloaded automatically.':' — click download below.'),'ok');
+  setSt('st-old','✓ Done'+(CFG.autodl?' — downloaded automatically.':' — click download above.'),'ok');
 }
 
-
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-//  MANNEQUIN RENDERER
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-function canvLbl(ctx,txt,x,y){
-  ctx.fillStyle='rgba(255,255,255,0.16)';ctx.font='7px JetBrains Mono,monospace';ctx.fillText(txt,x,y);
-}
+// ── MANNEQUIN ──
+function canvLbl(ctx,txt,x,y){ctx.fillStyle='rgba(255,255,255,0.14)';ctx.font='7px JetBrains Mono,monospace';ctx.fillText(txt,x,y);}
 function drawMF(canv,tex){
   const ctx=canv.getContext('2d'),W=canv.width,H=canv.height,P=PT2S,PP=PT2P;
-  ctx.fillStyle='#080814';ctx.fillRect(0,0,W,H);
+  ctx.fillStyle='#06060f';ctx.fillRect(0,0,W,H);
   const tX=74,tY=64,tW=108,tH=142,aW=38,aH=142,capH=20;
   const lX=tX+tW+2,rX=tX-aW-2;
   cr(tex,P.T_Top.x,P.T_Top.y,P.T_Top.w,P.T_Top.h,ctx,tX,tY-capH,tW,capH);
@@ -1698,13 +1629,13 @@ function drawMF(canv,tex){
 }
 function drawMB(canv,tex){
   const ctx=canv.getContext('2d'),W=canv.width,H=canv.height,P=PT2S,PP=PT2P;
-  ctx.fillStyle='#080814';ctx.fillRect(0,0,W,H);
+  ctx.fillStyle='#06060f';ctx.fillRect(0,0,W,H);
   const tX=74,tY=64,tW=108,tH=142,aW=38,aH=142;
   const lX=tX+tW+2,rX=tX-aW-2;
-  ctx.fillStyle='rgba(255,60,60,0.06)';ctx.fillRect(tX,tY,tW,tH);
-  ctx.strokeStyle='rgba(255,60,60,0.1)';ctx.lineWidth=1;
+  ctx.fillStyle='rgba(255,50,50,0.05)';ctx.fillRect(tX,tY,tW,tH);
+  ctx.strokeStyle='rgba(255,50,50,0.1)';ctx.lineWidth=1;
   for(let i=-tH;i<tW+tH;i+=12){ctx.beginPath();ctx.moveTo(tX+i,tY);ctx.lineTo(tX+i+tH,tY+tH);ctx.stroke();}
-  ctx.fillStyle='rgba(255,80,80,0.5)';ctx.font='bold 7px JetBrains Mono,monospace';
+  ctx.fillStyle='rgba(255,80,80,0.45)';ctx.font='bold 7px JetBrains Mono,monospace';
   ctx.fillText('no back',tX+8,tY+tH/2-4);ctx.fillText('in PT2',tX+8,tY+tH/2+8);
   cr(tex,P.LArm_B.x,P.LArm_B.y,P.LArm_B.w,P.LArm_B.h,ctx,lX+14,tY,aW-14,aH);
   cr(tex,P.RArm_B.x,P.RArm_B.y,P.RArm_B.w,P.RArm_B.h,ctx,rX,tY,aW-14,aH);
@@ -1718,7 +1649,7 @@ function drawMB(canv,tex){
 }
 function drawMS(canv,tex){
   const ctx=canv.getContext('2d'),W=canv.width,H=canv.height,P=PT2S,PP=PT2P;
-  ctx.fillStyle='#080814';ctx.fillRect(0,0,W,H);
+  ctx.fillStyle='#06060f';ctx.fillRect(0,0,W,H);
   const tX=44,tY=64,tW=62,tH=142,aW=24,aH=142;
   cr(tex,P.T_R.x,P.T_R.y,P.T_R.w,P.T_R.h,ctx,tX,tY,tW,tH);
   cr(tex,P.RArm_R.x,P.RArm_R.y,P.RArm_R.w,P.RArm_R.h,ctx,tX-aW-2,tY,aW,aH);
@@ -1728,9 +1659,7 @@ function drawMS(canv,tex){
   canvLbl(ctx,'LEFT SIDE',5,12);
 }
 
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-//  PREVIEW OVERLAY
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// ── REGION PREVIEW ──
 function doPreview(img){
   document.getElementById('pv-output').style.display='block';
   const tex=document.getElementById('pv-tex');
@@ -1740,55 +1669,40 @@ function doPreview(img){
   const ctx=ov.getContext('2d');ctx.drawImage(img,0,0,1024,1024);
   const op=CFG.overlayOpacity;
   const regs=[
-    // Shirt — Right Arm
-    {r:PT2S.RArm_L,  c:`rgba(240,94,140,`, lb:'RArm-L'},
-    {r:PT2S.RArm_B,  c:`rgba(62,207,207,`,  lb:'RArm-B'},
-    {r:PT2S.RArm_R,  c:`rgba(176,124,252,`, lb:'RArm-R'},
-    {r:PT2S.RArm_F,  c:`rgba(62,207,142,`,  lb:'RArm-F'},
-    {r:PT2S.RArm_Top,c:`rgba(240,208,62,`,  lb:'RArm-Top'},
-    {r:PT2S.RArm_Bot,c:`rgba(200,120,64,`,  lb:'RArm-Bot'},
-    // Shirt — Torso
-    {r:PT2S.T_R,     c:`rgba(176,124,252,`, lb:'Torso-R'},
-    {r:PT2S.T_F,     c:`rgba(62,207,142,`,  lb:'Torso-F'},
-    {r:PT2S.T_L,     c:`rgba(240,94,140,`,  lb:'Torso-L'},
-    {r:PT2S.T_Top,   c:`rgba(240,208,62,`,  lb:'Torso-Top'},
-    {r:PT2S.T_Bot,   c:`rgba(200,120,64,`,  lb:'Torso-Bot'},
-    // Shirt — Left Arm
-    {r:PT2S.LArm_F,  c:`rgba(62,207,142,`,  lb:'LArm-F'},
-    {r:PT2S.LArm_L,  c:`rgba(240,94,140,`,  lb:'LArm-L'},
-    {r:PT2S.LArm_B,  c:`rgba(62,207,207,`,  lb:'LArm-B'},
-    {r:PT2S.LArm_R,  c:`rgba(176,124,252,`, lb:'LArm-R'},
-    {r:PT2S.LArm_Top,c:`rgba(240,208,62,`,  lb:'LArm-Top'},
-    {r:PT2S.LArm_Bot,c:`rgba(200,120,64,`,  lb:'LArm-Bot'},
-    // Pants — Right Leg (all 4 faces + caps)
-    {r:PT2P.RL_L,    c:`rgba(240,94,140,`,  lb:'RLeg-L'},
-    {r:PT2P.RL_B,    c:`rgba(62,207,207,`,  lb:'RLeg-B'},
-    {r:PT2P.RL_R,    c:`rgba(176,124,252,`, lb:'RLeg-R'},
-    {r:PT2P.RL_F,    c:`rgba(62,207,142,`,  lb:'RLeg-F'},
-    {r:PT2P.RLT,     c:`rgba(240,208,62,`,  lb:'RLeg-Top'},
-    {r:PT2P.RL_Bt,   c:`rgba(200,120,64,`,  lb:'RLeg-Bot'},
-    // Pants — Waist
-    {r:PT2P.Waist,   c:`rgba(100,180,255,`,  lb:'Waist'},
-    // Pants — Left Leg (all 4 faces + caps)
-    {r:PT2P.LL_F,    c:`rgba(62,207,142,`,  lb:'LLeg-F'},
-    {r:PT2P.LL_L,    c:`rgba(240,94,140,`,  lb:'LLeg-L'},
-    {r:PT2P.LL_B,    c:`rgba(62,207,207,`,  lb:'LLeg-B'},
-    {r:PT2P.LL_R,    c:`rgba(176,124,252,`, lb:'LLeg-R'},
-    {r:PT2P.LLT,     c:`rgba(240,208,62,`,  lb:'LLeg-Top'},
-    {r:PT2P.LL_Bt,   c:`rgba(200,120,64,`,  lb:'LLeg-Bot'},
+    {r:PT2S.RArm_L,c:'rgba(240,94,140,',lb:'RArm-L'},{r:PT2S.RArm_B,c:'rgba(62,207,207,',lb:'RArm-B'},
+    {r:PT2S.RArm_R,c:'rgba(176,124,252,',lb:'RArm-R'},{r:PT2S.RArm_F,c:'rgba(62,207,142,',lb:'RArm-F'},
+    {r:PT2S.RArm_Top,c:'rgba(240,208,62,',lb:'RArm-Top'},{r:PT2S.RArm_Bot,c:'rgba(200,120,64,',lb:'RArm-Bot'},
+    {r:PT2S.T_R,c:'rgba(176,124,252,',lb:'Torso-R'},{r:PT2S.T_F,c:'rgba(62,207,142,',lb:'Torso-F'},
+    {r:PT2S.T_L,c:'rgba(240,94,140,',lb:'Torso-L'},{r:PT2S.T_Top,c:'rgba(240,208,62,',lb:'Torso-Top'},
+    {r:PT2S.T_Bot,c:'rgba(200,120,64,',lb:'Torso-Bot'},
+    {r:PT2S.LArm_F,c:'rgba(62,207,142,',lb:'LArm-F'},{r:PT2S.LArm_L,c:'rgba(240,94,140,',lb:'LArm-L'},
+    {r:PT2S.LArm_B,c:'rgba(62,207,207,',lb:'LArm-B'},{r:PT2S.LArm_R,c:'rgba(176,124,252,',lb:'LArm-R'},
+    {r:PT2S.LArm_Top,c:'rgba(240,208,62,',lb:'LArm-Top'},{r:PT2S.LArm_Bot,c:'rgba(200,120,64,',lb:'LArm-Bot'},
+    {r:PT2P.RL_L,c:'rgba(240,94,140,',lb:'RLeg-L'},{r:PT2P.RL_B,c:'rgba(62,207,207,',lb:'RLeg-B'},
+    {r:PT2P.RL_R,c:'rgba(176,124,252,',lb:'RLeg-R'},{r:PT2P.RL_F,c:'rgba(62,207,142,',lb:'RLeg-F'},
+    {r:PT2P.RLT,c:'rgba(240,208,62,',lb:'RLeg-Top'},{r:PT2P.RL_Bt,c:'rgba(200,120,64,',lb:'RLeg-Bot'},
+    {r:PT2P.Waist,c:'rgba(100,180,255,',lb:'Waist'},
+    {r:PT2P.LL_F,c:'rgba(62,207,142,',lb:'LLeg-F'},{r:PT2P.LL_L,c:'rgba(240,94,140,',lb:'LLeg-L'},
+    {r:PT2P.LL_B,c:'rgba(62,207,207,',lb:'LLeg-B'},{r:PT2P.LL_R,c:'rgba(176,124,252,',lb:'LLeg-R'},
+    {r:PT2P.LLT,c:'rgba(240,208,62,',lb:'LLeg-Top'},{r:PT2P.LL_Bt,c:'rgba(200,120,64,',lb:'LLeg-Bot'},
   ];
   regs.forEach(({r,c,lb})=>{
     ctx.fillStyle=c+op+')';ctx.fillRect(r.x,r.y,r.w,r.h);
     ctx.strokeStyle=c+'0.9)';ctx.lineWidth=2;ctx.strokeRect(r.x+1,r.y+1,r.w-2,r.h-2);
-    const tw=lb.length*7+6;
-    if(CFG.ovLabels){ctx.fillStyle='rgba(0,0,0,0.8)';ctx.fillRect(r.x+2,r.y+2,tw,17);ctx.fillStyle='#fff';ctx.font='bold 10px JetBrains Mono,monospace';ctx.fillText(lb,r.x+4,r.y+14);}
+    if(CFG.ovLabels){
+      const tw=lb.length*7+6;
+      ctx.fillStyle='rgba(0,0,0,0.8)';ctx.fillRect(r.x+2,r.y+2,tw,17);
+      ctx.fillStyle='#fff';ctx.font='bold 10px JetBrains Mono,monospace';ctx.fillText(lb,r.x+4,r.y+14);
+    }
   });
-  const tc=document.createElement('canvas');tc.width=1024;tc.height=1024;
-  tc.getContext('2d').drawImage(img,0,0,1024,1024);
+  const tc=mkSrc(img);
   drawMF(document.getElementById('pv-f'),tc);
   drawMB(document.getElementById('pv-b'),tc);
   drawMS(document.getElementById('pv-s'),tc);
 }
+
+// ── INIT ──
+loadSettings();
 </script>
 </body>
 </html>
