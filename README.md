@@ -1,6 +1,6 @@
 # 🧥 PT Clothing Converter
 
-> ✋ **Quick read if u want before use the converter, takes 30 seconds.**
+> ✋ **Quick read if u want before using the converter, takes 30 seconds.**
 
 I didn't want to gatekeep this. Polytoria clothing conversion should be free and accessible to everyone so here it is. No installs. Open the file, use it in browser, done.
 
@@ -31,6 +31,24 @@ I didn't want to gatekeep this. Polytoria clothing conversion should be free and
 
 ---
 
+## 📥 How to Download Roblox Clothing Templates
+
+> You need the raw template PNG from Roblox before you can convert anything. Here's how to get it.
+
+The easiest way is using **[thecsdev Roblox Tools](https://thecsdev.com/tool/roblox-tools/)** — a free browser tool that lets you grab the template image straight from any Roblox clothing item.
+
+### Step by step
+
+1. Find the shirt or pants you want on the [Roblox catalog](https://www.roblox.com/catalog) or someone's avatar
+2. Copy the item's URL — it'll look like `https://www.roblox.com/catalog/12345678/...`
+3. Go to **[thecsdev.com/tool/roblox-tools](https://thecsdev.com/tool/roblox-tools/)**
+4. Paste the item URL or asset ID into the tool
+5. Download the template PNG — this is the file you'll drop into the converter
+
+> 💡 The downloaded file will be the raw 585×559 Roblox template. That's exactly what this converter expects.
+
+---
+
 ## 🚀 How to Use
 
 ### Roblox → Polytoria 2.0
@@ -40,6 +58,8 @@ I didn't want to gatekeep this. Polytoria clothing conversion should be free and
 3. Drop your Roblox template onto the drop zone (or click to browse)
 4. Hit **Convert** — output appears on the right instantly
 5. Download the file, or let auto-download handle it automatically
+
+> 💡 You can load a new file at any time without refreshing — just drop another image onto the drop zone.
 
 <img width="2559" height="1350" alt="Screenshot 2026-03-31 021411" src="https://github.com/user-attachments/assets/b2714553-632b-4585-8cbe-51c92279312d" />
 
@@ -77,7 +97,7 @@ Open the ⚙ menu in the top right. A few things you'll want to configure:
 
 ## ⚠️ Known Limitations
 
-- **No torso back in PT 2.0 shirts** this is a Polytoria format limitation, not something the converter can fix
+- **No torso back in PT 2.0 shirts** — this is a Polytoria format limitation, not something the converter can fix
 - **Old PT templates use a compact cross layout** — the upgrader remaps this automatically, no prep needed
 
 ---
@@ -88,4 +108,4 @@ If this tool saved you time, showing some support genuinely means a lot. 💜
 
 ### 👉 [Subscribe on YouTube — @scoofyx](https://www.youtube.com/@scoofyx) 🔔
 
-Some unrelated content but i might make videos abt polytoria too
+Some unrelated content but I might make videos about Polytoria too — subscribe so you don't miss it.
