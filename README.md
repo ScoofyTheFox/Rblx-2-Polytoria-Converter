@@ -1,11 +1,10 @@
 # 🧥 PT Clothing Converter
 
-> ✋ **Quick read before you dive in — takes 30 seconds, saves a lot of headache.**
+> ✋ **Quick read if u want before use the converter, takes 30 seconds.**
 
-I didn't want to gatekeep this. Polytoria clothing conversion should be free and accessible to everyone — so here it is. No installs, no accounts, no BS. Open the file, use it, done.
+I didn't want to gatekeep this. Polytoria clothing conversion should be free and accessible to everyone so here it is. No installs. Open the file, use it in browser, done.
 
-![PT Clothing Converter UI](SCREENSHOT_main_ui.png)
-> 📸 *Replace with a screenshot of the full app*
+<img width="2559" height="1349" alt="Screenshot 2026-03-31 020714" src="https://github.com/user-attachments/assets/04576521-7432-4772-bfd4-aafd26c5c7a0" />
 
 ---
 
@@ -42,8 +41,7 @@ I didn't want to gatekeep this. Polytoria clothing conversion should be free and
 4. Hit **Convert** — output appears on the right instantly
 5. Download the file, or let auto-download handle it automatically
 
-![Roblox conversion example](SCREENSHOT_rbx_convert.png)
-> 📸 *Replace with a before/after screenshot of a Roblox shirt being converted*
+<img width="2559" height="1350" alt="Screenshot 2026-03-31 021411" src="https://github.com/user-attachments/assets/b2714553-632b-4585-8cbe-51c92279312d" />
 
 ### Old Polytoria → PT 2.0
 
@@ -57,8 +55,7 @@ I didn't want to gatekeep this. Polytoria clothing conversion should be free and
 2. Drop any PT 2.0 template
 3. See a full color-coded overlay + front, back, and side mannequin views
 
-![Region preview overlay](SCREENSHOT_region_preview.png)
-> 📸 *Replace with a screenshot of the region overlay*
+<img width="2559" height="1348" alt="Screenshot 2026-03-31 021512" src="https://github.com/user-attachments/assets/e36cddd3-d467-4eb1-ae75-34e14ad05660" />
 
 ---
 
@@ -80,7 +77,7 @@ Open the ⚙ menu in the top right. A few things you'll want to configure:
 
 ## ⚠️ Known Limitations
 
-- **No torso back in PT 2.0 shirts** — this is a Polytoria format limitation, not something the converter can fix
+- **No torso back in PT 2.0 shirts** this is a Polytoria format limitation, not something the converter can fix
 - **Old PT templates use a compact cross layout** — the upgrader remaps this automatically, no prep needed
 
 ---
@@ -91,4 +88,4 @@ If this tool saved you time, showing some support genuinely means a lot. 💜
 
 ### 👉 [Subscribe on YouTube — @scoofyx](https://www.youtube.com/@scoofyx) 🔔
 
-Polytoria tutorials, content, and more. Hit the bell so you don't miss anything.
+Some unrelated content but i might make videos abt polytoria too
