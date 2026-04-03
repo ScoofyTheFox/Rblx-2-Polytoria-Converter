@@ -1,785 +1,763 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PT Clothing Converter</title>
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<title>PT Clothing Converter · Scoofy™</title>
+<!--
+╔══════════════════════════════════════════════════════════╗
+║  ⚙️  EASY SETTINGS                                       ║
+╠══════════════════════════════════════════════════════════╣
+║  APP_TITLE       display name                            ║
+║  APP_VERSION     version string                          ║
+║  APP_AUTHOR      credit name                             ║
+║  APP_AUTHOR_URL  credit link                             ║
+╚══════════════════════════════════════════════════════════╝
+-->
+<script>
+const APP_TITLE      = 'PT Clothing Converter';
+const APP_VERSION    = 'v3.3';
+const APP_AUTHOR     = '@scoofyx';
+const APP_AUTHOR_URL = 'https://www.youtube.com/@scoofyx';
+</script>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
-:root {
-  --c1: #5b8dee;
-  --c2: #a78bfa;
-  --c3: #06d6a0;
-  --err: #f94144;
-  --warn: #ffd166;
-  --bg: #06060f;
-  --bg2: #0c0c1a;
-  --glass: rgba(255,255,255,0.04);
-  --glass2: rgba(255,255,255,0.075);
-  --border: rgba(255,255,255,0.08);
-  --border2: rgba(255,255,255,0.14);
-  --text: #eeeeff;
-  --sub: #8888aa;
-  --muted: #44445a;
-  --r: 10px;
-  --blur: saturate(160%) blur(22px);
-  --sbw: 210px;
+/* ══════════════════════════════════════
+   THEME TOKENS
+══════════════════════════════════════ */
+:root{
+  --r:12px;--r2:8px;--r3:20px;
+  --blur:saturate(180%) blur(24px);
+  --blur2:saturate(160%) blur(14px);
+  --sbw:216px;
+  --trans:.18s cubic-bezier(.4,0,.2,1);
 }
+[data-theme="dark"]{
+  --bg:#040c18;--bg2:#060f20;--bg3:#0a1630;
+  --glass:rgba(10,30,60,0.55);--glass2:rgba(20,50,90,0.65);
+  --glass3:rgba(30,70,120,0.5);
+  --border:rgba(80,180,255,0.10);--border2:rgba(80,180,255,0.22);
+  --glow:rgba(0,180,255,0.18);--glow2:rgba(0,180,255,0.35);
+  --text:#d8eeff;--sub:#4a7fa0;--muted:#1e3a55;
+  --c1:#00b4ff;--c2:#8b5cf6;--c3:#00d4a0;
+  --warn:#ffd166;--err:#ff4466;
+  --sh1:rgba(0,180,255,0.25);--sh2:rgba(139,92,246,0.2);--sh3:rgba(0,212,160,0.2);
+  --shine:rgba(255,255,255,0.07);--shine2:rgba(255,255,255,0.12);
+  --noise:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  --orb1:radial-gradient(ellipse 60% 55% at 12% 18%,rgba(0,120,255,0.14) 0%,transparent 65%);
+  --orb2:radial-gradient(ellipse 50% 40% at 88% 82%,rgba(139,92,246,0.12) 0%,transparent 60%);
+  --orb3:radial-gradient(ellipse 35% 28% at 50% 48%,rgba(0,212,160,0.06) 0%,transparent 60%);
+  --grid:linear-gradient(rgba(0,180,255,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,180,255,0.025) 1px,transparent 1px);
+}
+[data-theme="light"]{
+  --bg:#c8dff5;--bg2:#daeaf8;--bg3:#edf5fd;
+  --glass:rgba(255,255,255,0.55);--glass2:rgba(255,255,255,0.72);
+  --glass3:rgba(255,255,255,0.88);
+  --border:rgba(0,120,200,0.14);--border2:rgba(0,120,200,0.28);
+  --glow:rgba(0,120,200,0.12);--glow2:rgba(0,120,200,0.25);
+  --text:#092040;--sub:#2a6090;--muted:#90b8d8;
+  --c1:#0080c8;--c2:#5b21b6;--c3:#059669;
+  --warn:#d97706;--err:#dc2626;
+  --sh1:rgba(0,128,200,0.2);--sh2:rgba(91,33,182,0.15);--sh3:rgba(5,150,105,0.15);
+  --shine:rgba(255,255,255,0.55);--shine2:rgba(255,255,255,0.8);
+  --noise:none;
+  --orb1:radial-gradient(ellipse 65% 55% at 15% 20%,rgba(255,255,255,0.7) 0%,transparent 65%);
+  --orb2:radial-gradient(ellipse 50% 40% at 85% 80%,rgba(200,230,255,0.6) 0%,transparent 60%);
+  --orb3:radial-gradient(ellipse 40% 35% at 55% 45%,rgba(210,245,255,0.5) 0%,transparent 60%);
+  --grid:linear-gradient(rgba(0,100,200,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(0,100,200,0.04) 1px,transparent 1px);
+}
+
+/* ══════════════════════════════════════
+   BASE
+══════════════════════════════════════ */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 html,body{height:100%;overflow:hidden;-webkit-font-smoothing:antialiased;}
-
-/* ── CUSTOM CURSOR ── */
-*{cursor:none!important;}
-#cur{
-  position:fixed;width:10px;height:10px;border-radius:50%;
-  background:var(--c1);pointer-events:none;z-index:99999;
-  transform:translate(-50%,-50%);
-  transition:width 0.12s,height 0.12s,background 0.12s,opacity 0.12s;
-  mix-blend-mode:screen;
-}
-#cur-ring{
-  position:fixed;width:28px;height:28px;border-radius:50%;
-  border:1.5px solid rgba(91,141,238,0.5);pointer-events:none;z-index:99998;
-  transform:translate(-50%,-50%);
-  transition:width 0.18s cubic-bezier(.4,0,.2,1),height 0.18s cubic-bezier(.4,0,.2,1),
-             left 0.07s linear,top 0.07s linear,border-color 0.15s;
-}
-body:has(button:hover) #cur,
-body:has(a:hover) #cur,
-body:has(.nav-btn:hover) #cur,
-body:has(.dz:hover) #cur { width:16px;height:16px;background:var(--c2); }
-body:has(button:hover) #cur-ring,
-body:has(a:hover) #cur-ring { width:40px;height:40px;border-color:rgba(167,139,250,0.6); }
-
 body{
-  font-family:'Space Grotesk',sans-serif;
-  font-size:13px;color:var(--text);
-  background:var(--bg);
-  display:flex;
+  font-family:'Space Grotesk',sans-serif;font-size:13px;
+  color:var(--text);background:var(--bg);display:flex;
+  transition:background var(--trans),color var(--trans);
 }
 
-/* ── BG ── */
-.checker{background:repeating-conic-gradient(#1a1a28 0% 25%,#0d0d1c 0% 50%) 0 0/16px 16px!important;}
-
-.bg-blobs::before{
+/* ══════════════════════════════════════
+   BACKGROUND CANVAS
+══════════════════════════════════════ */
+.bg-wrap{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
+.bg-wrap::before{
   content:'';position:absolute;inset:0;
-  background:
-    radial-gradient(ellipse 60% 50% at 8% 15%,rgba(91,141,238,0.12) 0%,transparent 65%),
-    radial-gradient(ellipse 50% 40% at 92% 85%,rgba(167,139,250,0.10) 0%,transparent 60%),
-    radial-gradient(ellipse 40% 30% at 50% 50%,rgba(6,214,160,0.04) 0%,transparent 65%);
+  background:var(--orb1),var(--orb2),var(--orb3);
+  transition:background var(--trans);
 }
-.bg-blobs::after{
+.bg-wrap::after{
   content:'';position:absolute;inset:0;
-  background-image:
-    linear-gradient(rgba(255,255,255,0.01) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(255,255,255,0.01) 1px,transparent 1px);
-  background-size:48px 48px;
+  background-image:var(--grid),var(--noise);
+  background-size:52px 52px,200px 200px;
+  opacity:1;
+}
+/* Frutiger Aero floating bubbles */
+.bubble{
+  position:absolute;border-radius:50%;pointer-events:none;
+  background:radial-gradient(circle at 35% 35%,var(--shine2) 0%,var(--glass) 50%,transparent 75%);
+  border:1px solid var(--border2);
+  animation:floatBubble 18s ease-in-out infinite;
+}
+.bubble:nth-child(1){width:220px;height:220px;top:8%;left:5%;animation-delay:0s;opacity:.35;}
+.bubble:nth-child(2){width:140px;height:140px;top:55%;right:8%;animation-delay:-6s;opacity:.25;}
+.bubble:nth-child(3){width:80px;height:80px;top:30%;right:22%;animation-delay:-12s;opacity:.2;}
+@keyframes floatBubble{
+  0%,100%{transform:translateY(0) scale(1);}
+  33%{transform:translateY(-18px) scale(1.03);}
+  66%{transform:translateY(10px) scale(0.97);}
 }
 
-/* ══════════════════════════════════
-   SPLASH / START MENU
-══════════════════════════════════ */
+/* ══════════════════════════════════════
+   SPLASH
+══════════════════════════════════════ */
 #splash{
   position:fixed;inset:0;z-index:1000;
   display:flex;align-items:center;justify-content:center;
-  background:var(--bg);
+  background:var(--bg);transition:background var(--trans);
 }
 #splash::before{
   content:'';position:absolute;inset:0;
-  background:
-    radial-gradient(ellipse 70% 60% at 30% 30%,rgba(91,141,238,0.15) 0%,transparent 60%),
-    radial-gradient(ellipse 60% 50% at 75% 75%,rgba(167,139,250,0.12) 0%,transparent 60%);
-  pointer-events:none;
+  background:var(--orb1),var(--orb2);pointer-events:none;
 }
 .splash-box{
-  position:relative;
-  background:rgba(12,12,26,0.75);
-  backdrop-filter:var(--blur);
-  border:1px solid var(--border2);
-  border-radius:20px;
-  padding:48px 52px 44px;
-  text-align:center;
-  max-width:420px;width:90%;
-  box-shadow:
-    0 0 0 1px rgba(91,141,238,0.08),
-    0 40px 80px rgba(0,0,0,0.6),
-    inset 0 1px 0 rgba(255,255,255,0.08),
-    inset 0 0 60px rgba(91,141,238,0.03);
-  animation:splashIn 0.5s cubic-bezier(.4,0,.2,1) both;
+  position:relative;max-width:440px;width:92%;
+  background:var(--glass2);backdrop-filter:var(--blur);
+  border:1px solid var(--border2);border-radius:var(--r3);
+  padding:52px 48px 44px;text-align:center;
+  box-shadow:0 0 0 1px var(--border),0 40px 80px rgba(0,0,0,0.45),
+    inset 0 1px 0 var(--shine2),0 0 60px var(--glow);
+  animation:splashIn .5s cubic-bezier(.4,0,.2,1) both;
 }
-@keyframes splashIn{
-  from{opacity:0;transform:translateY(18px) scale(0.97);}
-  to{opacity:1;transform:translateY(0) scale(1);}
-}
+@keyframes splashIn{from{opacity:0;transform:translateY(22px) scale(.96);}to{opacity:1;transform:none;}}
 .splash-box::before{
-  content:'';position:absolute;top:0;left:20%;right:20%;height:1px;
-  background:linear-gradient(90deg,transparent,rgba(91,141,238,0.6),rgba(167,139,250,0.6),transparent);
-  border-radius:1px;
+  content:'';position:absolute;top:0;left:15%;right:15%;height:1px;
+  background:linear-gradient(90deg,transparent,var(--c1),var(--c2),transparent);
 }
-.splash-icon{
-  font-size:3.2rem;margin-bottom:18px;display:block;
-  filter:drop-shadow(0 0 18px rgba(91,141,238,0.5));
-  animation:float 3s ease-in-out infinite;
+/* Glossy top shine */
+.splash-box::after{
+  content:'';position:absolute;top:0;left:0;right:0;height:45%;
+  background:linear-gradient(180deg,var(--shine2) 0%,transparent 100%);
+  border-radius:var(--r3) var(--r3) 0 0;pointer-events:none;
 }
-@keyframes float{
-  0%,100%{transform:translateY(0);}
-  50%{transform:translateY(-6px);}
-}
+.splash-icon{font-size:3.4rem;display:block;margin-bottom:20px;filter:drop-shadow(0 0 20px var(--sh1));animation:float 3.5s ease-in-out infinite;}
+@keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-8px);}}
 .splash-title{
-  font-size:1.75rem;font-weight:700;letter-spacing:-0.5px;
-  margin-bottom:6px;
-  background:linear-gradient(135deg,#fff 30%,var(--c2));
+  font-size:1.9rem;font-weight:700;letter-spacing:-0.8px;margin-bottom:4px;
+  background:linear-gradient(135deg,var(--text) 30%,var(--c1) 70%,var(--c2));
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;
 }
-.splash-by{
-  font-size:0.72rem;color:var(--sub);font-family:'JetBrains Mono',monospace;
-  margin-bottom:5px;letter-spacing:0.3px;
-}
+.splash-by{font-size:0.7rem;color:var(--sub);font-family:'JetBrains Mono',monospace;margin-bottom:4px;}
 .splash-by a{color:var(--c1);text-decoration:none;}
 .splash-by a:hover{color:var(--c2);}
-.splash-desc{
-  font-size:0.82rem;color:var(--sub);line-height:1.65;
-  margin:16px 0 28px;font-family:'JetBrains Mono',monospace;
-}
-.splash-desc strong{color:var(--text);font-weight:600;}
+.splash-desc{font-size:0.82rem;color:var(--sub);line-height:1.65;margin:16px 0 28px;font-family:'JetBrains Mono',monospace;}
+.splash-desc strong{color:var(--text);}
 .splash-start{
-  width:100%;padding:13px;border:none;border-radius:10px;
+  width:100%;padding:14px;border:none;border-radius:var(--r);
   background:linear-gradient(135deg,var(--c1),var(--c2));
-  color:#fff;font-family:'Space Grotesk',sans-serif;
-  font-size:0.95rem;font-weight:700;letter-spacing:0.2px;
-  cursor:pointer;
-  box-shadow:0 4px 24px rgba(91,141,238,0.4),inset 0 1px 0 rgba(255,255,255,0.15);
-  transition:transform 0.12s,box-shadow 0.12s,opacity 0.12s;
-  position:relative;overflow:hidden;
+  color:#fff;font-family:'Space Grotesk',sans-serif;font-size:0.96rem;font-weight:700;
+  cursor:pointer;position:relative;overflow:hidden;
+  box-shadow:0 4px 24px var(--sh1),0 0 0 1px rgba(255,255,255,0.1) inset;
+  transition:transform var(--trans),box-shadow var(--trans);
 }
 .splash-start::before{
-  content:'';position:absolute;inset:0;
-  background:linear-gradient(135deg,rgba(255,255,255,0.15),transparent);
-  pointer-events:none;
+  content:'';position:absolute;top:0;left:0;right:0;height:50%;
+  background:linear-gradient(180deg,rgba(255,255,255,0.22) 0%,transparent 100%);pointer-events:none;
 }
-.splash-start:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(91,141,238,0.5),inset 0 1px 0 rgba(255,255,255,0.15);}
-.splash-start:active{transform:scale(0.98);}
-.splash-note{
-  margin-top:14px;font-size:0.62rem;color:var(--muted);
-  font-family:'JetBrains Mono',monospace;letter-spacing:0.3px;
-}
+.splash-start:hover{transform:translateY(-2px);box-shadow:0 8px 32px var(--sh1),inset 0 1px 0 rgba(255,255,255,0.2);}
+.splash-start:active{transform:scale(.98);}
+.splash-note{margin-top:14px;font-size:0.62rem;color:var(--muted);font-family:'JetBrains Mono',monospace;}
 .splash-note a{color:var(--c1);text-decoration:none;}
-#splash.out{animation:splashOut 0.35s cubic-bezier(.4,0,.2,1) both;}
-@keyframes splashOut{
-  from{opacity:1;transform:scale(1);}
-  to{opacity:0;transform:scale(1.04);}
+.splash-brand{
+  position:absolute;bottom:14px;left:0;right:0;text-align:center;
+  font-size:0.55rem;font-family:'JetBrains Mono',monospace;
+  color:var(--muted);letter-spacing:1px;
 }
+#splash.out{animation:splashOut .3s cubic-bezier(.4,0,.2,1) both;}
+@keyframes splashOut{to{opacity:0;transform:scale(1.04);}}
 
-/* ══════════════════════════════════
+/* ══════════════════════════════════════
    APP LAYOUT
-══════════════════════════════════ */
-.app{
-  display:flex;width:100%;height:100vh;
-  position:relative;z-index:5;
-  opacity:0;pointer-events:none;
-  transition:opacity 0.3s 0.1s;
-}
+══════════════════════════════════════ */
+.app{display:flex;width:100%;height:100vh;position:relative;z-index:5;opacity:0;pointer-events:none;transition:opacity .3s .1s;}
 .app.visible{opacity:1;pointer-events:all;}
 
-/* ── SIDEBAR ── */
+/* ══════════════════════════════════════
+   SIDEBAR
+══════════════════════════════════════ */
 .sidebar{
   width:var(--sbw);min-width:var(--sbw);height:100vh;
   position:relative;z-index:10;
   display:flex;flex-direction:column;
-  background:rgba(6,6,15,0.9);
-  backdrop-filter:var(--blur);
-  border-right:1px solid var(--border);
-  flex-shrink:0;overflow:hidden;
+  background:var(--glass);backdrop-filter:var(--blur);
+  border-right:1px solid var(--border);flex-shrink:0;overflow:hidden;
+  transition:width var(--trans),min-width var(--trans),background var(--trans);
 }
 .sidebar::after{
   content:'';position:absolute;top:0;left:0;right:0;height:1px;
-  background:linear-gradient(90deg,transparent,var(--c1) 35%,var(--c2) 65%,transparent);
-  opacity:0.45;
+  background:linear-gradient(90deg,transparent,var(--c1) 40%,var(--c2) 60%,transparent);
+  opacity:.5;
 }
+/* glossy sidebar shine */
+.sidebar::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:40%;
+  background:linear-gradient(180deg,var(--shine) 0%,transparent 100%);
+  pointer-events:none;z-index:0;
+}
+.sidebar.collapsed{width:50px;min-width:50px;}
+.sidebar.collapsed .sb-name,.sidebar.collapsed .sb-ver,
+.sidebar.collapsed .nav-lbl,.sidebar.collapsed .nav-tag,
+.sidebar.collapsed .nb-text,.sidebar.collapsed .sb-divider,
+.sidebar.collapsed .sb-foot,.sidebar.collapsed .sb-brand{display:none;}
+.sidebar.collapsed .sb-head{padding:10px 7px;display:flex;justify-content:center;}
+.sidebar.collapsed .sb-logo-row{justify-content:center;}
+.sidebar.collapsed .nav-btn{justify-content:center;padding:8px 0;}
+.sidebar.collapsed .nav-scroll{padding:6px 5px;}
+.sb-toggle{
+  position:absolute;top:16px;right:-14px;z-index:20;
+  width:28px;height:28px;border-radius:50%;
+  background:var(--glass2);backdrop-filter:var(--blur2);
+  border:1px solid var(--border2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;color:var(--sub);cursor:pointer;
+  transition:background var(--trans),color var(--trans),transform var(--trans);
+  box-shadow:0 2px 12px rgba(0,0,0,.35);
+}
+.sb-toggle:hover{background:var(--glass3);color:var(--text);}
+.sidebar.collapsed .sb-toggle{transform:rotate(180deg);}
 .sb-head{
-  padding:16px 13px 13px;
-  border-bottom:1px solid var(--border);
+  padding:18px 14px 14px;border-bottom:1px solid var(--border);
+  position:relative;z-index:1;
 }
 .sb-logo-row{display:flex;align-items:center;gap:10px;}
 .sb-logo{
-  width:32px;height:32px;border-radius:8px;flex-shrink:0;
+  width:34px;height:34px;border-radius:10px;flex-shrink:0;
   background:linear-gradient(135deg,var(--c1),var(--c2));
-  display:flex;align-items:center;justify-content:center;font-size:15px;
-  box-shadow:0 0 16px rgba(91,141,238,0.5),0 4px 8px rgba(0,0,0,0.4);
+  display:flex;align-items:center;justify-content:center;font-size:16px;
+  box-shadow:0 0 18px var(--sh1),0 4px 10px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,0.25);
+  position:relative;overflow:hidden;
 }
-.sb-name{
-  font-weight:700;font-size:0.82rem;letter-spacing:-0.2px;
-  background:linear-gradient(90deg,#fff,var(--sub));
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
-}
-.sb-ver{font-size:0.56rem;color:var(--muted);font-family:'JetBrains Mono',monospace;margin-top:1px;}
-
-.nav-scroll{flex:1;overflow-y:auto;padding:7px 6px;scrollbar-width:none;}
+.sb-logo::before{content:'';position:absolute;top:0;left:0;right:0;height:50%;background:linear-gradient(180deg,rgba(255,255,255,0.25),transparent);border-radius:10px 10px 0 0;}
+.sb-name{font-weight:700;font-size:0.83rem;letter-spacing:-.2px;
+  background:linear-gradient(90deg,var(--text),var(--sub));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.sb-ver{font-size:0.55rem;color:var(--muted);font-family:'JetBrains Mono',monospace;margin-top:1px;letter-spacing:.3px;}
+.nav-scroll{flex:1;overflow-y:auto;padding:8px 7px;scrollbar-width:none;position:relative;z-index:1;}
 .nav-scroll::-webkit-scrollbar{display:none;}
-
 .nav-lbl{
-  font-size:0.53rem;font-weight:700;letter-spacing:1.8px;
-  text-transform:uppercase;color:var(--muted);
-  padding:9px 8px 4px;font-family:'JetBrains Mono',monospace;
+  font-size:0.52rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;
+  color:var(--muted);padding:10px 8px 4px;font-family:'JetBrains Mono',monospace;
 }
 .nav-btn{
-  display:flex;align-items:center;gap:8px;
-  width:100%;padding:7px 8px;border-radius:8px;
+  display:flex;align-items:center;gap:9px;
+  width:100%;padding:8px 9px;border-radius:var(--r2);
   background:transparent;border:1px solid transparent;
-  color:var(--sub);cursor:none;
-  font-family:'Space Grotesk',sans-serif;font-size:0.78rem;font-weight:600;
-  text-align:left;margin-bottom:1px;
-  transition:background 0.13s,color 0.13s,border-color 0.13s;
-  position:relative;
+  color:var(--sub);cursor:pointer;
+  font-family:'Space Grotesk',sans-serif;font-size:0.79rem;font-weight:600;
+  text-align:left;margin-bottom:2px;
+  transition:background var(--trans),color var(--trans),border-color var(--trans),box-shadow var(--trans);
+  position:relative;overflow:hidden;
+}
+.nav-btn::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:50%;
+  background:linear-gradient(180deg,var(--shine) 0%,transparent 100%);
+  opacity:0;transition:opacity var(--trans);pointer-events:none;
 }
 .nav-btn:hover{background:var(--glass2);color:var(--text);border-color:var(--border);}
+.nav-btn:hover::before{opacity:1;}
 .nav-btn.active{
-  background:rgba(91,141,238,0.12);
-  border-color:rgba(91,141,238,0.25);
-  color:var(--text);
+  background:var(--glass2);border-color:var(--border2);color:var(--text);
+  box-shadow:0 0 12px var(--glow),inset 0 1px 0 var(--shine);
 }
-.nav-btn.active::before{
+.nav-btn.active::before{opacity:1;}
+.nav-btn.active::after{
   content:'';position:absolute;left:0;top:20%;bottom:20%;
-  width:2.5px;border-radius:0 2px 2px 0;
+  width:2.5px;border-radius:0 3px 3px 0;
   background:linear-gradient(180deg,var(--c1),var(--c2));
+  box-shadow:0 0 8px var(--c1);
 }
 .nav-ico{
-  width:24px;height:24px;border-radius:6px;
-  display:flex;align-items:center;justify-content:center;
-  font-size:12px;flex-shrink:0;
-  background:rgba(255,255,255,0.05);
-  transition:box-shadow 0.13s;
+  width:26px;height:26px;border-radius:7px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;font-size:13px;
+  background:var(--glass3);border:1px solid var(--border);
+  transition:box-shadow var(--trans);position:relative;overflow:hidden;
 }
-.nav-btn.active .nav-ico{box-shadow:0 0 8px rgba(91,141,238,0.4);}
+.nav-ico::before{content:'';position:absolute;top:0;left:0;right:0;height:50%;background:linear-gradient(180deg,var(--shine2),transparent);}
+.nav-btn.active .nav-ico{box-shadow:0 0 10px var(--glow2);}
 .nav-tag{
-  margin-left:auto;font-size:0.48rem;font-family:'JetBrains Mono',monospace;
-  font-weight:700;padding:2px 5px;border-radius:4px;letter-spacing:0.4px;
+  margin-left:auto;font-size:0.46rem;font-family:'JetBrains Mono',monospace;
+  font-weight:700;padding:2px 5px;border-radius:4px;letter-spacing:.5px;
 }
-.tag-new{background:rgba(6,214,160,0.15);color:var(--c3);}
-.tag-tool{background:rgba(255,209,102,0.12);color:var(--warn);}
-.sb-div{height:1px;background:var(--border);margin:3px 8px;}
-
+.tag-new{background:rgba(0,212,160,0.15);color:var(--c3);border:1px solid rgba(0,212,160,0.25);}
+.tag-tool{background:rgba(255,209,102,0.12);color:var(--warn);border:1px solid rgba(255,209,102,0.2);}
+.sb-divider{height:1px;background:var(--border);margin:4px 8px;}
 .sb-foot{
-  padding:9px 13px 11px;border-top:1px solid var(--border);
-  display:flex;flex-direction:column;gap:4px;
+  padding:10px 14px 12px;border-top:1px solid var(--border);position:relative;z-index:1;
 }
-.sb-stat{
-  display:flex;justify-content:space-between;align-items:center;
-  font-size:0.58rem;font-family:'JetBrains Mono',monospace;
-}
+.sb-stat{display:flex;justify-content:space-between;align-items:center;font-size:0.58rem;font-family:'JetBrains Mono',monospace;margin-bottom:3px;}
 .sb-stat-k{color:var(--muted);}
-.sb-stat-v{
-  color:var(--c3);background:rgba(6,214,160,0.08);
-  padding:1px 5px;border-radius:3px;font-weight:700;
-}
+.sb-stat-v{color:var(--c3);background:rgba(0,212,160,0.08);padding:1px 5px;border-radius:3px;font-weight:700;border:1px solid rgba(0,212,160,0.15);}
+.sb-brand{margin-top:7px;font-size:0.52rem;font-family:'JetBrains Mono',monospace;color:var(--muted);text-align:center;letter-spacing:.5px;}
 
-/* ── MAIN ── */
+/* ══════════════════════════════════════
+   MAIN + TOPBAR
+══════════════════════════════════════ */
 .main{flex:1;display:flex;flex-direction:column;height:100vh;overflow:hidden;position:relative;}
-
-/* TOPBAR */
 .topbar{
-  height:46px;flex-shrink:0;
-  display:flex;align-items:center;padding:0 18px;gap:10px;
-  background:rgba(6,6,15,0.7);
-  backdrop-filter:var(--blur);
-  border-bottom:1px solid var(--border);
+  height:48px;flex-shrink:0;display:flex;align-items:center;padding:0 20px;gap:10px;
+  background:var(--glass);backdrop-filter:var(--blur2);border-bottom:1px solid var(--border);
+  position:relative;z-index:5;
+}
+.topbar::after{
+  content:'';position:absolute;top:0;left:0;right:0;height:50%;
+  background:linear-gradient(180deg,var(--shine) 0%,transparent 100%);pointer-events:none;
 }
 .tb-crumb{display:flex;align-items:center;gap:6px;}
-.tb-sec{font-size:0.67rem;color:var(--muted);font-family:'JetBrains Mono',monospace;}
-.tb-sep{color:var(--muted);opacity:0.3;}
-.tb-page{font-weight:700;font-size:0.82rem;letter-spacing:-0.2px;}
+.tb-sec{font-size:0.66rem;color:var(--muted);font-family:'JetBrains Mono',monospace;letter-spacing:.3px;}
+.tb-sep{color:var(--muted);opacity:.3;font-size:1rem;}
+.tb-page{font-weight:700;font-size:0.83rem;letter-spacing:-.2px;color:var(--text);}
 .tb-r{margin-left:auto;display:flex;align-items:center;gap:7px;}
-
+.scoofy-brand{
+  font-size:0.52rem;font-family:'JetBrains Mono',monospace;color:var(--muted);
+  letter-spacing:.4px;white-space:nowrap;padding:2px 8px;border-radius:4px;
+  background:var(--glass2);border:1px solid var(--border);
+}
 .mode-toggle{
-  display:flex;align-items:center;
-  background:rgba(255,255,255,0.04);
-  border:1px solid var(--border);
-  border-radius:8px;padding:2px;gap:2px;
+  display:flex;align-items:center;background:var(--glass2);
+  border:1px solid var(--border);border-radius:var(--r2);padding:2px;gap:1px;
 }
 .mode-btn{
-  display:flex;align-items:center;gap:4px;
-  padding:4px 11px;border-radius:6px;
-  background:transparent;border:none;
-  color:var(--muted);font-family:'Space Grotesk',sans-serif;
-  font-size:0.73rem;font-weight:700;cursor:none;
-  transition:all 0.13s;white-space:nowrap;
+  display:flex;align-items:center;gap:3px;padding:4px 9px;border-radius:6px;
+  background:transparent;border:none;color:var(--sub);
+  font-family:'Space Grotesk',sans-serif;font-size:0.72rem;font-weight:700;
+  cursor:pointer;transition:all var(--trans);white-space:nowrap;
 }
 .mode-btn:hover{color:var(--text);}
 .mode-btn.active{
   background:linear-gradient(135deg,var(--c1),var(--c2));color:#fff;
-  box-shadow:0 2px 8px rgba(91,141,238,0.35);
+  box-shadow:0 2px 10px var(--sh1);position:relative;overflow:hidden;
+}
+.mode-btn.active::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:50%;
+  background:linear-gradient(180deg,rgba(255,255,255,0.2),transparent);pointer-events:none;
 }
 .tb-icon{
-  width:28px;height:28px;border-radius:7px;
-  background:var(--glass);border:1px solid var(--border);
+  width:30px;height:30px;border-radius:var(--r2);
+  background:var(--glass2);border:1px solid var(--border);
   display:flex;align-items:center;justify-content:center;
-  cursor:none;font-size:13px;color:var(--sub);
-  transition:background 0.12s,color 0.12s;
-}
-.tb-icon:hover{background:var(--glass2);color:var(--text);}
-
-/* ── CONTENT ── */
-.content{
-  flex:1;overflow-y:auto;padding:16px;
-  scrollbar-width:thin;scrollbar-color:rgba(255,255,255,0.06) transparent;
-}
-.content::-webkit-scrollbar{width:3px;}
-.content::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.06);border-radius:3px;}
-
-/* ── PANELS ── */
-.panel{display:none;animation:fadeUp 0.16s ease;}
-.panel.active{display:block;}
-@keyframes fadeUp{
-  from{opacity:0;transform:translateY(6px);}
-  to{opacity:1;transform:translateY(0);}
-}
-
-/* ── GRID ── */
-.conv-layout{display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:start;}
-.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:start;}
-.gap{margin-bottom:12px;}
-
-/* ── GLOSSY CARD ── */
-.card{
-  background:rgba(10,10,22,0.72);
-  backdrop-filter:var(--blur);
-  border:1px solid var(--border);
-  border-radius:var(--r);padding:15px;
+  cursor:pointer;font-size:14px;color:var(--sub);
+  transition:background var(--trans),color var(--trans),box-shadow var(--trans);
   position:relative;overflow:hidden;
 }
-.card::before{
-  content:'';position:absolute;top:0;left:0;right:0;height:1px;
-  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.1),transparent);
-}
-/* glossy sheen */
-.card::after{
-  content:'';position:absolute;top:0;left:0;right:0;height:40%;
-  background:linear-gradient(180deg,rgba(255,255,255,0.025),transparent);
-  pointer-events:none;border-radius:var(--r) var(--r) 0 0;
-}
+.tb-icon::before{content:'';position:absolute;top:0;left:0;right:0;height:50%;background:linear-gradient(180deg,var(--shine),transparent);pointer-events:none;}
+.tb-icon:hover{background:var(--glass3);color:var(--text);box-shadow:0 0 10px var(--glow);}
 
+/* ══════════════════════════════════════
+   CONTENT + PANELS
+══════════════════════════════════════ */
+.content{flex:1;overflow-y:auto;padding:18px;scrollbar-width:thin;scrollbar-color:var(--border) transparent;}
+.content::-webkit-scrollbar{width:4px;}
+.content::-webkit-scrollbar-thumb{background:var(--border2);border-radius:4px;}
+.panel{display:none;animation:fadeUp .18s ease;}
+.panel.active{display:block;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+
+/* ══════════════════════════════════════
+   CARDS
+══════════════════════════════════════ */
+.card{
+  background:var(--glass);backdrop-filter:var(--blur2);
+  border:1px solid var(--border);border-radius:var(--r);padding:16px;
+  position:relative;overflow:hidden;
+  box-shadow:0 4px 24px rgba(0,0,0,.2),inset 0 1px 0 var(--shine);
+  transition:background var(--trans),border-color var(--trans);
+}
+.card::after{content:'';position:absolute;top:0;left:0;right:0;height:40%;background:linear-gradient(180deg,var(--shine) 0%,transparent 100%);pointer-events:none;border-radius:var(--r) var(--r) 0 0;}
 .drop-card{
-  background:rgba(10,10,22,0.72);
-  backdrop-filter:var(--blur);
-  border:1px solid var(--border);
-  border-radius:var(--r);padding:14px;
+  background:var(--glass);backdrop-filter:var(--blur2);
+  border:1px solid var(--border);border-radius:var(--r);padding:15px;
   display:flex;flex-direction:column;gap:10px;
   position:relative;overflow:hidden;
+  box-shadow:0 4px 24px rgba(0,0,0,.18),inset 0 1px 0 var(--shine);
 }
-.drop-card::before{
-  content:'';position:absolute;top:0;left:0;right:0;height:1px;
-  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.1),transparent);
-}
-.drop-card::after{
-  content:'';position:absolute;top:0;left:0;right:0;height:35%;
-  background:linear-gradient(180deg,rgba(255,255,255,0.022),transparent);
-  pointer-events:none;
-}
+.drop-card::before{content:'';position:absolute;top:0;left:0;right:0;height:35%;background:linear-gradient(180deg,var(--shine) 0%,transparent 100%);pointer-events:none;z-index:0;}
+.out-card{background:var(--glass);backdrop-filter:var(--blur2);border:1px solid var(--border);border-radius:var(--r);padding:15px;position:relative;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,.18),inset 0 1px 0 var(--shine);}
+.out-card::after{content:'';position:absolute;top:0;left:0;right:0;height:38%;background:linear-gradient(180deg,var(--shine) 0%,transparent 100%);pointer-events:none;}
 
-.card-lbl{
-  font-size:0.55rem;font-weight:700;letter-spacing:1.6px;
-  text-transform:uppercase;color:var(--muted);
-  font-family:'JetBrains Mono',monospace;
-  display:flex;align-items:center;gap:7px;margin-bottom:12px;
-}
-.card-lbl::after{
-  content:'';flex:1;height:1px;
-  background:linear-gradient(90deg,var(--border),transparent);
-}
-
-.drop-title{font-size:0.98rem;font-weight:700;letter-spacing:-0.2px;}
-.drop-sub{font-size:0.67rem;color:var(--sub);font-family:'JetBrains Mono',monospace;margin-top:2px;line-height:1.5;}
-
-/* ── DROP ZONE ── */
+/* ══════════════════════════════════════
+   DROP ZONE
+══════════════════════════════════════ */
 .dz{
-  border:1.5px dashed rgba(255,255,255,0.1);border-radius:9px;
-  padding:22px 14px;text-align:center;cursor:none;
-  transition:border-color 0.15s,background 0.15s;
-  background:rgba(255,255,255,0.015);position:relative;
-  min-height:120px;display:flex;align-items:center;justify-content:center;
+  border:1.5px dashed var(--border2);border-radius:var(--r);
+  min-height:90px;display:flex;align-items:center;justify-content:center;
+  position:relative;overflow:hidden;cursor:pointer;
+  transition:border-color var(--trans),background var(--trans),box-shadow var(--trans);
+  background:var(--glass);
 }
-.dz:hover,.dz.hover{
-  border-color:rgba(91,141,238,0.5);
-  background:rgba(91,141,238,0.055);
-}
-.dz input[type=file]{position:absolute;inset:0;opacity:0;cursor:none;width:100%;height:100%;}
-.dz-inner{display:flex;flex-direction:column;align-items:center;gap:5px;pointer-events:none;}
-.dz-ico{font-size:1.8rem;opacity:0.45;}
-.dz-t{font-weight:700;font-size:0.83rem;color:var(--text);}
-.dz-s{font-size:0.62rem;color:var(--muted);font-family:'JetBrains Mono',monospace;}
+.dz::before{content:'';position:absolute;top:0;left:0;right:0;height:50%;background:linear-gradient(180deg,var(--shine) 0%,transparent 100%);pointer-events:none;}
+.dz:hover{border-color:var(--c1);background:var(--glass2);box-shadow:0 0 16px var(--glow),inset 0 1px 0 var(--shine2);}
+.dz.hover{border-color:var(--c1);background:var(--glass3);box-shadow:0 0 24px var(--glow2);}
+.dz input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
+.dz-inner{display:flex;flex-direction:column;align-items:center;gap:5px;padding:14px;text-align:center;position:relative;z-index:1;}
+.dz-ico{font-size:1.8rem;filter:drop-shadow(0 0 8px var(--sh1));}
+.dz-t{font-size:.8rem;font-weight:600;color:var(--text);}
+.dz-s{font-size:.65rem;color:var(--sub);font-family:'JetBrains Mono',monospace;}
 
-/* ── INPUT PREVIEW ── */
-.inp-prev{
-  display:none;border-radius:8px;overflow:hidden;
-  background:#000;position:relative;border:1px solid var(--border);
-}
-.inp-prev canvas{width:100%;display:block;image-rendering:pixelated;}
-.prev-badge{
-  position:absolute;top:6px;left:6px;
-  background:rgba(0,0,0,0.8);backdrop-filter:blur(8px);
-  color:var(--sub);font-size:0.52rem;font-family:'JetBrains Mono',monospace;
-  padding:2px 7px;border-radius:4px;letter-spacing:0.5px;border:1px solid var(--border);
-}
-
-/* ── STATUS ── */
-.status{
-  display:none;padding:8px 11px;border-radius:7px;
-  font-size:0.66rem;font-family:'JetBrains Mono',monospace;
-  line-height:1.5;
-}
-.status.show{display:block;}
-.status.info{background:rgba(6,214,160,0.06);border:1px solid rgba(6,214,160,0.18);color:var(--c3);}
-.status.ok{background:rgba(6,214,160,0.07);border:1px solid rgba(6,214,160,0.2);color:var(--c3);}
-.status.err{background:rgba(249,65,68,0.07);border:1px solid rgba(249,65,68,0.2);color:var(--err);}
-
-/* ── BUTTONS ── */
+/* ══════════════════════════════════════
+   BUTTONS
+══════════════════════════════════════ */
 .btn-conv{
-  width:100%;padding:10px 14px;border:none;border-radius:8px;
-  font-family:'Space Grotesk',sans-serif;font-size:0.82rem;font-weight:700;
-  cursor:none;display:flex;align-items:center;justify-content:center;gap:7px;
+  width:100%;padding:12px;border:none;border-radius:var(--r);
   background:linear-gradient(135deg,var(--c1),var(--c2));
-  color:#fff;
-  box-shadow:0 3px 14px rgba(91,141,238,0.3),inset 0 1px 0 rgba(255,255,255,0.14);
-  transition:opacity 0.12s,transform 0.1s,box-shadow 0.12s;
-  position:relative;overflow:hidden;
+  color:#fff;font-family:'Space Grotesk',sans-serif;font-size:.87rem;font-weight:700;
+  cursor:pointer;position:relative;overflow:hidden;
+  box-shadow:0 4px 18px var(--sh1),inset 0 1px 0 rgba(255,255,255,0.15);
+  transition:transform var(--trans),box-shadow var(--trans),opacity var(--trans);
+  letter-spacing:.1px;
 }
-.btn-conv::before{
-  content:'';position:absolute;top:0;left:0;right:0;height:50%;
-  background:linear-gradient(180deg,rgba(255,255,255,0.12),transparent);
-  pointer-events:none;
-}
-.btn-conv:hover:not(:disabled){opacity:0.9;transform:translateY(-1px);box-shadow:0 5px 20px rgba(91,141,238,0.45),inset 0 1px 0 rgba(255,255,255,0.14);}
-.btn-conv:active:not(:disabled){transform:scale(0.99);}
-.btn-conv:disabled{opacity:0.22;cursor:none;transform:none!important;box-shadow:none;}
-.btn-conv.teal{background:linear-gradient(135deg,#0a7b6a,#06d6a0);box-shadow:0 3px 14px rgba(6,214,160,0.25),inset 0 1px 0 rgba(255,255,255,0.14);}
-.btn-conv.teal:hover:not(:disabled){box-shadow:0 5px 20px rgba(6,214,160,0.4),inset 0 1px 0 rgba(255,255,255,0.14);}
-
-.hint{
-  font-size:0.6rem;color:var(--muted);
-  font-family:'JetBrains Mono',monospace;
-  text-align:center;line-height:1.5;
-}
-.hint strong{color:var(--sub);font-weight:600;}
-
-/* ── OUTPUT CARD ── */
-.out-card{
-  background:rgba(8,8,18,0.65);
-  backdrop-filter:var(--blur);
-  border:1px solid var(--border);
-  border-radius:var(--r);padding:15px;
-  min-height:180px;display:flex;flex-direction:column;
-  position:relative;overflow:hidden;
-}
-.out-card::before{
-  content:'';position:absolute;top:0;left:0;right:0;height:1px;
-  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.07),transparent);
-}
-.out-card::after{
-  content:'';position:absolute;top:0;left:0;right:0;height:30%;
-  background:linear-gradient(180deg,rgba(255,255,255,0.018),transparent);
-  pointer-events:none;
-}
-.out-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
-.out-title{font-size:0.76rem;font-weight:700;color:var(--sub);}
-
+.btn-conv::before{content:'';position:absolute;top:0;left:0;right:0;height:50%;background:linear-gradient(180deg,rgba(255,255,255,0.2),transparent);pointer-events:none;}
+.btn-conv:hover{transform:translateY(-2px);box-shadow:0 8px 28px var(--sh1),inset 0 1px 0 rgba(255,255,255,0.2);}
+.btn-conv:active{transform:scale(.98);}
+.btn-conv:disabled{opacity:.25;cursor:default;transform:none!important;box-shadow:none!important;}
+.btn-conv.teal{background:linear-gradient(135deg,var(--c3),var(--c1));box-shadow:0 4px 18px var(--sh3);}
 .btn-dl{
-  display:inline-flex;align-items:center;gap:4px;
-  padding:5px 11px;border-radius:7px;
-  background:rgba(6,214,160,0.1);border:1px solid rgba(6,214,160,0.22);
-  color:var(--c3);font-size:0.69rem;font-weight:700;
-  font-family:'Space Grotesk',sans-serif;text-decoration:none;
-  transition:all 0.13s;cursor:none;
-  box-shadow:inset 0 1px 0 rgba(6,214,160,0.1);
+  display:flex;align-items:center;gap:5px;padding:5px 12px;border-radius:var(--r2);
+  background:var(--glass2);border:1px solid var(--border2);
+  color:var(--text);font-size:.72rem;font-weight:600;
+  text-decoration:none;cursor:pointer;position:relative;overflow:hidden;
+  transition:all var(--trans);box-shadow:inset 0 1px 0 var(--shine);
 }
-.btn-dl:hover{background:rgba(6,214,160,0.16);border-color:rgba(6,214,160,0.4);}
+.btn-dl::before{content:'';position:absolute;top:0;left:0;right:0;height:50%;background:linear-gradient(180deg,var(--shine2),transparent);pointer-events:none;}
+.btn-dl:hover{background:var(--glass3);border-color:var(--c1);box-shadow:0 0 12px var(--glow),inset 0 1px 0 var(--shine2);}
+.btn-danger{
+  padding:6px 13px;border:1px solid rgba(255,68,102,.3);border-radius:var(--r2);
+  background:rgba(255,68,102,.1);color:var(--err);font-size:.73rem;font-weight:600;
+  cursor:pointer;transition:all var(--trans);font-family:'Space Grotesk',sans-serif;
+}
+.btn-danger:hover{background:rgba(255,68,102,.2);border-color:var(--err);}
+.btn-sm{
+  padding:4px 10px;border-radius:6px;border:1px solid var(--border);
+  background:var(--glass);color:var(--sub);font-size:.68rem;font-family:'Space Grotesk',sans-serif;
+  font-weight:600;cursor:pointer;transition:all var(--trans);
+}
+.btn-sm:hover{background:var(--glass2);color:var(--text);border-color:var(--border2);}
+.btn-sm.active{background:var(--glass3);border-color:var(--c1);color:var(--c1);box-shadow:0 0 8px var(--glow);}
 
-.cmp-row{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px;}
-.cmp-item{
-  border-radius:7px;overflow:hidden;background:#000;
-  position:relative;border:1px solid var(--border);
+/* ══════════════════════════════════════
+   TYPOGRAPHY + LAYOUT BITS
+══════════════════════════════════════ */
+.conv-layout{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:start;}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:start;}
+.gap{margin-bottom:14px;}
+.sec-h{font-size:1.2rem;font-weight:700;letter-spacing:-.4px;margin-bottom:6px;color:var(--text);}
+.sec-s{font-size:.8rem;color:var(--sub);line-height:1.6;margin-bottom:14px;}
+.card-lbl{font-size:.58rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--sub);margin-bottom:8px;font-family:'JetBrains Mono',monospace;}
+.drop-title{font-size:.82rem;font-weight:700;color:var(--text);position:relative;z-index:1;}
+.drop-sub{font-size:.73rem;color:var(--sub);position:relative;z-index:1;}
+.hint-box{
+  font-size:.67rem;color:var(--sub);line-height:1.55;
+  padding:7px 10px;border-radius:var(--r2);border-left:2px solid var(--c1);
+  background:var(--glass);font-family:'JetBrains Mono',monospace;
+  box-shadow:inset 0 1px 0 var(--shine);
 }
-.cmp-item canvas{width:100%;display:block;image-rendering:pixelated;}
-.cmp-lbl{
-  position:absolute;bottom:5px;left:5px;
-  background:rgba(0,0,0,0.85);backdrop-filter:blur(6px);
-  color:#fff;font-size:0.51rem;font-family:'JetBrains Mono',monospace;
-  padding:1px 6px;border-radius:3px;border:1px solid var(--border);letter-spacing:0.3px;
-}
-
-.out-wrap{border-radius:7px;overflow:hidden;background:#000;position:relative;border:1px solid var(--border);}
-.out-wrap canvas{width:100%;display:block;image-rendering:pixelated;}
-
-.empty{
-  flex:1;display:flex;flex-direction:column;
-  align-items:center;justify-content:center;
-  text-align:center;color:var(--muted);
-  font-family:'JetBrains Mono',monospace;font-size:0.64rem;gap:8px;padding:24px 0;
-}
-.empty-ico{font-size:2rem;opacity:0.18;}
+.hint-box strong{color:var(--c1);}
+.out-head{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+.out-title{font-size:.8rem;font-weight:700;flex:1;color:var(--text);}
+.out-wrap{position:relative;border-radius:var(--r);overflow:hidden;background:#000;box-shadow:0 0 0 1px var(--border),0 4px 20px rgba(0,0,0,.4);}
+.cmp-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;}
+.cmp-item{position:relative;border-radius:var(--r2);overflow:hidden;}
+.cmp-item canvas{width:100%;display:block;border-radius:var(--r2);}
+.cmp-lbl{position:absolute;bottom:4px;right:6px;font-size:.5rem;font-family:'JetBrains Mono',monospace;color:rgba(255,255,255,.6);background:rgba(0,0,0,.5);padding:1px 4px;border-radius:3px;}
+.prev-badge{position:absolute;top:7px;right:7px;font-size:.5rem;font-family:'JetBrains Mono',monospace;background:rgba(0,0,0,.65);color:rgba(255,255,255,.7);padding:2px 6px;border-radius:4px;backdrop-filter:blur(4px);border:1px solid rgba(255,255,255,.08);}
+.inp-prev{display:none;border-radius:var(--r2);overflow:hidden;position:relative;margin-top:4px;}
+.inp-prev canvas{width:100%;display:block;max-height:120px;object-fit:cover;}
+.empty{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:40px;text-align:center;min-height:160px;}
+.empty-ico{font-size:2.4rem;opacity:.4;filter:drop-shadow(0 0 10px var(--sh1));}
+.empty span:last-child{font-size:.75rem;color:var(--muted);font-family:'JetBrains Mono',monospace;}
 .hidden{display:none!important;}
 
-/* ── MANNEQUIN ── */
-.mq-sec{
-  background:rgba(10,10,22,0.65);
-  border:1px solid var(--border);border-radius:var(--r);
-  padding:14px;margin-top:12px;display:none;
-  position:relative;overflow:hidden;
-}
-.mq-sec::before{
-  content:'';position:absolute;top:0;left:0;right:0;height:1px;
-  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.08),transparent);
-}
-.mq-sec.show{display:block;animation:fadeUp 0.2s ease;}
-.mq-row{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-start;margin-top:10px;}
-.mq-view{text-align:center;flex:1;min-width:130px;}
-.mq-view canvas{
-  image-rendering:pixelated;background:#06060f;
-  border-radius:8px;border:1px solid var(--border);
-  width:100%;max-width:220px;display:block;margin:0 auto;
-}
-.mq-lbl{font-size:0.56rem;color:var(--muted);font-family:'JetBrains Mono',monospace;margin-top:4px;letter-spacing:0.5px;}
+/* ══════════════════════════════════════
+   STATUS
+══════════════════════════════════════ */
+.status{font-size:.7rem;font-family:'JetBrains Mono',monospace;padding:0;max-height:0;overflow:hidden;transition:max-height .2s,padding .2s;border-radius:var(--r2);}
+.status.show{max-height:40px;padding:6px 9px;}
+.status.info{background:rgba(0,180,255,.1);color:var(--c1);border:1px solid rgba(0,180,255,.2);}
+.status.ok{background:rgba(0,212,160,.1);color:var(--c3);border:1px solid rgba(0,212,160,.2);}
+.status.err{background:rgba(255,68,102,.1);color:var(--err);border:1px solid rgba(255,68,102,.2);}
 
-/* ── INFO HINT ── */
-.hint-box{
-  background:rgba(255,255,255,0.022);
-  border:1px solid var(--border);border-radius:7px;
-  padding:8px 11px;font-size:0.65rem;color:var(--sub);
-  line-height:1.55;font-family:'JetBrains Mono',monospace;
-}
-.hint-box strong{color:var(--text);font-weight:600;}
-
-/* ── SECTION HEADER ── */
-.sec-h{font-weight:700;font-size:0.95rem;letter-spacing:-0.2px;margin-bottom:3px;}
-.sec-s{font-size:0.65rem;color:var(--muted);font-family:'JetBrains Mono',monospace;margin-bottom:14px;line-height:1.5;}
-
-/* ── TOOLS ── */
-.tools-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:9px;margin-bottom:14px;}
-.tool-card{
-  background:var(--glass);border:1px solid var(--border);
-  border-radius:var(--r);padding:13px;cursor:none;
-  transition:background 0.15s,border-color 0.15s,transform 0.15s,box-shadow 0.15s;
-  position:relative;overflow:hidden;
-}
-.tool-card::before{
-  content:'';position:absolute;top:0;left:0;right:0;height:1px;
-  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.07),transparent);
-}
-.tool-card::after{
-  content:'';position:absolute;top:0;left:0;right:0;height:35%;
-  background:linear-gradient(180deg,rgba(255,255,255,0.018),transparent);
-  pointer-events:none;
-}
-.tool-card:hover{
-  background:var(--glass2);border-color:var(--border2);
-  transform:translateY(-2px);box-shadow:0 6px 18px rgba(0,0,0,0.35);
-}
-.tool-ico{font-size:1.5rem;margin-bottom:8px;display:block;}
-.tool-name{font-weight:700;font-size:0.79rem;margin-bottom:3px;}
-.tool-desc{font-size:0.63rem;color:var(--muted);font-family:'JetBrains Mono',monospace;line-height:1.45;}
-.tool-badge{
-  position:absolute;top:8px;right:8px;
-  font-size:0.49rem;font-family:'JetBrains Mono',monospace;font-weight:700;
-  padding:2px 5px;border-radius:3px;letter-spacing:0.5px;
-}
-.tb-s{background:rgba(91,141,238,0.18);color:var(--c1);}
-.tb-p{background:rgba(167,139,250,0.15);color:var(--c2);}
-.tb-u{background:rgba(6,214,160,0.14);color:var(--c3);}
-
-/* ── SETTINGS ── */
-.settings-sec{margin-bottom:16px;}
-.settings-sec-title{
-  display:flex;align-items:center;gap:6px;
-  font-size:0.63rem;font-weight:700;letter-spacing:1.2px;
-  text-transform:uppercase;color:var(--sub);
-  font-family:'JetBrains Mono',monospace;
-  margin-bottom:6px;padding-bottom:7px;border-bottom:1px solid var(--border);
-}
-.settings-grid{display:flex;flex-direction:column;gap:4px;}
-.setting-row{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:9px 12px;border-radius:8px;
-  background:var(--glass);border:1px solid var(--border);
-  gap:14px;transition:border-color 0.12s;
-  position:relative;overflow:hidden;
-}
-.setting-row::before{
-  content:'';position:absolute;top:0;left:0;right:0;height:1px;
-  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.05),transparent);
-}
-.setting-row:hover{border-color:var(--border2);}
-.setting-name{font-weight:600;font-size:0.79rem;margin-bottom:1px;}
-.setting-desc{font-size:0.63rem;color:var(--muted);font-family:'JetBrains Mono',monospace;line-height:1.4;}
-.toggle{
-  width:36px;height:20px;border-radius:10px;
-  background:rgba(255,255,255,0.07);border:1px solid var(--border);
-  cursor:none;position:relative;transition:all 0.16s;flex-shrink:0;
-}
-.toggle::after{
-  content:'';position:absolute;width:14px;height:14px;border-radius:50%;
-  background:var(--sub);top:2px;left:2px;transition:all 0.16s;
-}
-.toggle.on{background:rgba(91,141,238,0.28);border-color:rgba(91,141,238,0.5);}
-.toggle.on::after{left:18px;background:var(--c1);}
-.select-row{display:flex;gap:4px;flex-wrap:wrap;}
-.btn-sm{
-  padding:4px 9px;border-radius:6px;font-size:0.67rem;font-weight:600;
-  cursor:none;border:1px solid var(--border);
-  background:var(--glass);color:var(--sub);
-  transition:all 0.12s;font-family:'Space Grotesk',sans-serif;
-}
-.btn-sm:hover{background:var(--glass2);color:var(--text);}
-.btn-sm.active{background:rgba(91,141,238,0.18);border-color:rgba(91,141,238,0.38);color:var(--c1);}
-.setting-input{
-  background:var(--glass);border:1px solid var(--border);
-  color:var(--text);border-radius:6px;padding:5px 9px;
-  font-family:'JetBrains Mono',monospace;font-size:0.67rem;
-  width:135px;outline:none;transition:border-color 0.13s;
-}
-.setting-input:focus{border-color:var(--c1);}
-.btn-danger{
-  padding:6px 12px;border-radius:7px;
-  background:rgba(249,65,68,0.09);border:1px solid rgba(249,65,68,0.2);
-  color:var(--err);font-size:0.71rem;font-weight:600;
-  font-family:'Space Grotesk',sans-serif;cursor:none;transition:all 0.12s;
-}
-.btn-danger:hover{background:rgba(249,65,68,0.16);border-color:var(--err);}
-
-/* ── SHORTCUTS ── */
-.shortcuts-grid{
-  display:grid;grid-template-columns:1fr 1fr;gap:3px;
-  background:var(--glass);border:1px solid var(--border);
-  border-radius:9px;padding:10px;margin-bottom:6px;
-}
-.shortcut-row{display:flex;align-items:center;gap:8px;padding:4px 5px;border-radius:5px;}
-.shortcut-row:hover{background:var(--glass2);}
-.shortcut-keys{display:flex;align-items:center;gap:3px;flex-shrink:0;min-width:88px;}
-kbd{
-  background:rgba(255,255,255,0.07);border:1px solid var(--border2);
-  border-bottom:2px solid rgba(255,255,255,0.16);
-  color:var(--text);font-family:'JetBrains Mono',monospace;
-  font-size:0.57rem;font-weight:700;padding:2px 5px;border-radius:4px;white-space:nowrap;
-}
-.shortcut-desc{font-size:0.66rem;color:var(--sub);font-family:'JetBrains Mono',monospace;}
-
-/* ── ABOUT ── */
-.about-sec{
-  background:var(--glass);border:1px solid var(--border);
-  border-radius:var(--r);padding:14px;margin-bottom:10px;
-}
-.about-title{font-weight:700;font-size:0.82rem;margin-bottom:7px;}
-.about-text{font-size:0.69rem;color:var(--sub);line-height:1.75;font-family:'JetBrains Mono',monospace;}
-.coord-table{width:100%;border-collapse:collapse;margin-top:7px;}
-.coord-table th,.coord-table td{
-  text-align:left;padding:5px 9px;
-  font-size:0.62rem;font-family:'JetBrains Mono',monospace;
-  border-bottom:1px solid var(--border);
-}
-.coord-table th{color:var(--muted);font-weight:700;}
-.coord-table td{color:var(--sub);}
-.coord-table tr:last-child td{border:none;}
-.coord-table .hl{color:var(--c1);}
-
-/* ── LEGEND ── */
-.legend{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px;}
-.leg{font-size:0.6rem;font-family:'JetBrains Mono',monospace;color:var(--sub);display:flex;align-items:center;gap:3px;}
-.ldot{width:7px;height:7px;border-radius:2px;flex-shrink:0;}
-
-/* ── TOAST ── */
+/* ══════════════════════════════════════
+   TOAST
+══════════════════════════════════════ */
 #toast{
-  position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(8px);
-  background:rgba(10,10,22,0.97);border:1px solid rgba(255,255,255,0.1);
-  backdrop-filter:blur(18px);color:#fff;
-  font-family:'JetBrains Mono',monospace;
-  font-size:0.7rem;padding:8px 16px;border-radius:9px;
-  opacity:0;z-index:9999;pointer-events:none;white-space:nowrap;
-  transition:opacity 0.18s,transform 0.18s;
-  box-shadow:0 8px 24px rgba(0,0,0,0.5),inset 0 1px 0 rgba(255,255,255,0.07);
+  position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(20px);
+  background:var(--glass2);backdrop-filter:var(--blur);
+  border:1px solid var(--border2);border-radius:30px;
+  padding:8px 20px;font-size:.75rem;font-family:'JetBrains Mono',monospace;
+  color:var(--text);opacity:0;pointer-events:none;z-index:9999;
+  transition:opacity .2s,transform .2s;white-space:nowrap;
+  box-shadow:0 4px 20px rgba(0,0,0,.4),inset 0 1px 0 var(--shine);
 }
 #toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 
-/* ── RESPONSIVE ── */
-@media(max-width:820px){
-  .conv-layout,.g2{grid-template-columns:1fr;}
-  :root{--sbw:56px;}
-  .sb-name,.sb-ver,.nav-lbl,.sb-div,.nav-tag,.sb-foot{display:none;}
-  .nav-btn{padding:9px;justify-content:center;}
-  .nav-ico{width:28px;height:28px;font-size:15px;}
-  .nb-text{display:none;}
+/* ══════════════════════════════════════
+   MANNEQUIN + MQ
+══════════════════════════════════════ */
+.mq-sec{display:none;margin-top:14px;}
+.mq-sec.show{display:block;}
+.mq-row{display:flex;gap:12px;flex-wrap:wrap;}
+.mq-view{background:var(--glass);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;text-align:center;flex:1;min-width:140px;box-shadow:inset 0 1px 0 var(--shine);}
+.mq-view canvas{width:100%;display:block;}
+.mq-lbl{font-size:.58rem;font-family:'JetBrains Mono',monospace;color:var(--sub);padding:3px 0 5px;letter-spacing:.5px;}
+
+/* ══════════════════════════════════════
+   SETTINGS
+══════════════════════════════════════ */
+.settings-sec{margin-bottom:18px;}
+.settings-sec-title{font-size:.68rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--sub);font-family:'JetBrains Mono',monospace;margin-bottom:8px;padding-left:2px;}
+.settings-grid{background:var(--glass);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;box-shadow:inset 0 1px 0 var(--shine);}
+.setting-row{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid var(--border);}
+.setting-row:last-child{border-bottom:none;}
+.setting-name{font-size:.78rem;font-weight:600;color:var(--text);margin-bottom:2px;}
+.setting-desc{font-size:.64rem;color:var(--sub);font-family:'JetBrains Mono',monospace;}
+.toggle{
+  width:38px;height:22px;border-radius:11px;background:var(--muted);
+  cursor:pointer;position:relative;transition:background var(--trans),box-shadow var(--trans);flex-shrink:0;
+  border:1px solid var(--border);
+}
+.toggle::before{
+  content:'';position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;
+  background:#fff;transition:transform var(--trans);box-shadow:0 1px 4px rgba(0,0,0,.3);
+}
+.toggle.on{background:linear-gradient(135deg,var(--c1),var(--c3));border-color:var(--c1);box-shadow:0 0 8px var(--glow);}
+.toggle.on::before{transform:translateX(16px);}
+.select-row{display:flex;gap:4px;flex-wrap:wrap;}
+.setting-input{
+  background:var(--glass2);border:1px solid var(--border);border-radius:var(--r2);
+  color:var(--text);padding:5px 9px;font-size:.73rem;font-family:'JetBrains Mono',monospace;
+  width:160px;outline:none;transition:border-color var(--trans),box-shadow var(--trans);
+}
+.setting-input:focus{border-color:var(--c1);box-shadow:0 0 8px var(--glow);}
+
+/* ══════════════════════════════════════
+   SHORTCUTS + ABOUT
+══════════════════════════════════════ */
+.shortcuts-grid{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;}
+.shortcut-row{display:flex;align-items:center;gap:8px;font-size:.72rem;color:var(--sub);}
+.shortcut-keys{display:flex;gap:3px;}
+kbd{
+  background:var(--glass2);border:1px solid var(--border2);border-radius:5px;
+  padding:2px 6px;font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--text);
+  box-shadow:inset 0 1px 0 var(--shine);
+}
+.about-sec{background:var(--glass);border:1px solid var(--border);border-radius:var(--r);padding:14px;box-shadow:inset 0 1px 0 var(--shine);}
+.about-title{font-size:.75rem;font-weight:700;color:var(--c1);margin-bottom:8px;font-family:'JetBrains Mono',monospace;letter-spacing:.5px;}
+.about-text{font-size:.72rem;color:var(--sub);line-height:1.65;}
+.about-text strong{color:var(--text);}
+.coord-table{width:100%;border-collapse:collapse;font-size:.68rem;font-family:'JetBrains Mono',monospace;}
+.coord-table th{color:var(--sub);font-weight:600;padding:3px 8px;text-align:left;border-bottom:1px solid var(--border);}
+.coord-table td{padding:3px 8px;border-bottom:1px solid rgba(255,255,255,.03);}
+.coord-table .hl{color:var(--c1);font-weight:600;}
+
+/* ══════════════════════════════════════
+   TOOLS GRID
+══════════════════════════════════════ */
+.tools-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;}
+.tool-card{
+  background:var(--glass);border:1px solid var(--border);border-radius:var(--r);
+  padding:16px;cursor:pointer;position:relative;overflow:hidden;
+  transition:all var(--trans);display:flex;flex-direction:column;gap:6px;
+  box-shadow:inset 0 1px 0 var(--shine);
+}
+.tool-card::before{content:'';position:absolute;top:0;left:0;right:0;height:45%;background:linear-gradient(180deg,var(--shine) 0%,transparent 100%);pointer-events:none;}
+.tool-card:hover{background:var(--glass2);border-color:var(--border2);transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,0,0,.25),inset 0 1px 0 var(--shine2),0 0 14px var(--glow);}
+.tool-ico{font-size:1.6rem;filter:drop-shadow(0 0 8px var(--sh1));}
+.tool-name{font-size:.8rem;font-weight:700;color:var(--text);}
+.tool-desc{font-size:.68rem;color:var(--sub);line-height:1.45;}
+.tool-badge{font-size:.5rem;font-family:'JetBrains Mono',monospace;font-weight:700;padding:2px 6px;border-radius:4px;width:fit-content;letter-spacing:.4px;}
+.tb-s{background:rgba(0,180,255,.15);color:var(--c1);border:1px solid rgba(0,180,255,.2);}
+.tb-p{background:rgba(139,92,246,.15);color:var(--c2);border:1px solid rgba(139,92,246,.2);}
+.tb-u{background:rgba(0,212,160,.15);color:var(--c3);border:1px solid rgba(0,212,160,.2);}
+
+/* ══════════════════════════════════════
+   LEGEND + REGION PREVIEW
+══════════════════════════════════════ */
+.legend{display:flex;flex-wrap:wrap;gap:6px;padding:8px 0 2px;}
+.leg{display:flex;align-items:center;gap:4px;font-size:.65rem;color:var(--sub);font-family:'JetBrains Mono',monospace;}
+.ldot{width:10px;height:10px;border-radius:2px;flex-shrink:0;}
+
+/* ══════════════════════════════════════
+   POST-FILTER STRIP
+══════════════════════════════════════ */
+.pf-strip{
+  margin-top:10px;padding:10px;border-radius:var(--r);
+  background:var(--glass);border:1px solid var(--border);
+  display:flex;flex-direction:column;gap:6px;
+  box-shadow:inset 0 1px 0 var(--shine);
+}
+.pf-row{display:flex;flex-wrap:wrap;align-items:center;gap:3px;}
+.pf-lbl{font-size:.58rem;font-family:'JetBrains Mono',monospace;color:var(--muted);
+  letter-spacing:.4px;white-space:nowrap;margin-right:4px;min-width:56px;}
+
+/* ══════════════════════════════════════
+   MAKER BUTTONS
+══════════════════════════════════════ */
+.mk-section{margin-bottom:8px;}
+.mk-lbl{font-size:.56rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);
+  font-family:'JetBrains Mono',monospace;margin-bottom:4px;display:flex;align-items:center;gap:5px;}
+.mk-lbl span{opacity:.7;font-size:.6rem;font-weight:400;text-transform:none;letter-spacing:0;}
+.mk-row{display:flex;flex-wrap:wrap;gap:3px;}
+.mk-btn{
+  padding:3px 8px;border-radius:6px;border:1px solid var(--border);
+  background:var(--glass);color:var(--sub);
+  font-size:.65rem;font-family:'Space Grotesk',sans-serif;font-weight:600;
+  cursor:pointer;transition:all var(--trans);white-space:nowrap;
+  box-shadow:inset 0 1px 0 var(--shine);
+}
+.mk-btn:hover{background:var(--glass2);color:var(--text);border-color:var(--border2);}
+.mk-btn.on-fill{background:rgba(0,180,255,.15);border-color:rgba(0,180,255,.35);color:var(--c1);box-shadow:0 0 8px var(--glow),inset 0 1px 0 var(--shine);}
+.mk-btn.on-fx{background:rgba(139,92,246,.15);border-color:rgba(139,92,246,.35);color:var(--c2);box-shadow:0 0 8px var(--sh2),inset 0 1px 0 var(--shine);}
+.mk-btn.on-tint{background:rgba(255,209,102,.15);border-color:rgba(255,209,102,.3);color:var(--warn);box-shadow:inset 0 1px 0 var(--shine);}
+.mk-btn.on-op{background:rgba(0,212,160,.15);border-color:rgba(0,212,160,.35);color:var(--c3);box-shadow:0 0 8px var(--sh3),inset 0 1px 0 var(--shine);}
+
+/* ══════════════════════════════════════
+   CHECKER (transparent bg)
+══════════════════════════════════════ */
+.checker{background:repeating-conic-gradient(#111 0% 25%,#191919 0% 50%) 0 0/16px 16px!important;}
+[data-theme="light"] .checker{background:repeating-conic-gradient(#ccc 0% 25%,#ddd 0% 50%) 0 0/16px 16px!important;}
+
+/* ══════════════════════════════════════
+   FULLKIT DROP ZONES
+══════════════════════════════════════ */
+.fk-sub-lbl{font-size:.62rem;color:var(--sub);font-family:'JetBrains Mono',monospace;letter-spacing:.5px;margin-bottom:4px;}
+
+/* ══════════════════════════════════════
+   FOX / FURRY TAB
+══════════════════════════════════════ */
+.fox-hero{
+  text-align:center;padding:32px 20px 24px;border-radius:var(--r3);
+  background:linear-gradient(135deg,rgba(255,107,53,.15),rgba(255,140,66,.1),rgba(100,60,20,.15));
+  border:1px solid rgba(255,107,53,.25);margin-bottom:18px;
+  position:relative;overflow:hidden;box-shadow:inset 0 1px 0 rgba(255,200,150,.15),0 0 30px rgba(255,107,53,.1);
+}
+.fox-hero::before{content:'';position:absolute;top:0;left:0;right:0;height:45%;background:linear-gradient(180deg,rgba(255,200,150,.1),transparent);pointer-events:none;}
+.fox-hero h1{font-size:2rem;font-weight:700;background:linear-gradient(135deg,#ff8c42,#ff6b35,#ff4500);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:6px;}
+.fox-hero p{font-size:.85rem;color:var(--sub);font-family:'JetBrains Mono',monospace;}
+.fox-emoji-rain{font-size:1.6rem;letter-spacing:4px;margin-bottom:12px;display:block;filter:drop-shadow(0 0 10px rgba(255,107,53,.4));}
+.fox-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin-bottom:18px;}
+.fox-card{
+  background:var(--glass);border:1px solid var(--border);border-radius:var(--r);
+  padding:16px;position:relative;overflow:hidden;
+  box-shadow:inset 0 1px 0 var(--shine);transition:all var(--trans);
+}
+.fox-card::before{content:'';position:absolute;top:0;left:0;right:0;height:40%;background:linear-gradient(180deg,rgba(255,150,80,.07) 0%,transparent 100%);pointer-events:none;}
+.fox-card:hover{border-color:rgba(255,107,53,.35);box-shadow:0 0 16px rgba(255,107,53,.15),inset 0 1px 0 rgba(255,200,150,.1);}
+.fox-card-title{font-size:.78rem;font-weight:700;color:var(--text);margin-bottom:6px;display:flex;align-items:center;gap:6px;}
+.fox-card-body{font-size:.72rem;color:var(--sub);line-height:1.6;}
+.fox-card-body a{color:#ff8c42;text-decoration:none;}
+.fox-card-body a:hover{color:#ff6b35;}
+.fox-ascii{
+  font-family:'JetBrains Mono',monospace;font-size:.65rem;color:#ff8c42;
+  background:rgba(255,107,53,.06);border:1px solid rgba(255,107,53,.15);
+  border-radius:var(--r);padding:14px;white-space:pre;line-height:1.3;
+  box-shadow:inset 0 1px 0 rgba(255,200,150,.08);
+}
+.fox-gen{
+  background:linear-gradient(135deg,rgba(255,107,53,.12),rgba(255,140,66,.08));
+  border:1px solid rgba(255,107,53,.2);border-radius:var(--r);padding:16px;
+  text-align:center;box-shadow:inset 0 1px 0 rgba(255,200,150,.08);
+}
+.fox-name-out{
+  font-size:1.5rem;font-weight:700;
+  background:linear-gradient(135deg,#ff8c42,#ff6b35);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  margin:10px 0 4px;font-family:'JetBrains Mono',monospace;
+}
+.fox-trait-out{font-size:.8rem;color:var(--sub);font-family:'JetBrains Mono',monospace;}
+
+/* ══════════════════════════════════════
+   RESPONSIVE TWEAKS
+══════════════════════════════════════ */
+@media(max-width:700px){
+  :root{--sbw:190px;}
+  .conv-layout{grid-template-columns:1fr;}
+  .g2{grid-template-columns:1fr;}
 }
 </style>
 </head>
 <body>
-<div class="bg-blobs"></div>
+<!-- Background -->
+<div class="bg-wrap">
+  <div class="bubble"></div>
+  <div class="bubble"></div>
+  <div class="bubble"></div>
+</div>
 
-<!-- CUSTOM CURSOR -->
-<div id="cur"></div>
-<div id="cur-ring"></div>
-
-<!-- ══════════════════════════════════
-     SPLASH SCREEN
-══════════════════════════════════ -->
+<!-- ═══════════════════ SPLASH ═══════════════════ -->
 <div id="splash">
   <div class="splash-box">
     <span class="splash-icon">🧥</span>
-    <div class="splash-title">PT Clothing Converter</div>
-    <div class="splash-by">by <a href="https://www.youtube.com/@scoofyx" target="_blank">@scoofyx</a> · free to use, no gatekeeping</div>
-    <div class="splash-desc">
-      Convert <strong>Roblox templates</strong> or upgrade <strong>old Polytoria</strong> clothing to the new PT 2.0 format.<br>
-      Everything runs in your browser — nothing is uploaded anywhere.
-    </div>
+    <div class="splash-title" id="splash-title">PT Clothing Converter</div>
+    <div class="splash-by">by <a href="https://www.youtube.com/@scoofyx" target="_blank" id="splash-author">@scoofyx</a> · free to use, no gatekeeping</div>
+    <div class="splash-desc" id="splash-desc">Convert <strong>Roblox templates</strong> or upgrade <strong>old Polytoria</strong> clothing to PT 2.0 format.<br>Everything runs in your browser — nothing is uploaded anywhere.</div>
     <button class="splash-start" onclick="enterApp()">Open Converter →</button>
-    <div class="splash-note">
-      Works offline · pixel-perfect accuracy · <a href="https://www.youtube.com/@scoofyx" target="_blank">subscribe for more</a> 🔔
-    </div>
+    <div class="splash-note">Works offline · pixel-perfect · <a href="https://www.youtube.com/@scoofyx" target="_blank">subscribe</a> 🔔</div>
+    <div class="splash-brand">Scoofy™ 2026</div>
   </div>
 </div>
 
-<!-- ══════════════════════════════════
-     APP
-══════════════════════════════════ -->
+<!-- ═══════════════════ APP ═══════════════════ -->
 <div class="app" id="app">
 
 <!-- ─── SIDEBAR ─── -->
-<nav class="sidebar">
+<nav class="sidebar" id="sidebar">
+  <div class="sb-toggle" onclick="toggleSidebar()" title="Collapse sidebar">‹</div>
   <div class="sb-head">
     <div class="sb-logo-row">
       <div class="sb-logo">🧥</div>
       <div>
-        <div class="sb-name">PT Converter</div>
-        <div class="sb-ver">v3.1 · pixel-accurate</div>
+        <div class="sb-name" id="sb-name">PT Converter</div>
+        <div class="sb-ver" id="sb-ver">v3.3 · pixel-accurate</div>
       </div>
     </div>
   </div>
   <div class="nav-scroll">
     <div class="nav-lbl">Convert</div>
     <button class="nav-btn active" id="nbtn-rbx" data-p="rbx" onclick="goTo(this,'rbx')">
-      <span class="nav-ico" style="background:rgba(91,141,238,0.14)">🎮</span>
+      <span class="nav-ico" style="background:rgba(0,180,255,0.15)">🎮</span>
       <span class="nb-text">Roblox → PT 2.0</span>
     </button>
     <button class="nav-btn" id="nbtn-old" data-p="old" onclick="goTo(this,'old')">
-      <span class="nav-ico" style="background:rgba(6,214,160,0.1)">🔄</span>
+      <span class="nav-ico" style="background:rgba(0,212,160,0.12)">🔄</span>
       <span class="nb-text">Old → PT 2.0</span>
       <span class="nav-tag tag-new">UPGRADE</span>
     </button>
     <button class="nav-btn" id="nbtn-pt2rbx" data-p="pt2rbx" onclick="goTo(this,'pt2rbx')">
-      <span class="nav-ico" style="background:rgba(255,209,102,0.12)">🔁</span>
+      <span class="nav-ico" style="background:rgba(255,209,102,0.14)">🔁</span>
       <span class="nb-text">PT 2.0 → Roblox</span>
       <span class="nav-tag tag-tool">NEW</span>
     </button>
     <button class="nav-btn" id="nbtn-fullkit" data-p="fullkit" onclick="goTo(this,'fullkit')">
-      <span class="nav-ico" style="background:rgba(6,214,160,0.14)">🎽</span>
+      <span class="nav-ico" style="background:rgba(0,212,160,0.12)">🎽</span>
       <span class="nb-text">Full Kit</span>
       <span class="nav-tag tag-new">NEW</span>
     </button>
-    <div class="sb-div"></div>
-    <div class="nav-lbl">Tools</div>
+    <div class="sb-divider"></div>
+    <div class="nav-lbl">Create</div>
+    <button class="nav-btn" data-p="ptmaker" onclick="goTo(this,'ptmaker')">
+      <span class="nav-ico" style="background:rgba(0,212,160,0.14)">✨</span>
+      <span class="nb-text">PT Maker</span>
+      <span class="nav-tag tag-new">NEW</span>
+    </button>
     <button class="nav-btn" data-p="maker" onclick="goTo(this,'maker')">
       <span class="nav-ico" style="background:rgba(255,120,50,0.16)">🪄</span>
       <span class="nb-text">Clothing Maker</span>
       <span class="nav-tag tag-new">NEW</span>
     </button>
+    <div class="sb-divider"></div>
+    <div class="nav-lbl">Tools</div>
     <button class="nav-btn" data-p="preview" onclick="goTo(this,'preview')">
-      <span class="nav-ico" style="background:rgba(255,209,102,0.1)">🔍</span>
+      <span class="nav-ico" style="background:rgba(255,209,102,0.12)">🔍</span>
       <span class="nb-text">Region Preview</span>
       <span class="nav-tag tag-tool">TOOL</span>
     </button>
@@ -787,7 +765,12 @@ kbd{
       <span class="nav-ico" style="background:rgba(255,209,102,0.1)">🛠</span>
       <span class="nb-text">All Tools</span>
     </button>
-    <div class="sb-div"></div>
+    <button class="nav-btn" data-p="foxes" onclick="goTo(this,'foxes')">
+      <span class="nav-ico" style="background:rgba(255,107,53,0.18)">🦊</span>
+      <span class="nb-text">Foxes & Furries</span>
+      <span class="nav-tag" style="background:rgba(255,107,53,0.15);color:#ff8c42;border:1px solid rgba(255,107,53,0.25)">🐾</span>
+    </button>
+    <div class="sb-divider"></div>
     <div class="nav-lbl">App</div>
     <button class="nav-btn" data-p="settings" onclick="goTo(this,'settings')">
       <span class="nav-ico">⚙️</span>
@@ -801,6 +784,7 @@ kbd{
   <div class="sb-foot">
     <div class="sb-stat"><span class="sb-stat-k">output</span><span class="sb-stat-v">1024×1024</span></div>
     <div class="sb-stat" id="sb-conv-stat"><span class="sb-stat-k">conversions</span><span class="sb-stat-v" id="conv-count">0</span></div>
+    <div class="sb-brand">Scoofy™ 2026</div>
   </div>
 </nav>
 
@@ -813,6 +797,9 @@ kbd{
       <span class="tb-page" id="tb-page">Shirt</span>
     </div>
     <div class="tb-r">
+      <span class="scoofy-brand">Scoofy™ 2026</span>
+      <div class="tb-icon" onclick="toggleTheme()" id="theme-btn" title="Toggle light/dark theme">🌙</div>
+      <div class="tb-icon" onclick="refreshPanel()" title="Refresh — clear panel" style="color:var(--c3)">↺</div>
       <div class="mode-toggle">
         <button class="mode-btn active" id="mode-shirt" onclick="setMode('shirt')">👕 Shirt</button>
         <button class="mode-btn" id="mode-pants" onclick="setMode('pants')">👖 Pants</button>
@@ -823,21 +810,15 @@ kbd{
 
   <div class="content">
 
-    <!-- ── PANEL: RBX ── -->
+    <!-- ══ RBX PANEL ══ -->
     <div class="panel active" id="panel-rbx">
       <div class="conv-layout">
         <div class="drop-card" id="rbx-in-card">
-          <div>
-            <div class="drop-title" id="rbx-title">Roblox → Polytoria 2.0</div>
-            <div class="drop-sub" id="rbx-desc">Drop your Roblox template and hit Convert.</div>
-          </div>
+          <div><div class="drop-title" id="rbx-title">Roblox → Polytoria 2.0</div>
+          <div class="drop-sub" id="rbx-desc">Drop your Roblox template and hit Convert.</div></div>
           <div class="dz" id="rbx-dz" ondragover="dzo(event,this)" ondragleave="dzl(this)" ondrop="dzd(event,'rbx')">
             <input type="file" accept="image/*" onchange="lf(event,'rbx')" id="rbx-file-input">
-            <div class="dz-inner">
-              <span class="dz-ico" id="rbx-dz-ico">📤</span>
-              <div class="dz-t" id="rbx-dz-t">Drop file here</div>
-              <div class="dz-s">or click to browse · PNG / JPG</div>
-            </div>
+            <div class="dz-inner"><span class="dz-ico" id="rbx-dz-ico">📤</span><div class="dz-t" id="rbx-dz-t">Drop file here</div><div class="dz-s">or click to browse · PNG / JPG</div></div>
           </div>
           <div class="inp-prev" id="pw-rbx"><canvas id="cv-rbx"></canvas><span class="prev-badge" id="rbx-pw-badge">INPUT</span></div>
           <div class="status" id="st-rbx"></div>
@@ -846,21 +827,38 @@ kbd{
         </div>
         <div class="out-card">
           <div class="hidden" id="out-rbx">
-            <div class="out-head">
-              <span class="out-title" id="rbx-out-head">Output</span>
-              <a class="btn-dl" id="dl-rbx" href="#" download="polytoria.png">⬇ <span id="rbx-dl-label">Download</span></a>
-            </div>
+            <div class="out-head"><span class="out-title" id="rbx-out-head">Output</span><a class="btn-dl" id="dl-rbx" href="#" download="polytoria.png">⬇ <span id="rbx-dl-label">Download</span></a></div>
             <div class="cmp-row" id="rbx-cmp-row">
               <div class="cmp-item"><canvas id="cmp-rbx-i"></canvas><span class="cmp-lbl">INPUT</span></div>
               <div class="cmp-item"><canvas id="cmp-rbx-o"></canvas><span class="cmp-lbl">OUTPUT</span></div>
             </div>
-            <div class="out-wrap"><canvas id="out-rbx-cv" width="1024" height="1024"></canvas><span class="prev-badge" id="rbx-out-badge">PT 2.0 · 1024×1024</span></div>
+            <div class="out-wrap"><canvas id="out-rbx-cv" width="1024" height="1024" style="width:100%;display:block;image-rendering:pixelated;"></canvas><span class="prev-badge" id="rbx-out-badge">PT 2.0 · 1024×1024</span></div>
+            <div class="pf-strip" id="pf-rbx">
+              <div class="pf-row"><span class="pf-lbl">Post-FX</span>
+                <button class="mk-btn on-fx" onclick="setPF('rbx','fx',this,'none')">None</button>
+                <button class="mk-btn" onclick="setPF('rbx','fx',this,'fake3d')">🧊 3D</button>
+                <button class="mk-btn" onclick="setPF('rbx','fx',this,'vintage')">📷 Vintage</button>
+                <button class="mk-btn" onclick="setPF('rbx','fx',this,'glitch')">⚡ Glitch</button>
+                <button class="mk-btn" onclick="setPF('rbx','fx',this,'scanlines')">📺 Scan</button>
+                <button class="mk-btn" onclick="setPF('rbx','fx',this,'vignette')">🌑 Vignette</button>
+                <button class="mk-btn" onclick="setPF('rbx','fx',this,'pixelate')">🟦 Pixel</button>
+                <button class="mk-btn" onclick="setPF('rbx','fx',this,'neon')">💡 Neon</button>
+                <button class="mk-btn" onclick="setPF('rbx','fx',this,'grayscale')">🩶 Gray</button>
+                <button class="mk-btn" onclick="setPF('rbx','fx',this,'invert')">🔄 Invert</button>
+                <button class="mk-btn" onclick="setPF('rbx','fx',this,'rainbow')">🌈 Rainbow</button>
+                <button class="mk-btn" onclick="setPF('rbx','fx',this,'grunge')">🪨 Grunge</button>
+              </div>
+              <div class="pf-row"><span class="pf-lbl">Tint</span>
+                <button class="mk-btn on-tint" onclick="setPF('rbx','tint',this,'none')">None</button>
+                <button class="mk-btn" onclick="setPF('rbx','tint',this,'red')">🔴</button><button class="mk-btn" onclick="setPF('rbx','tint',this,'orange')">🟠</button><button class="mk-btn" onclick="setPF('rbx','tint',this,'gold')">🟡</button><button class="mk-btn" onclick="setPF('rbx','tint',this,'green')">🟢</button><button class="mk-btn" onclick="setPF('rbx','tint',this,'blue')">🔵</button><button class="mk-btn" onclick="setPF('rbx','tint',this,'purple')">🟣</button><button class="mk-btn" onclick="setPF('rbx','tint',this,'pink')">🩷</button><button class="mk-btn" onclick="setPF('rbx','tint',this,'cyan')">🩵</button><button class="mk-btn" onclick="setPF('rbx','tint',this,'dark')">⬛</button><button class="mk-btn" onclick="setPF('rbx','tint',this,'light')">⬜</button>
+              </div>
+              <div class="pf-row" style="justify-content:flex-end"><button class="btn-conv" style="width:auto;padding:5px 16px;font-size:.72rem;" onclick="applyPF('rbx')">✦ Apply &amp; Re-export</button></div>
+            </div>
           </div>
           <div class="empty" id="em-rbx"><span class="empty-ico" id="rbx-em-ico">👕</span><span id="rbx-em-text">Output appears here after conversion</span></div>
         </div>
       </div>
-      <div class="mq-sec" id="mq-rbx">
-        <div class="card-lbl">Mannequin Preview</div>
+      <div class="mq-sec" id="mq-rbx"><div class="card-lbl">Mannequin Preview</div>
         <div class="mq-row">
           <div class="mq-view"><canvas id="mq-rbx-f" width="240" height="320"></canvas><div class="mq-lbl">front</div></div>
           <div class="mq-view"><canvas id="mq-rbx-b" width="240" height="320"></canvas><div class="mq-lbl">back</div></div>
@@ -868,21 +866,14 @@ kbd{
       </div>
     </div>
 
-    <!-- ── PANEL: OLD ── -->
+    <!-- ══ OLD PANEL ══ -->
     <div class="panel" id="panel-old">
       <div class="conv-layout">
         <div class="drop-card" id="old-in-card">
-          <div>
-            <div class="drop-title" id="old-title">Old Polytoria → PT 2.0</div>
-            <div class="drop-sub" id="old-desc">Drop your old PT template and hit Upgrade.</div>
-          </div>
+          <div><div class="drop-title" id="old-title">Old Polytoria → PT 2.0</div><div class="drop-sub" id="old-desc">Drop your old PT template and hit Upgrade.</div></div>
           <div class="dz" id="old-dz" ondragover="dzo(event,this)" ondragleave="dzl(this)" ondrop="dzd(event,'old')">
             <input type="file" accept="image/*" onchange="lf(event,'old')" id="old-file-input">
-            <div class="dz-inner">
-              <span class="dz-ico" id="old-dz-ico">🔄</span>
-              <div class="dz-t" id="old-dz-t">Drop file here</div>
-              <div class="dz-s">or click to browse · 1024×1024</div>
-            </div>
+            <div class="dz-inner"><span class="dz-ico" id="old-dz-ico">🔄</span><div class="dz-t" id="old-dz-t">Drop file here</div><div class="dz-s">or click to browse · 1024×1024</div></div>
           </div>
           <div class="inp-prev" id="pw-old"><canvas id="cv-old"></canvas><span class="prev-badge" id="old-pw-badge">INPUT</span></div>
           <div class="status" id="st-old"></div>
@@ -891,172 +882,156 @@ kbd{
         </div>
         <div class="out-card">
           <div class="hidden" id="out-old">
-            <div class="out-head">
-              <span class="out-title" id="old-out-head">Output</span>
-              <a class="btn-dl" id="dl-old" href="#" download="polytoria_upgraded.png">⬇ <span id="old-dl-label">Download</span></a>
+            <div class="out-head"><span class="out-title" id="old-out-head">Output</span><a class="btn-dl" id="dl-old" href="#" download="polytoria_upgraded.png">⬇ <span id="old-dl-label">Download</span></a></div>
+            <div class="cmp-row"><div class="cmp-item"><canvas id="cmp-old-i"></canvas><span class="cmp-lbl">INPUT</span></div><div class="cmp-item"><canvas id="cmp-old-o"></canvas><span class="cmp-lbl">OUTPUT</span></div></div>
+            <div class="out-wrap"><canvas id="out-old-cv" width="1024" height="1024" style="width:100%;display:block;image-rendering:pixelated;"></canvas><span class="prev-badge" id="old-out-badge">PT 2.0 · 1024×1024</span></div>
+            <div class="pf-strip" id="pf-old">
+              <div class="pf-row"><span class="pf-lbl">Post-FX</span><button class="mk-btn on-fx" onclick="setPF('old','fx',this,'none')">None</button><button class="mk-btn" onclick="setPF('old','fx',this,'fake3d')">🧊 3D</button><button class="mk-btn" onclick="setPF('old','fx',this,'vintage')">📷 Vintage</button><button class="mk-btn" onclick="setPF('old','fx',this,'glitch')">⚡ Glitch</button><button class="mk-btn" onclick="setPF('old','fx',this,'scanlines')">📺 Scan</button><button class="mk-btn" onclick="setPF('old','fx',this,'vignette')">🌑 Vignette</button><button class="mk-btn" onclick="setPF('old','fx',this,'pixelate')">🟦 Pixel</button><button class="mk-btn" onclick="setPF('old','fx',this,'neon')">💡 Neon</button><button class="mk-btn" onclick="setPF('old','fx',this,'grayscale')">🩶 Gray</button><button class="mk-btn" onclick="setPF('old','fx',this,'invert')">🔄 Invert</button><button class="mk-btn" onclick="setPF('old','fx',this,'rainbow')">🌈 Rainbow</button><button class="mk-btn" onclick="setPF('old','fx',this,'grunge')">🪨 Grunge</button></div>
+              <div class="pf-row"><span class="pf-lbl">Tint</span><button class="mk-btn on-tint" onclick="setPF('old','tint',this,'none')">None</button><button class="mk-btn" onclick="setPF('old','tint',this,'red')">🔴</button><button class="mk-btn" onclick="setPF('old','tint',this,'orange')">🟠</button><button class="mk-btn" onclick="setPF('old','tint',this,'gold')">🟡</button><button class="mk-btn" onclick="setPF('old','tint',this,'green')">🟢</button><button class="mk-btn" onclick="setPF('old','tint',this,'blue')">🔵</button><button class="mk-btn" onclick="setPF('old','tint',this,'purple')">🟣</button><button class="mk-btn" onclick="setPF('old','tint',this,'pink')">🩷</button><button class="mk-btn" onclick="setPF('old','tint',this,'cyan')">🩵</button><button class="mk-btn" onclick="setPF('old','tint',this,'dark')">⬛</button><button class="mk-btn" onclick="setPF('old','tint',this,'light')">⬜</button></div>
+              <div class="pf-row" style="justify-content:flex-end"><button class="btn-conv" style="width:auto;padding:5px 16px;font-size:.72rem;" onclick="applyPF('old')">✦ Apply &amp; Re-export</button></div>
             </div>
-            <div class="cmp-row">
-              <div class="cmp-item"><canvas id="cmp-old-i"></canvas><span class="cmp-lbl">INPUT</span></div>
-              <div class="cmp-item"><canvas id="cmp-old-o"></canvas><span class="cmp-lbl">OUTPUT</span></div>
-            </div>
-            <div class="out-wrap"><canvas id="out-old-cv" width="1024" height="1024"></canvas><span class="prev-badge" id="old-out-badge">PT 2.0 · 1024×1024</span></div>
           </div>
           <div class="empty" id="em-old"><span class="empty-ico" id="old-em-ico">🔄</span><span id="old-em-text">Output appears here after upgrade</span></div>
         </div>
       </div>
     </div>
 
-    <!-- ── PANEL: PT2RBX ── -->
+    <!-- ══ PT2RBX PANEL ══ -->
     <div class="panel" id="panel-pt2rbx">
       <div class="conv-layout">
         <div class="drop-card" id="pt2rbx-in-card">
-          <div>
-            <div class="drop-title" id="pt2rbx-title">PT 2.0 → Roblox</div>
-            <div class="drop-sub" id="pt2rbx-desc">Drop your PT 2.0 template and hit Convert.</div>
-          </div>
+          <div><div class="drop-title" id="pt2rbx-title">PT 2.0 → Roblox</div><div class="drop-sub" id="pt2rbx-desc">Drop your PT 2.0 template and hit Convert.</div></div>
           <div class="dz" id="pt2rbx-dz" ondragover="dzo(event,this)" ondragleave="dzl(this)" ondrop="dzd(event,'pt2rbx')">
             <input type="file" accept="image/*" onchange="lf(event,'pt2rbx')" id="pt2rbx-file-input">
-            <div class="dz-inner">
-              <span class="dz-ico" id="pt2rbx-dz-ico">🔁</span>
-              <div class="dz-t" id="pt2rbx-dz-t">Drop PT 2.0 template here</div>
-              <div class="dz-s">or click to browse · PNG / JPG</div>
-            </div>
+            <div class="dz-inner"><span class="dz-ico" id="pt2rbx-dz-ico">🔁</span><div class="dz-t" id="pt2rbx-dz-t">Drop PT 2.0 template here</div><div class="dz-s">or click to browse · PNG / JPG</div></div>
           </div>
           <div class="inp-prev" id="pw-pt2rbx"><canvas id="cv-pt2rbx"></canvas><span class="prev-badge" id="pt2rbx-pw-badge">INPUT</span></div>
           <div class="status" id="st-pt2rbx"></div>
           <button class="btn-conv" id="btn-pt2rbx" onclick="convPt2rbx()" disabled style="background:linear-gradient(135deg,#e05a00,#f59e0b);box-shadow:0 3px 14px rgba(224,90,0,0.3);">🔁 <span id="pt2rbx-btn-label">Convert to Roblox Shirt</span></button>
-          <div class="hint-box" id="pt2rbx-ib">Shirt: remaps torso, both arms + caps to Roblox 585×559 format. Torso back face is preserved.</div>
+          <div class="hint-box" id="pt2rbx-ib">Converts PT 2.0 back to the standard <strong>Roblox 585×559</strong> template.</div>
         </div>
         <div class="out-card">
           <div class="hidden" id="out-pt2rbx">
-            <div class="out-head">
-              <span class="out-title" id="pt2rbx-out-head">Output · Roblox Template</span>
-              <a class="btn-dl" id="dl-pt2rbx" href="#" download="roblox_shirt.png">⬇ <span id="pt2rbx-dl-label">Download</span></a>
+            <div class="out-head"><span class="out-title" id="pt2rbx-out-head">Output · Roblox Template</span><a class="btn-dl" id="dl-pt2rbx" href="#" download="roblox_shirt.png">⬇ <span id="pt2rbx-dl-label">Download</span></a></div>
+            <div class="cmp-row"><div class="cmp-item"><canvas id="cmp-pt2rbx-i"></canvas><span class="cmp-lbl">INPUT</span></div><div class="cmp-item"><canvas id="cmp-pt2rbx-o"></canvas><span class="cmp-lbl">OUTPUT</span></div></div>
+            <div class="out-wrap checker"><canvas id="out-pt2rbx-cv" width="585" height="559" style="width:100%;display:block;image-rendering:pixelated;"></canvas><span class="prev-badge" id="pt2rbx-out-badge">ROBLOX · 585×559</span></div>
+            <div class="pf-strip" id="pf-pt2rbx">
+              <div class="pf-row"><span class="pf-lbl">Post-FX</span><button class="mk-btn on-fx" onclick="setPF('pt2rbx','fx',this,'none')">None</button><button class="mk-btn" onclick="setPF('pt2rbx','fx',this,'fake3d')">🧊 3D</button><button class="mk-btn" onclick="setPF('pt2rbx','fx',this,'vintage')">📷 Vintage</button><button class="mk-btn" onclick="setPF('pt2rbx','fx',this,'glitch')">⚡ Glitch</button><button class="mk-btn" onclick="setPF('pt2rbx','fx',this,'scanlines')">📺 Scan</button><button class="mk-btn" onclick="setPF('pt2rbx','fx',this,'vignette')">🌑 Vignette</button><button class="mk-btn" onclick="setPF('pt2rbx','fx',this,'pixelate')">🟦 Pixel</button><button class="mk-btn" onclick="setPF('pt2rbx','fx',this,'neon')">💡 Neon</button><button class="mk-btn" onclick="setPF('pt2rbx','fx',this,'grayscale')">🩶 Gray</button><button class="mk-btn" onclick="setPF('pt2rbx','fx',this,'invert')">🔄 Invert</button><button class="mk-btn" onclick="setPF('pt2rbx','fx',this,'rainbow')">🌈 Rainbow</button><button class="mk-btn" onclick="setPF('pt2rbx','fx',this,'grunge')">🪨 Grunge</button></div>
+              <div class="pf-row"><span class="pf-lbl">Tint</span><button class="mk-btn on-tint" onclick="setPF('pt2rbx','tint',this,'none')">None</button><button class="mk-btn" onclick="setPF('pt2rbx','tint',this,'red')">🔴</button><button class="mk-btn" onclick="setPF('pt2rbx','tint',this,'orange')">🟠</button><button class="mk-btn" onclick="setPF('pt2rbx','tint',this,'gold')">🟡</button><button class="mk-btn" onclick="setPF('pt2rbx','tint',this,'green')">🟢</button><button class="mk-btn" onclick="setPF('pt2rbx','tint',this,'blue')">🔵</button><button class="mk-btn" onclick="setPF('pt2rbx','tint',this,'purple')">🟣</button><button class="mk-btn" onclick="setPF('pt2rbx','tint',this,'pink')">🩷</button><button class="mk-btn" onclick="setPF('pt2rbx','tint',this,'cyan')">🩵</button><button class="mk-btn" onclick="setPF('pt2rbx','tint',this,'dark')">⬛</button><button class="mk-btn" onclick="setPF('pt2rbx','tint',this,'light')">⬜</button></div>
+              <div class="pf-row" style="justify-content:flex-end"><button class="btn-conv" style="width:auto;padding:5px 16px;font-size:.72rem;" onclick="applyPF('pt2rbx')">✦ Apply &amp; Re-export</button></div>
             </div>
-            <div class="cmp-row">
-              <div class="cmp-item"><canvas id="cmp-pt2rbx-i"></canvas><span class="cmp-lbl">INPUT</span></div>
-              <div class="cmp-item"><canvas id="cmp-pt2rbx-o"></canvas><span class="cmp-lbl">OUTPUT</span></div>
-            </div>
-            <div class="out-wrap"><canvas id="out-pt2rbx-cv" width="585" height="559"></canvas><span class="prev-badge" id="pt2rbx-out-badge">ROBLOX · 585×559</span></div>
           </div>
           <div class="empty" id="em-pt2rbx"><span class="empty-ico" id="pt2rbx-em-ico">🎮</span><span id="pt2rbx-em-text">Output appears here after conversion</span></div>
         </div>
       </div>
     </div>
 
-    <!-- ── PANEL: FULL KIT ── -->
+    <!-- ══ FULL KIT PANEL ══ -->
     <div class="panel" id="panel-fullkit">
-      <div class="sec-h">Full Kit — Roblox Shirt + Pants → PT 2.0</div>
-      <div class="sec-s">Upload a Roblox <strong>shirt</strong> and a Roblox <strong>pants</strong> template. Both will be combined into a single 1024×1024 Polytoria PNG — shirt covers the torso &amp; arms, pants covers the legs.</div>
+      <div class="sec-h">Full Kit — Shirt + Pants → PT 2.0</div>
+      <div class="sec-s">Upload a Roblox <strong>shirt</strong> and <strong>pants</strong> template. Both combine into a single 1024×1024 Polytoria PNG.</div>
       <div class="conv-layout">
         <div class="drop-card">
-          <div>
-            <div class="drop-title">Upload Both Templates</div>
-            <div class="drop-sub">Drop shirt first, then pants — or vice versa.</div>
-          </div>
-          <!-- Shirt drop -->
-          <div style="margin-bottom:4px;font-size:0.7rem;color:var(--sub);font-family:'JetBrains Mono',monospace;letter-spacing:0.3px;">👕 SHIRT TEMPLATE</div>
+          <div class="drop-title">Upload Both Templates</div>
+          <div class="fk-sub-lbl" style="margin-top:8px;">👕 SHIRT TEMPLATE</div>
           <div class="dz" id="fk-shirt-dz" ondragover="dzo(event,this)" ondragleave="dzl(this)" ondrop="fkDrop(event,'shirt')">
             <input type="file" accept="image/*" onchange="fkLoad(event,'shirt')" id="fk-shirt-input">
-            <div class="dz-inner">
-              <span class="dz-ico" id="fk-shirt-ico">👕</span>
-              <div class="dz-t" id="fk-shirt-t">Drop Roblox shirt here</div>
-              <div class="dz-s">585×559 · PNG / JPG</div>
-            </div>
+            <div class="dz-inner"><span class="dz-ico" id="fk-shirt-ico">👕</span><div class="dz-t" id="fk-shirt-t">Drop Roblox shirt here</div><div class="dz-s">585×559 · PNG / JPG</div></div>
           </div>
           <div class="inp-prev" id="pw-fkShirt" style="display:none"><canvas id="cv-fkShirt"></canvas><span class="prev-badge">SHIRT INPUT</span></div>
-          <!-- Pants drop -->
-          <div style="margin:8px 0 4px;font-size:0.7rem;color:var(--sub);font-family:'JetBrains Mono',monospace;letter-spacing:0.3px;">👖 PANTS TEMPLATE</div>
+          <div class="fk-sub-lbl" style="margin-top:8px;">👖 PANTS TEMPLATE</div>
           <div class="dz" id="fk-pants-dz" ondragover="dzo(event,this)" ondragleave="dzl(this)" ondrop="fkDrop(event,'pants')">
             <input type="file" accept="image/*" onchange="fkLoad(event,'pants')" id="fk-pants-input">
-            <div class="dz-inner">
-              <span class="dz-ico" id="fk-pants-ico">👖</span>
-              <div class="dz-t" id="fk-pants-t">Drop Roblox pants here</div>
-              <div class="dz-s">585×559 · PNG / JPG</div>
-            </div>
+            <div class="dz-inner"><span class="dz-ico" id="fk-pants-ico">👖</span><div class="dz-t" id="fk-pants-t">Drop Roblox pants here</div><div class="dz-s">585×559 · PNG / JPG</div></div>
           </div>
           <div class="inp-prev" id="pw-fkPants" style="display:none"><canvas id="cv-fkPants"></canvas><span class="prev-badge">PANTS INPUT</span></div>
           <div class="status" id="st-fk"></div>
-          <button class="btn-conv" id="btn-fk" onclick="convFullKit()" disabled style="background:linear-gradient(135deg,#06d6a0,#5b8dee);box-shadow:0 3px 14px rgba(6,214,160,0.3);">🎽 <span>Combine into PT 2.0</span></button>
+          <button class="btn-conv" id="btn-fk" onclick="convFullKit()" disabled style="background:linear-gradient(135deg,var(--c3),var(--c1));box-shadow:0 3px 14px var(--sh3);">🎽 <span>Combine into PT 2.0</span></button>
           <div class="hint-box">Combines torso+arms from shirt and legs from pants into one 1024×1024 PT file.</div>
         </div>
         <div class="out-card">
           <div class="hidden" id="out-fk">
-            <div class="out-head">
-              <span class="out-title">Output · Full Kit PT 2.0</span>
-              <a class="btn-dl" id="dl-fk" href="#" download="polytoria_fullkit.png">⬇ Download Full Kit</a>
-            </div>
-            <div class="out-wrap"><canvas id="out-fk-cv" width="1024" height="1024"></canvas><span class="prev-badge">PT 2.0 FULL KIT · 1024×1024</span></div>
+            <div class="out-head"><span class="out-title">Output · Full Kit PT 2.0</span><a class="btn-dl" id="dl-fk" href="#" download="polytoria_fullkit.png">⬇ Download Full Kit</a></div>
+            <div class="out-wrap"><canvas id="out-fk-cv" width="1024" height="1024" style="width:100%;display:block;image-rendering:pixelated;"></canvas><span class="prev-badge">PT 2.0 FULL KIT · 1024×1024</span></div>
           </div>
           <div class="empty" id="em-fk"><span class="empty-ico">🎽</span><span>Upload shirt + pants then hit Combine</span></div>
         </div>
       </div>
     </div>
 
-    <!-- ── PANEL: CLOTHING MAKER ── -->
-    <div class="panel" id="panel-maker">
-      <div class="sec-h">🪄 Roblox Clothing Maker</div>
-      <div class="sec-s">Upload <strong>any image</strong> (texture, pattern, photo…) and it gets stamped into every face of a Roblox <strong>shirt</strong> or <strong>pants</strong> template. Download the ready-to-upload 585×559 PNG.</div>
+    <!-- ══ PT MAKER PANEL ══ -->
+    <div class="panel" id="panel-ptmaker">
+      <div class="sec-h">✨ Polytoria Clothing Maker</div>
+      <div class="sec-s">Upload <strong>any image</strong> and stamp it into every face of a Polytoria 2.0 template. Output: 1024×1024 PNG.</div>
       <div class="conv-layout">
         <div class="drop-card">
-          <div>
-            <div class="drop-title">1 — Choose type</div>
+          <div class="drop-title" style="margin-bottom:6px;">1 — Choose type</div>
+          <div class="mode-toggle" style="width:100%;margin-bottom:8px;">
+            <button class="mode-btn active" id="ptmk-mode-shirt" onclick="setPtMakerMode('shirt')" style="flex:1">👕 Shirt</button>
+            <button class="mode-btn" id="ptmk-mode-pants" onclick="setPtMakerMode('pants')" style="flex:1">👖 Pants</button>
           </div>
+          <div class="drop-title" style="margin-bottom:4px;">2 — Upload texture</div>
+          <div class="dz" id="ptmk-dz" ondragover="dzo(event,this)" ondragleave="dzl(this)" ondrop="ptmkDrop(event)">
+            <input type="file" accept="image/*" onchange="ptmkLoad(event)" id="ptmk-file-input">
+            <div class="dz-inner"><span class="dz-ico" id="ptmk-ico">🖼</span><div class="dz-t" id="ptmk-t">Drop any image here</div><div class="dz-s">wood, metal, camo…</div></div>
+          </div>
+          <div class="inp-prev" id="pw-ptmk" style="display:none"><canvas id="cv-ptmk"></canvas><span class="prev-badge">TEXTURE</span></div>
+          <div class="drop-title" style="margin:8px 0 4px;">3 — Style it ✨</div>
+          <div class="mk-section"><div class="mk-lbl">Fill Mode</div><div class="mk-row" id="ptmk-fill-row"><button class="mk-btn on-fill" onclick="setPtMkFill(this,'stretch')">⬜ Stretch</button><button class="mk-btn" onclick="setPtMkFill(this,'tile')">▦ Tile</button><button class="mk-btn" onclick="setPtMkFill(this,'fullspread')">🌐 Full Spread</button><button class="mk-btn" onclick="setPtMkFill(this,'mirror')">⧎ Mirror</button><button class="mk-btn" onclick="setPtMkFill(this,'fit')">📐 Fit</button><button class="mk-btn" onclick="setPtMkFill(this,'diagonal')">◈ Diagonal</button></div></div>
+          <div class="mk-section"><div class="mk-lbl">Effect</div><div class="mk-row" id="ptmk-fx-row"><button class="mk-btn on-fx" onclick="setPtMkFx(this,'none')">✦ None</button><button class="mk-btn" onclick="setPtMkFx(this,'fake3d')">🧊 Fake 3D</button><button class="mk-btn" onclick="setPtMkFx(this,'vintage')">📷 Vintage</button><button class="mk-btn" onclick="setPtMkFx(this,'glitch')">⚡ Glitch</button><button class="mk-btn" onclick="setPtMkFx(this,'scanlines')">📺 Scanlines</button><button class="mk-btn" onclick="setPtMkFx(this,'vignette')">🌑 Vignette</button><button class="mk-btn" onclick="setPtMkFx(this,'pixelate')">🟦 Pixelate</button><button class="mk-btn" onclick="setPtMkFx(this,'neon')">💡 Neon</button><button class="mk-btn" onclick="setPtMkFx(this,'grayscale')">🩶 Gray</button><button class="mk-btn" onclick="setPtMkFx(this,'invert')">🔄 Invert</button><button class="mk-btn" onclick="setPtMkFx(this,'rainbow')">🌈 Rainbow</button><button class="mk-btn" onclick="setPtMkFx(this,'grunge')">🪨 Grunge</button></div></div>
+          <div class="mk-section"><div class="mk-lbl">Color Tint</div><div class="mk-row" id="ptmk-tint-row"><button class="mk-btn on-tint" onclick="setPtMkTint(this,'none')">◌ None</button><button class="mk-btn" onclick="setPtMkTint(this,'red')">🔴 Red</button><button class="mk-btn" onclick="setPtMkTint(this,'orange')">🟠 Orange</button><button class="mk-btn" onclick="setPtMkTint(this,'gold')">🟡 Gold</button><button class="mk-btn" onclick="setPtMkTint(this,'green')">🟢 Green</button><button class="mk-btn" onclick="setPtMkTint(this,'blue')">🔵 Blue</button><button class="mk-btn" onclick="setPtMkTint(this,'purple')">🟣 Purple</button><button class="mk-btn" onclick="setPtMkTint(this,'pink')">🩷 Pink</button><button class="mk-btn" onclick="setPtMkTint(this,'cyan')">🩵 Cyan</button><button class="mk-btn" onclick="setPtMkTint(this,'dark')">⬛ Dark</button><button class="mk-btn" onclick="setPtMkTint(this,'light')">⬜ Light</button></div></div>
+          <div class="mk-section"><div class="mk-lbl">Opacity</div><div class="mk-row" id="ptmk-op-row"><button class="mk-btn" onclick="setPtMkOpacity(this,0.25)">25%</button><button class="mk-btn" onclick="setPtMkOpacity(this,0.5)">50%</button><button class="mk-btn" onclick="setPtMkOpacity(this,0.75)">75%</button><button class="mk-btn on-op" onclick="setPtMkOpacity(this,1.0)">100%</button></div></div>
+          <div class="status" id="st-ptmk"></div>
+          <button class="btn-conv" id="btn-ptmk" onclick="convPtMaker()" disabled style="background:linear-gradient(135deg,var(--c3),var(--c1));box-shadow:0 3px 14px var(--sh3);">✨ <span id="ptmk-btn-lbl">Generate PT Shirt</span></button>
+          <div class="hint-box" id="ptmk-hint">Fills every face of the Polytoria shirt template.</div>
+        </div>
+        <div class="out-card">
+          <div class="hidden" id="out-ptmk">
+            <div class="out-head"><span class="out-title" id="ptmk-out-head">Output · PT 2.0 Shirt</span><a class="btn-dl" id="dl-ptmk" href="#" download="polytoria_shirt_made.png">⬇ <span id="ptmk-dl-lbl">Download</span></a></div>
+            <div class="out-wrap checker"><canvas id="out-ptmk-cv" width="1024" height="1024" style="width:100%;display:block;image-rendering:pixelated;"></canvas><span class="prev-badge" id="ptmk-out-badge">PT 2.0 SHIRT · 1024×1024</span></div>
+          </div>
+          <div class="empty" id="em-ptmk"><span class="empty-ico">✨</span><span>Your PT 2.0 template appears here</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ ROBLOX MAKER PANEL ══ -->
+    <div class="panel" id="panel-maker">
+      <div class="sec-h">🪄 Roblox Clothing Maker</div>
+      <div class="sec-s">Upload <strong>any image</strong> and stamp it into every face of a Roblox template. Output: ready-to-upload 585×559 PNG.</div>
+      <div class="conv-layout">
+        <div class="drop-card">
+          <div class="drop-title" style="margin-bottom:6px;">1 — Choose type</div>
           <div class="mode-toggle" style="width:100%;margin-bottom:8px;">
             <button class="mode-btn active" id="mk-mode-shirt" onclick="setMakerMode('shirt')" style="flex:1">👕 Shirt</button>
             <button class="mode-btn" id="mk-mode-pants" onclick="setMakerMode('pants')" style="flex:1">👖 Pants</button>
           </div>
-          <div class="drop-title" style="margin-bottom:4px;">2 — Upload your texture</div>
+          <div class="drop-title" style="margin-bottom:4px;">2 — Upload texture</div>
           <div class="dz" id="mk-dz" ondragover="dzo(event,this)" ondragleave="dzl(this)" ondrop="mkDrop(event)">
             <input type="file" accept="image/*" onchange="mkLoad(event)" id="mk-file-input">
-            <div class="dz-inner">
-              <span class="dz-ico" id="mk-ico">🖼</span>
-              <div class="dz-t" id="mk-t">Drop any image here</div>
-              <div class="dz-s">wood, metal, camo, photo… anything goes</div>
-            </div>
+            <div class="dz-inner"><span class="dz-ico" id="mk-ico">🖼</span><div class="dz-t" id="mk-t">Drop any image here</div><div class="dz-s">wood, metal, camo, photo…</div></div>
           </div>
           <div class="inp-prev" id="pw-mk" style="display:none"><canvas id="cv-mk"></canvas><span class="prev-badge">TEXTURE</span></div>
-
-          <div class="drop-title" style="margin:8px 0 4px;">3 — Fill options</div>
-          <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px;">
-            <div style="flex:1;min-width:130px;">
-              <div style="font-size:0.62rem;color:var(--sub);font-family:'JetBrains Mono',monospace;margin-bottom:3px;">FILL MODE</div>
-              <div class="select-row" style="gap:4px;">
-                <button class="btn-sm active" id="mk-fill-stretch" onclick="setMkFill(this,'stretch')">Stretch</button>
-                <button class="btn-sm" id="mk-fill-tile" onclick="setMkFill(this,'tile')">Tile</button>
-              </div>
-            </div>
-            <div style="flex:1;min-width:130px;">
-              <div style="font-size:0.62rem;color:var(--sub);font-family:'JetBrains Mono',monospace;margin-bottom:3px;">OPACITY</div>
-              <div class="select-row" style="gap:4px;">
-                <button class="btn-sm" onclick="setMkOpacity(this,0.5)">50%</button>
-                <button class="btn-sm" onclick="setMkOpacity(this,0.75)">75%</button>
-                <button class="btn-sm active" onclick="setMkOpacity(this,1.0)">100%</button>
-              </div>
-            </div>
-          </div>
-
+          <div class="drop-title" style="margin:8px 0 4px;">3 — Style it up ✨</div>
+          <div class="mk-section"><div class="mk-lbl">Fill Mode <span>how texture maps onto each face</span></div><div class="mk-row" id="mk-fill-row"><button class="mk-btn on-fill" onclick="setMkFill(this,'stretch')">⬜ Stretch</button><button class="mk-btn" onclick="setMkFill(this,'tile')">▦ Tile</button><button class="mk-btn" onclick="setMkFill(this,'fullspread')">🌐 Full Spread</button><button class="mk-btn" onclick="setMkFill(this,'mirror')">⧎ Mirror</button><button class="mk-btn" onclick="setMkFill(this,'fit')">📐 Fit</button><button class="mk-btn" onclick="setMkFill(this,'diagonal')">◈ Diagonal</button></div></div>
+          <div class="mk-section"><div class="mk-lbl">Effect <span>static post-process</span></div><div class="mk-row" id="mk-fx-row"><button class="mk-btn on-fx" onclick="setMkFx(this,'none')">✦ None</button><button class="mk-btn" onclick="setMkFx(this,'fake3d')">🧊 Fake 3D</button><button class="mk-btn" onclick="setMkFx(this,'vintage')">📷 Vintage</button><button class="mk-btn" onclick="setMkFx(this,'glitch')">⚡ Glitch</button><button class="mk-btn" onclick="setMkFx(this,'scanlines')">📺 Scanlines</button><button class="mk-btn" onclick="setMkFx(this,'vignette')">🌑 Vignette</button><button class="mk-btn" onclick="setMkFx(this,'pixelate')">🟦 Pixelate</button><button class="mk-btn" onclick="setMkFx(this,'neon')">💡 Neon</button><button class="mk-btn" onclick="setMkFx(this,'grayscale')">🩶 Grayscale</button><button class="mk-btn" onclick="setMkFx(this,'invert')">🔄 Invert</button><button class="mk-btn" onclick="setMkFx(this,'rainbow')">🌈 Rainbow</button><button class="mk-btn" onclick="setMkFx(this,'grunge')">🪨 Grunge</button></div></div>
+          <div class="mk-section"><div class="mk-lbl">Color Tint</div><div class="mk-row" id="mk-tint-row"><button class="mk-btn on-tint" onclick="setMkTint(this,'none')">◌ None</button><button class="mk-btn" onclick="setMkTint(this,'red')">🔴 Red</button><button class="mk-btn" onclick="setMkTint(this,'orange')">🟠 Orange</button><button class="mk-btn" onclick="setMkTint(this,'gold')">🟡 Gold</button><button class="mk-btn" onclick="setMkTint(this,'green')">🟢 Green</button><button class="mk-btn" onclick="setMkTint(this,'blue')">🔵 Blue</button><button class="mk-btn" onclick="setMkTint(this,'purple')">🟣 Purple</button><button class="mk-btn" onclick="setMkTint(this,'pink')">🩷 Pink</button><button class="mk-btn" onclick="setMkTint(this,'cyan')">🩵 Cyan</button><button class="mk-btn" onclick="setMkTint(this,'dark')">⬛ Dark</button><button class="mk-btn" onclick="setMkTint(this,'light')">⬜ Light</button></div></div>
+          <div class="mk-section"><div class="mk-lbl">Opacity</div><div class="mk-row" id="mk-op-row"><button class="mk-btn" onclick="setMkOpacity(this,0.25)">25%</button><button class="mk-btn" onclick="setMkOpacity(this,0.5)">50%</button><button class="mk-btn" onclick="setMkOpacity(this,0.75)">75%</button><button class="mk-btn on-op" onclick="setMkOpacity(this,1.0)">100%</button></div></div>
           <div class="status" id="st-mk"></div>
-          <button class="btn-conv" id="btn-mk" onclick="convMaker()" disabled style="background:linear-gradient(135deg,#ff6432,#a78bfa);box-shadow:0 3px 14px rgba(255,100,50,0.3);">🪄 <span id="mk-btn-lbl">Generate Shirt Template</span></button>
-          <div class="hint-box" id="mk-hint">Texture fills every face of the Roblox shirt template. Transparent gaps stay empty so Roblox renders correctly.</div>
+          <button class="btn-conv" id="btn-mk" onclick="convMaker()" disabled style="background:linear-gradient(135deg,#ff6432,var(--c2));box-shadow:0 3px 14px rgba(255,100,50,0.3);">🪄 <span id="mk-btn-lbl">Generate Shirt Template</span></button>
+          <div class="hint-box" id="mk-hint">Texture fills every face of the Roblox shirt template. Transparent gaps stay empty.</div>
         </div>
         <div class="out-card">
           <div class="hidden" id="out-mk">
-            <div class="out-head">
-              <span class="out-title" id="mk-out-head">Output · Roblox Shirt</span>
-              <a class="btn-dl" id="dl-mk" href="#" download="roblox_shirt_made.png">⬇ <span id="mk-dl-lbl">Download Shirt</span></a>
-            </div>
-            <div class="out-wrap" style="background:repeating-conic-gradient(#1a1a2a 0% 25%,#0c0c1a 0% 50%) 0 0/16px 16px">
-              <canvas id="out-mk-cv" width="585" height="559" style="width:100%;image-rendering:pixelated;border-radius:7px;display:block;" class="checker"></canvas>
-              <span class="prev-badge" id="mk-out-badge">ROBLOX SHIRT · 585×559</span>
-            </div>
+            <div class="out-head"><span class="out-title" id="mk-out-head">Output · Roblox Shirt</span><a class="btn-dl" id="dl-mk" href="#" download="roblox_shirt_made.png">⬇ <span id="mk-dl-lbl">Download Shirt</span></a></div>
+            <div class="out-wrap checker"><canvas id="out-mk-cv" width="585" height="559" class="checker" style="width:100%;display:block;image-rendering:pixelated;"></canvas><span class="prev-badge" id="mk-out-badge">ROBLOX SHIRT · 585×559</span></div>
           </div>
           <div class="empty" id="em-mk"><span class="empty-ico">🪄</span><span>Your Roblox template appears here</span></div>
         </div>
       </div>
     </div>
 
-    <!-- ── PANEL: PREVIEW ── -->
+    <!-- ══ PREVIEW PANEL ══ -->
     <div class="panel" id="panel-preview">
       <div class="sec-h">Region Preview</div>
       <div class="sec-s">Drop any PT 2.0 template to see exactly which pixels map to which body part.</div>
@@ -1064,34 +1039,17 @@ kbd{
         <div class="card-lbl">Upload PT 2.0 Template</div>
         <div class="dz" ondragover="dzo(event,this)" ondragleave="dzl(this)" ondrop="dzd(event,'preview')">
           <input type="file" accept="image/*" onchange="lf(event,'preview')">
-          <div class="dz-inner">
-            <span class="dz-ico">🔍</span>
-            <div class="dz-t">Drop any PT 2.0 template here</div>
-            <div class="dz-s">shirt or pants · 1024×1024 recommended</div>
-          </div>
+          <div class="dz-inner"><span class="dz-ico">🔍</span><div class="dz-t">Drop any PT 2.0 template here</div><div class="dz-s">shirt or pants · 1024×1024</div></div>
         </div>
       </div>
       <div id="pv-output" style="display:none">
         <div class="g2 gap">
-          <div class="card">
-            <div class="card-lbl">Your Texture</div>
-            <canvas id="pv-tex" width="1024" height="1024" style="width:100%;image-rendering:pixelated;border-radius:7px;display:block;background:#000"></canvas>
-          </div>
-          <div class="card">
-            <div class="card-lbl">Region Overlay</div>
-            <canvas id="pv-ov" width="1024" height="1024" style="width:100%;image-rendering:pixelated;border-radius:7px;display:block;background:#000"></canvas>
-            <div class="legend">
-              <div class="leg"><div class="ldot" style="background:#f05e8c"></div>Left</div>
-              <div class="leg"><div class="ldot" style="background:#3ecfcf"></div>Back</div>
-              <div class="leg"><div class="ldot" style="background:#b07cfc"></div>Right</div>
-              <div class="leg"><div class="ldot" style="background:#3ecf8e"></div>Front</div>
-              <div class="leg"><div class="ldot" style="background:#f0d03e"></div>Top</div>
-              <div class="leg"><div class="ldot" style="background:#c87840"></div>Bot</div>
-            </div>
+          <div class="card"><div class="card-lbl">Your Texture</div><canvas id="pv-tex" width="1024" height="1024" style="width:100%;image-rendering:pixelated;border-radius:var(--r2);display:block;background:#000"></canvas></div>
+          <div class="card"><div class="card-lbl">Region Overlay</div><canvas id="pv-ov" width="1024" height="1024" style="width:100%;image-rendering:pixelated;border-radius:var(--r2);display:block;background:#000"></canvas>
+            <div class="legend"><div class="leg"><div class="ldot" style="background:#f05e8c"></div>Left</div><div class="leg"><div class="ldot" style="background:#3ecfcf"></div>Back</div><div class="leg"><div class="ldot" style="background:#b07cfc"></div>Right</div><div class="leg"><div class="ldot" style="background:#3ecf8e"></div>Front</div><div class="leg"><div class="ldot" style="background:#f0d03e"></div>Top</div><div class="leg"><div class="ldot" style="background:#c87840"></div>Bot</div></div>
           </div>
         </div>
-        <div class="mq-sec" style="display:block;margin-bottom:12px">
-          <div class="card-lbl">Mannequin Preview</div>
+        <div class="mq-sec" style="display:block;margin-bottom:14px"><div class="card-lbl">Mannequin Preview</div>
           <div class="mq-row">
             <div class="mq-view"><canvas id="pv-f" width="240" height="320"></canvas><div class="mq-lbl">front</div></div>
             <div class="mq-view"><canvas id="pv-b" width="240" height="320"></canvas><div class="mq-lbl">back</div></div>
@@ -1101,269 +1059,134 @@ kbd{
       </div>
     </div>
 
-    <!-- ── PANEL: TOOLS ── -->
+    <!-- ══ ALL TOOLS PANEL ══ -->
     <div class="panel" id="panel-tools">
       <div class="sec-h">All Tools</div>
       <div class="sec-s">Quick access to every converter and utility.</div>
       <div class="tools-grid gap">
-        <div class="tool-card" onclick="setMode('shirt');goTo(document.getElementById('nbtn-rbx'),'rbx')">
-          <span class="tool-ico">👕</span>
-          <div class="tool-name">Roblox Shirt → PT 2.0</div>
-          <div class="tool-desc">585×559 → 1024×1024, all faces</div>
-          <span class="tool-badge tb-s">SHIRT</span>
-        </div>
-        <div class="tool-card" onclick="setMode('pants');goTo(document.getElementById('nbtn-rbx'),'rbx')">
-          <span class="tool-ico">👖</span>
-          <div class="tool-name">Roblox Pants → PT 2.0</div>
-          <div class="tool-desc">Both legs + waist remapped</div>
-          <span class="tool-badge tb-p">PANTS</span>
-        </div>
-        <div class="tool-card" onclick="setMode('shirt');goTo(document.getElementById('nbtn-old'),'old')">
-          <span class="tool-ico">🔄</span>
-          <div class="tool-name">Old PT Shirt → PT 2.0</div>
-          <div class="tool-desc">Compact cross → new format</div>
-          <span class="tool-badge tb-u">UPGRADE</span>
-        </div>
-        <div class="tool-card" onclick="setMode('pants');goTo(document.getElementById('nbtn-old'),'old')">
-          <span class="tool-ico">🩳</span>
-          <div class="tool-name">Old PT Pants → PT 2.0</div>
-          <div class="tool-desc">Legs + waist remapped</div>
-          <span class="tool-badge tb-u">UPGRADE</span>
-        </div>
-        <div class="tool-card" onclick="setMode('shirt');goTo(document.getElementById('nbtn-pt2rbx'),'pt2rbx')">
-          <span class="tool-ico">🔁</span>
-          <div class="tool-name">PT 2.0 Shirt → Roblox</div>
-          <div class="tool-desc">Export back to Roblox 585×559 format</div>
-          <span class="tool-badge tb-s">NEW</span>
-        </div>
-        <div class="tool-card" onclick="setMode('pants');goTo(document.getElementById('nbtn-pt2rbx'),'pt2rbx')">
-          <span class="tool-ico">🔁</span>
-          <div class="tool-name">PT 2.0 Pants → Roblox</div>
-          <div class="tool-desc">Export legs back to Roblox pants format</div>
-          <span class="tool-badge tb-p">NEW</span>
-        </div>
-        <div class="tool-card" onclick="goTo(document.querySelector('[data-p=preview]'),'preview')">
-          <span class="tool-ico">🔍</span>
-          <div class="tool-name">Region Preview</div>
-          <div class="tool-desc">Color overlay on any PT 2.0 template</div>
-        </div>
-        <div class="tool-card" onclick="goTo(document.getElementById('nbtn-fullkit'),'fullkit')">
-          <span class="tool-ico">🎽</span>
-          <div class="tool-name">Full Kit Combiner</div>
-          <div class="tool-desc">Roblox shirt + pants → one PT 2.0 PNG</div>
-          <span class="tool-badge" style="background:rgba(6,214,160,0.15);color:var(--c3)">NEW</span>
-        </div>
-        <div class="tool-card" onclick="goTo(document.querySelector('[data-p=maker]'),'maker')">
-          <span class="tool-ico">🪄</span>
-          <div class="tool-name">Clothing Maker</div>
-          <div class="tool-desc">Any texture → Roblox shirt or pants 585×559</div>
-          <span class="tool-badge" style="background:rgba(255,120,50,0.15);color:#ff9060">NEW</span>
-        </div>
-        <div class="tool-card" onclick="goTo(document.querySelector('[data-p=about]'),'about')">
-          <span class="tool-ico">📐</span>
-          <div class="tool-name">Coordinate Reference</div>
-          <div class="tool-desc">All pixel coords for PT 2.0</div>
-        </div>
+        <div class="tool-card" onclick="setMode('shirt');goTo(document.getElementById('nbtn-rbx'),'rbx')"><span class="tool-ico">👕</span><div class="tool-name">Roblox Shirt → PT 2.0</div><div class="tool-desc">585×559 → 1024×1024, all faces</div><span class="tool-badge tb-s">SHIRT</span></div>
+        <div class="tool-card" onclick="setMode('pants');goTo(document.getElementById('nbtn-rbx'),'rbx')"><span class="tool-ico">👖</span><div class="tool-name">Roblox Pants → PT 2.0</div><div class="tool-desc">Both legs + waist remapped</div><span class="tool-badge tb-p">PANTS</span></div>
+        <div class="tool-card" onclick="setMode('shirt');goTo(document.getElementById('nbtn-old'),'old')"><span class="tool-ico">🔄</span><div class="tool-name">Old PT Shirt → PT 2.0</div><div class="tool-desc">Compact cross → new format</div><span class="tool-badge tb-u">UPGRADE</span></div>
+        <div class="tool-card" onclick="setMode('pants');goTo(document.getElementById('nbtn-old'),'old')"><span class="tool-ico">🩳</span><div class="tool-name">Old PT Pants → PT 2.0</div><div class="tool-desc">Legs + waist remapped</div><span class="tool-badge tb-u">UPGRADE</span></div>
+        <div class="tool-card" onclick="setMode('shirt');goTo(document.getElementById('nbtn-pt2rbx'),'pt2rbx')"><span class="tool-ico">🔁</span><div class="tool-name">PT 2.0 Shirt → Roblox</div><div class="tool-desc">Export back to 585×559 format</div><span class="tool-badge tb-s">NEW</span></div>
+        <div class="tool-card" onclick="setMode('pants');goTo(document.getElementById('nbtn-pt2rbx'),'pt2rbx')"><span class="tool-ico">🔁</span><div class="tool-name">PT 2.0 Pants → Roblox</div><div class="tool-desc">Export legs back to Roblox format</div><span class="tool-badge tb-p">NEW</span></div>
+        <div class="tool-card" onclick="goTo(document.querySelector('[data-p=ptmaker]'),'ptmaker')"><span class="tool-ico">✨</span><div class="tool-name">PT Clothing Maker</div><div class="tool-desc">Any texture → PT 2.0 1024×1024</div><span class="tool-badge tb-u">NEW</span></div>
+        <div class="tool-card" onclick="goTo(document.querySelector('[data-p=maker]'),'maker')"><span class="tool-ico">🪄</span><div class="tool-name">Roblox Clothing Maker</div><div class="tool-desc">Any texture → Roblox 585×559</div><span class="tool-badge" style="background:rgba(255,120,50,.15);color:#ff9060;border:1px solid rgba(255,120,50,.25)">NEW</span></div>
+        <div class="tool-card" onclick="goTo(document.getElementById('nbtn-fullkit'),'fullkit')"><span class="tool-ico">🎽</span><div class="tool-name">Full Kit Combiner</div><div class="tool-desc">Shirt + pants → one PT 2.0 PNG</div><span class="tool-badge tb-u">NEW</span></div>
+        <div class="tool-card" onclick="goTo(document.querySelector('[data-p=preview]'),'preview')"><span class="tool-ico">🔍</span><div class="tool-name">Region Preview</div><div class="tool-desc">Color overlay on any PT 2.0</div></div>
+        <div class="tool-card" onclick="goTo(document.querySelector('[data-p=foxes]'),'foxes')"><span class="tool-ico">🦊</span><div class="tool-name">Foxes & Furries</div><div class="tool-desc">Absolutely essential</div><span class="tool-badge" style="background:rgba(255,107,53,.15);color:#ff8c42;border:1px solid rgba(255,107,53,.25)">🐾</span></div>
+        <div class="tool-card" onclick="goTo(document.querySelector('[data-p=about]'),'about')"><span class="tool-ico">📐</span><div class="tool-name">Coordinate Reference</div><div class="tool-desc">All pixel coords for PT 2.0</div></div>
       </div>
     </div>
 
-    <!-- ── PANEL: SETTINGS ── -->
+    <!-- ══ FOXES PANEL ══ -->
+    <div class="panel" id="panel-foxes">
+      <div class="fox-hero">
+        <span class="fox-emoji-rain">🦊 🦊 🐾 🦊 🦊</span>
+        <h1>Foxes &amp; Furries</h1>
+        <p>This tab exists for absolutely no reason whatsoever.</p>
+      </div>
+      <div class="fox-grid">
+        <div class="fox-card"><div class="fox-card-title">🦊 Why Foxes?</div><div class="fox-card-body">Nobody knows. They just showed up one day and never left. Foxes are the only animal that somehow managed to be both a dog and a cat at the same time. Science is still baffled.</div></div>
+        <div class="fox-card"><div class="fox-card-title">🌍 Fox Facts</div><div class="fox-card-body">• A fox's call is a "gekkering" 🗣️<br>• They use the Earth's magnetic field to hunt 🧲<br>• Baby foxes are called kits 🍼<br>• Arctic foxes change color seasonally ❄️<br>• They can rotate their ears 150° 👂</div></div>
+        <div class="fox-card"><div class="fox-card-title">🎨 Furry Art</div><div class="fox-card-body">The furry fandom is one of the largest creative communities on the internet. Millions of artists create characters called "fursonas." The fandom is full of genuinely kind people and incredible art. Don't believe what you hear.</div></div>
+        <div class="fox-card"><div class="fox-card-title">🦊 Types of Foxes</div><div class="fox-card-body">Red Fox · Arctic Fox · Fennec Fox · Gray Fox · Swift Fox · Kit Fox · Tibetan Sand Fox (the most derpy looking animal alive) · Corsac Fox · Cape Fox · Blanford's Fox</div></div>
+        <div class="fox-card"><div class="fox-card-title">🐾 The Connection</div><div class="fox-card-body">Foxes are the #1 most common fursona animal. Their design versatility, personality (clever, mischievous, independent) and distinctive looks make them perfect virtual avatars. This is completely relevant to a Polytoria clothing tool.</div></div>
+        <div class="fox-card"><div class="fox-card-title">🎮 Foxes in Games</div><div class="fox-card-body">Star Fox · Firefox (the browser counts) · Tails from Sonic · Nick Wilde from Zootopia · Vulpix in Pokémon · Carmelita Fox from Sly Cooper · Every single VRChat player ever</div></div>
+      </div>
+      <div class="fox-ascii">
+        ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡀⠀⢀⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+        ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⡾⢿⣿⣶⣿⡿⢷⣤⠀⠀⠀⠀⠀⠀⠀⠀⠀
+        ⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣼⠏⠀⢸⣿⣿⣿⡇⠀⠹⣧⡀⠀⠀⠀⠀⠀⠀⠀
+        ⠀⠀⠀⠀⠀⠀⠀⢀⣴⠟⠁⠀⠀⢸⣿⣿⣿⡇⠀⠀⠈⠻⣦⡀⠀⠀⠀⠀⠀
+        ⠀⠀⠀⠀⠀⠀⢠⡿⠁⠀⠀⠀⠀⣸⣿⣿⣿⣇⠀⠀⠀⠀⠈⢿⡄⠀⠀⠀⠀
+        ⠀⠀⠀⠀⠀⢠⡟⠀⠀⠀⠀⠀⣴⠟⠛⠛⠛⠻⣦⠀⠀⠀⠀⠀⢻⡄⠀⠀⠀
+        ⠀⠀⠀⠀⠀⣾⠃⠀⠀⠀⠀⠸⡿⠀🟠⠀🟠⠀⢿⡇⠀⠀⠀⠀⠈⣷⠀⠀⠀
+        ⠀⠀⠀⠀⠀⣿⠀⠀⠀⠀⠀⠀⠙⢦⣀⣀⣀⣠⠟⠁⠀⠀⠀⠀⠀⣿⠀⠀⠀
+        ⠀⠀⠀⠀⠀⣿⠀⠀⠀⠀⠀⠀⠀⠀⣤⠤⣤⠀⠀⠀⠀⠀⠀⠀⠀⣿⠀⠀⠀
+        ⠀⠀⠀⠀⠀⢿⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡿⠀⠀⠀
+        ⠀⠀⠀⠀⠀⠘⢷⣄⠀⠀⠀⣀⣀⡀⠀⠀⠀⢀⣀⣀⠀⠀⠀⣠⡾⠃⠀⠀⠀
+        ⠀⠀⠀⠀⠀⠀⠀⠉⠛⠛⠛⠉⠀⠀⠀⠀⠀⠀⠉⠛⠛⠛⠛⠉⠀⠀⠀⠀⠀
+        — a fox, chilling, judging you
+      </div>
+      <br>
+      <div class="fox-gen">
+        <div style="font-size:.8rem;color:var(--sub);font-family:'JetBrains Mono',monospace;margin-bottom:8px;">🎲 Fox Name Generator</div>
+        <div class="fox-name-out" id="fox-name">???</div>
+        <div class="fox-trait-out" id="fox-trait">Click below to discover your inner fox</div>
+        <br>
+        <button class="btn-conv" onclick="genFox()" style="width:auto;padding:8px 24px;margin-top:4px;background:linear-gradient(135deg,#ff6b35,#ff8c42);box-shadow:0 4px 18px rgba(255,107,53,0.4);">🦊 Generate Fox</button>
+      </div>
+    </div>
+
+    <!-- ══ SETTINGS PANEL ══ -->
     <div class="panel" id="panel-settings">
       <div class="sec-h">Settings</div>
-      <div class="sec-s">All settings are saved to your browser automatically.</div>
-
+      <div class="sec-s">All settings saved to your browser automatically.</div>
+      <div class="settings-sec">
+        <div class="settings-sec-title">🎨 Theme</div>
+        <div class="settings-grid">
+          <div class="setting-row">
+            <div><div class="setting-name">Color theme</div><div class="setting-desc">Dark (cryptic aero) or Light (frutiger aero)</div></div>
+            <div class="select-row"><button class="btn-sm active" id="theme-dark-btn" onclick="setTheme('dark')">🌙 Dark</button><button class="btn-sm" id="theme-light-btn" onclick="setTheme('light')">☀️ Light</button></div>
+          </div>
+        </div>
+      </div>
       <div class="settings-sec">
         <div class="settings-sec-title">📦 Output</div>
         <div class="settings-grid">
-          <div class="setting-row">
-            <div><div class="setting-name">Auto-download on convert</div><div class="setting-desc">Save file immediately when conversion finishes</div></div>
-            <div class="toggle on" id="tog-autodl" onclick="toggleSetting(this,'autodl')"></div>
-          </div>
-          <div class="setting-row">
-            <div><div class="setting-name">Output format</div><div class="setting-desc">File format for downloads</div></div>
-            <div class="select-row">
-              <button class="btn-sm active" onclick="setSetting(this,'outputFmt','png')">PNG</button>
-              <button class="btn-sm" onclick="setSetting(this,'outputFmt','webp')">WebP</button>
-            </div>
-          </div>
-          <div class="setting-row">
-            <div><div class="setting-name">Filename prefix</div><div class="setting-desc">Prepended to every downloaded file</div></div>
-            <input type="text" value="polytoria_" id="set-prefix" class="setting-input" placeholder="polytoria_" oninput="saveSettings()">
-          </div>
-          <div class="setting-row">
-            <div><div class="setting-name">Include mode in filename</div><div class="setting-desc">Appends _shirt or _pants</div></div>
-            <div class="toggle on" id="tog-fname-mode" onclick="toggleSetting(this,'fnameMode')"></div>
-          </div>
-          <div class="setting-row">
-            <div><div class="setting-name">Canvas background</div><div class="setting-desc">Fill empty regions</div></div>
-            <div class="select-row">
-              <button class="btn-sm active" onclick="setSetting(this,'bgFill','transparent')">Transparent</button>
-              <button class="btn-sm" onclick="setSetting(this,'bgFill','black')">Black</button>
-              <button class="btn-sm" onclick="setSetting(this,'bgFill','white')">White</button>
-            </div>
-          </div>
+          <div class="setting-row"><div><div class="setting-name">Auto-download on convert</div><div class="setting-desc">Save file immediately when done</div></div><div class="toggle on" id="tog-autodl" onclick="toggleSetting(this,'autodl')"></div></div>
+          <div class="setting-row"><div><div class="setting-name">Output format</div><div class="setting-desc">File format for downloads</div></div><div class="select-row"><button class="btn-sm active" onclick="setSetting(this,'outputFmt','png')">PNG</button><button class="btn-sm" onclick="setSetting(this,'outputFmt','webp')">WebP</button></div></div>
+          <div class="setting-row"><div><div class="setting-name">Filename prefix</div><div class="setting-desc">Prepended to every downloaded file</div></div><input type="text" value="polytoria_" id="set-prefix" class="setting-input" placeholder="polytoria_" oninput="saveSettings()"></div>
+          <div class="setting-row"><div><div class="setting-name">Include mode in filename</div><div class="setting-desc">Appends _shirt or _pants</div></div><div class="toggle on" id="tog-fname-mode" onclick="toggleSetting(this,'fnameMode')"></div></div>
+          <div class="setting-row"><div><div class="setting-name">Canvas background</div><div class="setting-desc">Fill empty regions</div></div><div class="select-row"><button class="btn-sm active" onclick="setSetting(this,'bgFill','transparent')">Transparent</button><button class="btn-sm" onclick="setSetting(this,'bgFill','black')">Black</button><button class="btn-sm" onclick="setSetting(this,'bgFill','white')">White</button></div></div>
         </div>
       </div>
-
       <div class="settings-sec">
         <div class="settings-sec-title">🎨 Image Quality</div>
         <div class="settings-grid">
-          <div class="setting-row">
-            <div><div class="setting-name">Scaling mode</div><div class="setting-desc">How faces are resampled</div></div>
-            <div class="select-row">
-              <button class="btn-sm active" onclick="setSetting(this,'smooth','pixelated')">Pixelated</button>
-              <button class="btn-sm" onclick="setSetting(this,'smooth','bilinear')">Bilinear</button>
-            </div>
-          </div>
-          <div class="setting-row">
-            <div><div class="setting-name">Stretch to fill slots</div><div class="setting-desc">Scale source to fit destination exactly (recommended)</div></div>
-            <div class="toggle on" id="tog-stretch" onclick="toggleSetting(this,'stretch')"></div>
-          </div>
-          <div class="setting-row">
-            <div><div class="setting-name">Mirror left arm from right</div><div class="setting-desc">Auto-mirror for symmetric clothing</div></div>
-            <div class="toggle" id="tog-mirror" onclick="toggleSetting(this,'mirror')"></div>
-          </div>
+          <div class="setting-row"><div><div class="setting-name">Scaling mode</div><div class="setting-desc">How faces are resampled</div></div><div class="select-row"><button class="btn-sm active" onclick="setSetting(this,'smooth','pixelated')">Pixelated</button><button class="btn-sm" onclick="setSetting(this,'smooth','bilinear')">Bilinear</button></div></div>
+          <div class="setting-row"><div><div class="setting-name">Stretch to fill slots</div><div class="setting-desc">Scale source to fit destination exactly</div></div><div class="toggle on" id="tog-stretch" onclick="toggleSetting(this,'stretch')"></div></div>
+          <div class="setting-row"><div><div class="setting-name">Mirror left arm from right</div><div class="setting-desc">Auto-mirror for symmetric clothing</div></div><div class="toggle" id="tog-mirror" onclick="toggleSetting(this,'mirror')"></div></div>
         </div>
       </div>
-
       <div class="settings-sec">
         <div class="settings-sec-title">🖥 Display</div>
         <div class="settings-grid">
-          <div class="setting-row">
-            <div><div class="setting-name">Before/after comparison</div><div class="setting-desc">Side-by-side view after conversion</div></div>
-            <div class="toggle on" id="tog-cmp" onclick="toggleSetting(this,'cmp')"></div>
-          </div>
-          <div class="setting-row">
-            <div><div class="setting-name">Mannequin preview</div><div class="setting-desc">Render front/back after shirt conversion</div></div>
-            <div class="toggle on" id="tog-mq" onclick="toggleSetting(this,'mq')"></div>
-          </div>
-          <div class="setting-row">
-            <div><div class="setting-name">Overlay opacity</div><div class="setting-desc">Region overlay visibility in preview tool</div></div>
-            <div class="select-row">
-              <button class="btn-sm" onclick="setOpacity(this,0.15)">Low</button>
-              <button class="btn-sm active" onclick="setOpacity(this,0.35)">Med</button>
-              <button class="btn-sm" onclick="setOpacity(this,0.6)">High</button>
-              <button class="btn-sm" onclick="setOpacity(this,0.85)">Full</button>
-            </div>
-          </div>
-          <div class="setting-row">
-            <div><div class="setting-name">Overlay labels</div><div class="setting-desc">Show face name labels on region overlay</div></div>
-            <div class="toggle on" id="tog-ovlabels" onclick="toggleSetting(this,'ovLabels')"></div>
-          </div>
+          <div class="setting-row"><div><div class="setting-name">Before/after comparison</div><div class="setting-desc">Side-by-side view after conversion</div></div><div class="toggle on" id="tog-cmp" onclick="toggleSetting(this,'cmp')"></div></div>
+          <div class="setting-row"><div><div class="setting-name">Mannequin preview</div><div class="setting-desc">Render front/back after shirt conversion</div></div><div class="toggle on" id="tog-mq" onclick="toggleSetting(this,'mq')"></div></div>
+          <div class="setting-row"><div><div class="setting-name">Overlay opacity</div><div class="setting-desc">Region overlay visibility in preview</div></div><div class="select-row"><button class="btn-sm" onclick="setOpacity(this,0.15)">Low</button><button class="btn-sm active" onclick="setOpacity(this,0.35)">Med</button><button class="btn-sm" onclick="setOpacity(this,0.6)">High</button><button class="btn-sm" onclick="setOpacity(this,0.85)">Full</button></div></div>
+          <div class="setting-row"><div><div class="setting-name">Overlay labels</div><div class="setting-desc">Show face name labels on region overlay</div></div><div class="toggle on" id="tog-ovlabels" onclick="toggleSetting(this,'ovLabels')"></div></div>
         </div>
       </div>
-
       <div class="settings-sec">
         <div class="settings-sec-title">⚡ Workflow</div>
         <div class="settings-grid">
-          <div class="setting-row">
-            <div><div class="setting-name">Auto-convert on drop</div><div class="setting-desc">Run conversion immediately on file drop</div></div>
-            <div class="toggle" id="tog-autoconv" onclick="toggleSetting(this,'autoConv')"></div>
-          </div>
-          <div class="setting-row">
-            <div><div class="setting-name">Clear output on new upload</div><div class="setting-desc">Reset output when a new file loads</div></div>
-            <div class="toggle on" id="tog-clearout" onclick="toggleSetting(this,'clearOut')"></div>
-          </div>
-          <div class="setting-row">
-            <div><div class="setting-name">Conversion counter</div><div class="setting-desc">Show total conversions in sidebar</div></div>
-            <div class="toggle on" id="tog-counter" onclick="toggleSetting(this,'counter')"></div>
-          </div>
+          <div class="setting-row"><div><div class="setting-name">Auto-convert on drop</div><div class="setting-desc">Run conversion immediately on file drop</div></div><div class="toggle" id="tog-autoconv" onclick="toggleSetting(this,'autoConv')"></div></div>
+          <div class="setting-row"><div><div class="setting-name">Clear output on new upload</div><div class="setting-desc">Reset output when a new file loads</div></div><div class="toggle on" id="tog-clearout" onclick="toggleSetting(this,'clearOut')"></div></div>
+          <div class="setting-row"><div><div class="setting-name">Conversion counter</div><div class="setting-desc">Show total conversions in sidebar</div></div><div class="toggle on" id="tog-counter" onclick="toggleSetting(this,'counter')"></div></div>
         </div>
       </div>
-
       <div class="settings-sec">
         <div class="settings-sec-title">⌨️ Keyboard Shortcuts</div>
-        <div class="shortcuts-grid">
-          <div class="shortcut-row"><span class="shortcut-keys"><kbd>Ctrl</kbd><kbd>↵</kbd></span><span class="shortcut-desc">Run conversion</span></div>
-          <div class="shortcut-row"><span class="shortcut-keys"><kbd>Ctrl</kbd><kbd>O</kbd></span><span class="shortcut-desc">Open file</span></div>
-          <div class="shortcut-row"><span class="shortcut-keys"><kbd>Ctrl</kbd><kbd>S</kbd></span><span class="shortcut-desc">Download output</span></div>
-          <div class="shortcut-row"><span class="shortcut-keys"><kbd>Tab</kbd></span><span class="shortcut-desc">Toggle shirt/pants</span></div>
-          <div class="shortcut-row"><span class="shortcut-keys"><kbd>1</kbd></span><span class="shortcut-desc">Roblox → PT 2.0</span></div>
-          <div class="shortcut-row"><span class="shortcut-keys"><kbd>2</kbd></span><span class="shortcut-desc">Old → PT 2.0</span></div>
-          <div class="shortcut-row"><span class="shortcut-keys"><kbd>3</kbd></span><span class="shortcut-desc">Region Preview</span></div>
-          <div class="shortcut-row"><span class="shortcut-keys"><kbd>4</kbd></span><span class="shortcut-desc">Full Kit</span></div>
-          <div class="shortcut-row"><span class="shortcut-keys"><kbd>5</kbd></span><span class="shortcut-desc">Clothing Maker</span></div>
-          <div class="shortcut-row"><span class="shortcut-keys"><kbd>,</kbd></span><span class="shortcut-desc">Settings</span></div>
-        </div>
-        <div class="setting-row">
-          <div><div class="setting-name">Enable keyboard shortcuts</div><div class="setting-desc">Use the shortcuts listed above</div></div>
-          <div class="toggle on" id="tog-keys" onclick="toggleSetting(this,'keys')"></div>
-        </div>
+        <div class="shortcuts-grid"><div class="shortcut-row"><span class="shortcut-keys"><kbd>Ctrl</kbd><kbd>↵</kbd></span><span class="shortcut-desc">Run conversion</span></div><div class="shortcut-row"><span class="shortcut-keys"><kbd>Ctrl</kbd><kbd>O</kbd></span><span class="shortcut-desc">Open file</span></div><div class="shortcut-row"><span class="shortcut-keys"><kbd>Ctrl</kbd><kbd>S</kbd></span><span class="shortcut-desc">Download</span></div><div class="shortcut-row"><span class="shortcut-keys"><kbd>Tab</kbd></span><span class="shortcut-desc">Toggle shirt/pants</span></div><div class="shortcut-row"><span class="shortcut-keys"><kbd>1</kbd></span><span class="shortcut-desc">Roblox → PT 2.0</span></div><div class="shortcut-row"><span class="shortcut-keys"><kbd>2</kbd></span><span class="shortcut-desc">Old → PT 2.0</span></div><div class="shortcut-row"><span class="shortcut-keys"><kbd>3</kbd></span><span class="shortcut-desc">Region Preview</span></div><div class="shortcut-row"><span class="shortcut-keys"><kbd>4</kbd></span><span class="shortcut-desc">Full Kit</span></div><div class="shortcut-row"><span class="shortcut-keys"><kbd>5</kbd></span><span class="shortcut-desc">Clothing Maker</span></div></div>
+        <div class="setting-row" style="margin-top:8px;"><div><div class="setting-name">Enable keyboard shortcuts</div></div><div class="toggle on" id="tog-keys" onclick="toggleSetting(this,'keys')"></div></div>
       </div>
-
       <div class="settings-sec">
         <div class="settings-sec-title">🔁 Reset</div>
-        <div class="settings-grid">
-          <div class="setting-row">
-            <div><div class="setting-name">Reset all settings</div><div class="setting-desc">Restore every setting to its default</div></div>
-            <button class="btn-danger" onclick="resetAllSettings()">Reset to Defaults</button>
-          </div>
-        </div>
+        <div class="settings-grid"><div class="setting-row"><div><div class="setting-name">Reset all settings</div><div class="setting-desc">Restore every setting to defaults</div></div><button class="btn-danger" onclick="resetAllSettings()">Reset to Defaults</button></div></div>
       </div>
     </div>
 
-    <!-- ── PANEL: ABOUT ── -->
+    <!-- ══ ABOUT PANEL ══ -->
     <div class="panel" id="panel-about">
       <div class="sec-h">About & Coordinate Reference</div>
-      <div class="sec-s">Pixel-accurate coordinate maps scanned directly from the PT 2.0 template. Made by <a href="https://www.youtube.com/@scoofyx" style="color:var(--c1);text-decoration:none;">@scoofyx</a> — subscribe if this helped 🔔</div>
+      <div class="sec-s">Pixel-accurate coordinate maps scanned directly from the PT 2.0 template. Made by <a href="https://www.youtube.com/@scoofyx" style="color:var(--c1);text-decoration:none;">@scoofyx</a> · Scoofy™ 2026</div>
       <div class="g2 gap">
-        <div class="about-sec">
-          <div class="about-title">PT 2.0 Shirt — Torso</div>
-          <table class="coord-table">
-            <tr><th>Face</th><th>X</th><th>Y</th><th>W</th><th>H</th></tr>
-            <tr><td class="hl">Right (R)</td><td>351</td><td>103</td><td>88</td><td>290</td></tr>
-            <tr><td class="hl">Front (F)</td><td>440</td><td>104</td><td>144</td><td>288</td></tr>
-            <tr><td class="hl">Left (L)</td><td>587</td><td>104</td><td>84</td><td>288</td></tr>
-            <tr><td class="hl">Top cap</td><td>439</td><td>7</td><td>146</td><td>96</td></tr>
-            <tr><td class="hl">Bot cap</td><td>439</td><td>394</td><td>146</td><td>93</td></tr>
-          </table>
-        </div>
-        <div class="about-sec">
-          <div class="about-title">PT 2.0 Shirt — Right Arm</div>
-          <table class="coord-table">
-            <tr><th>Face</th><th>X</th><th>Y</th><th>W</th><th>H</th></tr>
-            <tr><td class="hl">Left (L)</td><td>7</td><td>71</td><td>66</td><td>290</td></tr>
-            <tr><td class="hl">Back (B)</td><td>73</td><td>71</td><td>65</td><td>290</td></tr>
-            <tr><td class="hl">Right (R)</td><td>138</td><td>71</td><td>66</td><td>290</td></tr>
-            <tr><td class="hl">Front (F)</td><td>204</td><td>71</td><td>66</td><td>290</td></tr>
-            <tr><td class="hl">Top cap</td><td>204</td><td>7</td><td>66</td><td>63</td></tr>
-            <tr><td class="hl">Bot cap</td><td>204</td><td>362</td><td>66</td><td>63</td></tr>
-          </table>
-        </div>
-        <div class="about-sec">
-          <div class="about-title">PT 2.0 Shirt — Left Arm</div>
-          <table class="coord-table">
-            <tr><th>Face</th><th>X</th><th>Y</th><th>W</th><th>H</th></tr>
-            <tr><td class="hl">Front (F)</td><td>754</td><td>71</td><td>66</td><td>290</td></tr>
-            <tr><td class="hl">Left (L)</td><td>821</td><td>71</td><td>66</td><td>290</td></tr>
-            <tr><td class="hl">Back (B)</td><td>887</td><td>71</td><td>65</td><td>290</td></tr>
-            <tr><td class="hl">Right (R)</td><td>952</td><td>71</td><td>66</td><td>290</td></tr>
-            <tr><td class="hl">Top cap</td><td>754</td><td>7</td><td>66</td><td>63</td></tr>
-            <tr><td class="hl">Bot cap</td><td>754</td><td>362</td><td>66</td><td>63</td></tr>
-          </table>
-        </div>
-        <div class="about-sec">
-          <div class="about-title">PT 2.0 Pants — Legs</div>
-          <table class="coord-table">
-            <tr><th>Face</th><th>X</th><th>Y</th><th>W</th><th>H</th></tr>
-            <tr><td class="hl">RLeg Top</td><td>206</td><td>597</td><td>64</td><td>63</td></tr>
-            <tr><td class="hl">RLeg L/B/R/F</td><td>14–206</td><td>661</td><td>64</td><td>292</td></tr>
-            <tr><td class="hl">RLeg Bot</td><td>206</td><td>954</td><td>64</td><td>63</td></tr>
-            <tr><td class="hl">Waist</td><td>439</td><td>519</td><td>146</td><td>290</td></tr>
-            <tr><td class="hl">LLeg Top</td><td>754</td><td>597</td><td>64</td><td>63</td></tr>
-            <tr><td class="hl">LLeg F/L/B/R</td><td>754–946</td><td>661</td><td>64</td><td>292</td></tr>
-            <tr><td class="hl">LLeg Bot</td><td>754</td><td>954</td><td>64</td><td>63</td></tr>
-          </table>
-        </div>
-      </div>
-      <div class="about-sec">
-        <div class="about-title">Notes</div>
-        <div class="about-text">
-          • Zero gaps — faces are flush to each other. All values confirmed by pixel scanning.<br>
-          • PT 2.0 shirts have <strong>no torso back face</strong> — only R, F, L. Roblox back face is dropped on conversion.<br>
-          • Arm faces: y=71–360 (h=290). Top caps y=7–69. Bottom caps y=362–424.<br>
-          • Pants waist: y=519–808 (h=290). Leg faces: y=661–952 (h=292).
-        </div>
+        <div class="about-sec"><div class="about-title">PT 2.0 Shirt — Torso</div><table class="coord-table"><tr><th>Face</th><th>X</th><th>Y</th><th>W</th><th>H</th></tr><tr><td class="hl">Right (R)</td><td>350</td><td>103</td><td>89</td><td>290</td></tr><tr><td class="hl">Front (F)</td><td>439</td><td>104</td><td>146</td><td>289</td></tr><tr><td class="hl">Left (L)</td><td>585</td><td>104</td><td>87</td><td>288</td></tr><tr><td class="hl">Top cap</td><td>439</td><td>7</td><td>146</td><td>97</td></tr><tr><td class="hl">Bot cap</td><td>439</td><td>394</td><td>146</td><td>94</td></tr></table></div>
+        <div class="about-sec"><div class="about-title">PT 2.0 Shirt — Right Arm</div><table class="coord-table"><tr><th>Face</th><th>X</th><th>Y</th><th>W</th><th>H</th></tr><tr><td class="hl">Left (L)</td><td>7</td><td>71</td><td>65</td><td>290</td></tr><tr><td class="hl">Back (B)</td><td>72</td><td>71</td><td>66</td><td>290</td></tr><tr><td class="hl">Right (R)</td><td>138</td><td>71</td><td>66</td><td>290</td></tr><tr><td class="hl">Front (F)</td><td>204</td><td>71</td><td>66</td><td>290</td></tr><tr><td class="hl">Top cap</td><td>204</td><td>7</td><td>66</td><td>63</td></tr><tr><td class="hl">Bot cap</td><td>204</td><td>362</td><td>66</td><td>63</td></tr></table></div>
+        <div class="about-sec"><div class="about-title">PT 2.0 Shirt — Left Arm</div><table class="coord-table"><tr><th>Face</th><th>X</th><th>Y</th><th>W</th><th>H</th></tr><tr><td class="hl">Front (F)</td><td>754</td><td>71</td><td>66</td><td>290</td></tr><tr><td class="hl">Left (L)</td><td>820</td><td>71</td><td>65</td><td>290</td></tr><tr><td class="hl">Back (B)</td><td>885</td><td>71</td><td>66</td><td>290</td></tr><tr><td class="hl">Right (R)</td><td>951</td><td>71</td><td>67</td><td>290</td></tr><tr><td class="hl">Top cap</td><td>754</td><td>7</td><td>66</td><td>63</td></tr><tr><td class="hl">Bot cap</td><td>754</td><td>362</td><td>66</td><td>63</td></tr></table></div>
+        <div class="about-sec"><div class="about-title">PT 2.0 Pants — Legs</div><table class="coord-table"><tr><th>Face</th><th>X</th><th>Y</th><th>W</th><th>H</th></tr><tr><td class="hl">RLeg Top</td><td>206</td><td>597</td><td>64</td><td>63</td></tr><tr><td class="hl">RLeg L/B/R/F</td><td>14–206</td><td>661</td><td>64</td><td>292</td></tr><tr><td class="hl">RLeg Bot</td><td>206</td><td>954</td><td>64</td><td>63</td></tr><tr><td class="hl">Waist</td><td>439</td><td>519</td><td>146</td><td>290</td></tr><tr><td class="hl">LLeg Top</td><td>754</td><td>597</td><td>64</td><td>63</td></tr><tr><td class="hl">LLeg F/L/B/R</td><td>754–946</td><td>661</td><td>64</td><td>292</td></tr><tr><td class="hl">LLeg Bot</td><td>754</td><td>954</td><td>64</td><td>63</td></tr></table></div>
       </div>
     </div>
 
@@ -1372,24 +1195,54 @@ kbd{
 </div><!-- /app -->
 
 <div id="toast"></div>
-
 <script>
-// ── CUSTOM CURSOR ──
-const cur = document.getElementById('cur');
-const curRing = document.getElementById('cur-ring');
-let mx=0,my=0,rx=0,ry=0;
-document.addEventListener('mousemove',e=>{
-  mx=e.clientX; my=e.clientY;
-  cur.style.left=mx+'px'; cur.style.top=my+'px';
-});
-function animRing(){
-  rx+=(mx-rx)*0.14; ry+=(my-ry)*0.14;
-  curRing.style.left=rx+'px'; curRing.style.top=ry+'px';
-  requestAnimationFrame(animRing);
+// ── THEME ──
+function toggleTheme(){
+  const cur=document.documentElement.getAttribute('data-theme');
+  setTheme(cur==='dark'?'light':'dark');
 }
-animRing();
+function setTheme(t){
+  document.documentElement.setAttribute('data-theme',t);
+  document.getElementById('theme-btn').textContent=t==='dark'?'🌙':'☀️';
+  document.getElementById('theme-dark-btn')?.classList.toggle('active',t==='dark');
+  document.getElementById('theme-light-btn')?.classList.toggle('active',t==='light');
+  try{localStorage.setItem('ptconv_theme',t);}catch(e){}
+}
+(function(){
+  try{
+    const t=localStorage.getItem('ptconv_theme');
+    if(t==='light')setTheme('light');
+  }catch(e){}
+})();
+// ── FOX GENERATOR ──
+const FOX_NAMES=['Ember','Blaze','Cinder','Frost','Nova','Zephyr','Copper','Russet','Sable','Ash','Flicker','Dusk','Hazel','Thorn','Echo','Vex','Rune','Pixel','Glitch','Neon'];
+const FOX_TRAITS=['chronically online','suspiciously fast','has nine lives (wrong species)','smells like petrichor','hacks for fun','leaves pawprints everywhere','nocturnal by choice','eats ramen at 3am','has strong opinions about anime','professionally chaotic','surprisingly chill','extremely fluffy','always watching','knows where you live'];
+function genFox(){
+  const n=FOX_NAMES[Math.floor(Math.random()*FOX_NAMES.length)];
+  const t=FOX_TRAITS[Math.floor(Math.random()*FOX_TRAITS.length)];
+  const el=document.getElementById('fox-name');
+  const tel=document.getElementById('fox-trait');
+  if(el)el.textContent='🦊 '+n;
+  if(tel)tel.textContent='"'+t+'"';
+  showToast('🦊 You are '+n+'!');
+}
 
 // ── SPLASH ──
+function toggleSidebar(){
+  const sb=document.getElementById('sidebar');
+  const collapsed=sb.classList.toggle('collapsed');
+  document.querySelector('.sb-toggle').textContent=collapsed?'›':'‹';
+  try{localStorage.setItem('ptconv_sb_collapsed',collapsed?'1':'');}catch(e){}
+}
+// Restore sidebar state
+(function(){
+  try{
+    if(localStorage.getItem('ptconv_sb_collapsed')==='1'){
+      const sb=document.getElementById('sidebar');
+      if(sb){sb.classList.add('collapsed');const t=document.querySelector('.sb-toggle');if(t)t.textContent='›';}
+    }
+  }catch(e){}
+})();
 function enterApp(){
   const splash=document.getElementById('splash');
   splash.classList.add('out');
@@ -1585,7 +1438,7 @@ function updatePanelText(panel){
   setEl(panel+'-ib','innerHTML',t.ib);
 }
 
-const S={rbx:null,old:null,pt2rbx:null,preview:null,fkShirt:null,fkPants:null,mk:null};
+const S={rbx:null,old:null,pt2rbx:null,preview:null,fkShirt:null,fkPants:null,mk:null,ptmk:null};
 updatePanelText('rbx');updatePanelText('old');updatePanelText('pt2rbx');
 
 // ── NAV ──
@@ -1599,6 +1452,7 @@ const META={
   about:{sec:'App',page:'About & Coords'},
   fullkit:{sec:'Full Kit',page:'Shirt + Pants → PT 2.0'},
   maker:{sec:'Tools',page:'Clothing Maker'},
+  ptmaker:{sec:'Tools',page:'PT Clothing Maker'},
 };
 function goTo(el,id){
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
@@ -1757,6 +1611,7 @@ function showOut(outC,panel,basefname){
   }
   const cv=document.getElementById('out-'+panel+'-cv');
   cv.width=ow;cv.height=oh;cv.getContext('2d').drawImage(outC,0,0);
+  _storePFClean(panel, cv);
   const sec=document.getElementById('out-'+panel);
   sec.style.display='block';sec.classList.remove('hidden');
   const em=document.getElementById('em-'+panel);
@@ -1965,8 +1820,397 @@ function doPreview(img){
   drawMS(document.getElementById('pv-s'),tc);
 }
 
-// ── CLOTHING MAKER ──
-let MK_MODE='shirt', MK_FILL='stretch', MK_OPACITY=1.0;
+// ── REFRESH BUTTON ──
+function refreshPanel(){
+  const active = document.querySelector('.panel.active');
+  if(!active) return;
+  const id = active.id.replace('panel-','');
+  // Reset state
+  if(S[id]!==undefined) S[id]=null;
+  if(id==='fkShirt'||id==='fkPants'){ S.fkShirt=null; S.fkPants=null; }
+  // Reset UI elements
+  const pw=document.getElementById('pw-'+id); if(pw)pw.style.display='none';
+  const btn=document.getElementById('btn-'+id); if(btn)btn.disabled=true;
+  const fi=document.getElementById(id+'-file-input'); if(fi)fi.value='';
+  const ico=document.getElementById(id+'-dz-ico'); if(ico)ico.textContent={'rbx':'📤','old':'🔄','pt2rbx':'🔁','preview':'🔍','maker':'🖼','ptmk':'🖼','fullkit':'🎽'}[id]||'📤';
+  const tz=document.getElementById(id+'-dz-t'); if(tz)tz.textContent='Drop file here';
+  clearPanelOutput(id);
+  // Reset post-filter buttons in this panel
+  const pfStrip=document.getElementById('pf-'+id);
+  if(pfStrip){
+    pfStrip.querySelectorAll('.mk-btn.on-fx').forEach(b=>{b.classList.remove('on-fx');});
+    pfStrip.querySelectorAll('.mk-btn.on-tint').forEach(b=>{b.classList.remove('on-tint');});
+    const fxNone=pfStrip.querySelector('[onclick*="\'none\'"][onclick*="\'fx\'"]');
+    if(fxNone)fxNone.classList.add('on-fx');
+    const tintNone=pfStrip.querySelector('[onclick*="\'none\'"][onclick*="\'tint\'"]');
+    if(tintNone)tintNone.classList.add('on-tint');
+    PF_STATE[id]={fx:'none',tint:'none'};
+  }
+  showToast('Panel cleared');
+}
+
+// ── POST-CONVERT FILTERS ──
+const PF_STATE={rbx:{fx:'none',tint:'none'},old:{fx:'none',tint:'none'},pt2rbx:{fx:'none',tint:'none'}};
+// Store clean (pre-filter) canvas snapshots
+const PF_CLEAN={};
+
+function _storePFClean(panel, canvas){
+  const c=mkOut(canvas.width,canvas.height);
+  c.getContext('2d').drawImage(canvas,0,0);
+  PF_CLEAN[panel]=c;
+}
+function setPF(panel, kind, el, val){
+  const row = el.closest('.pf-row');
+  const cls = kind==='fx'?'on-fx':'on-tint';
+  row.querySelectorAll('.mk-btn.'+cls).forEach(b=>b.classList.remove(cls));
+  el.classList.add(cls);
+  if(!PF_STATE[panel]) PF_STATE[panel]={fx:'none',tint:'none'};
+  PF_STATE[panel][kind]=val;
+}
+function applyPF(panel){
+  const clean=PF_CLEAN[panel];
+  if(!clean){showToast('Convert first, then apply filters','err');return;}
+  const st=PF_STATE[panel]||{fx:'none',tint:'none'};
+  const out=mkOut(clean.width,clean.height);
+  const ctx=out.getContext('2d');
+  ctx.drawImage(clean,0,0);
+  // Determine faces to apply effects over
+  const isPT=(clean.width===1024);
+  const faces=isPT
+    ? (MODE==='shirt'?Object.values(PT2S).map(f=>({x:f.x,y:f.y,w:f.w,h:f.h})):Object.values(PT2P).filter(f=>f).map(f=>({x:f.x,y:f.y,w:f.w,h:f.h})))
+    : (MODE==='shirt'?MK_SHIRT_FACES:MK_PANTS_FACES);
+  // Apply tint first, then effect
+  const savedFX=MK_FX, savedTint=MK_TINT;
+  MK_FX=st.fx; MK_TINT=st.tint;
+  _applyTint(ctx,faces);
+  _applyFx(ctx,faces);
+  MK_FX=savedFX; MK_TINT=savedTint;
+  // Write back to output canvas and update download
+  const cv=document.getElementById('out-'+panel+'-cv');
+  if(cv){cv.width=out.width;cv.height=out.height;cv.getContext('2d').drawImage(out,0,0);}
+  const dl=document.getElementById('dl-'+panel);
+  if(dl){
+    const ext=CFG.outputFmt==='webp'?'webp':'png';
+    const mime=ext==='webp'?'image/webp':'image/png';
+    const url=out.toDataURL(mime);
+    dl.href=url;
+    const prefix=document.getElementById('set-prefix')?.value||'polytoria_';
+    dl.download=prefix+'filtered.'+ext;
+    if(CFG.autodl){const a=document.createElement('a');a.href=url;a.download=dl.download;a.click();}
+  }
+  showToast('✓ Filter applied — click download to save');
+}
+
+// ── PT CLOTHING MAKER ──
+let PTMK_MODE='shirt', PTMK_FILL='stretch', PTMK_FX='none', PTMK_TINT='none', PTMK_OPACITY=1.0;
+// PT2 shirt face rects (from PT2S)
+const PTMK_SHIRT_FACES=[
+  {x:7,y:71,w:65,h:290},{x:72,y:71,w:66,h:290},{x:138,y:71,w:66,h:290},{x:204,y:71,w:66,h:290},
+  {x:204,y:7,w:66,h:64},{x:204,y:362,w:66,h:63},
+  {x:350,y:103,w:89,h:290},{x:439,y:104,w:146,h:289},{x:585,y:104,w:87,h:288},
+  {x:439,y:7,w:146,h:97},{x:439,y:394,w:146,h:94},{x:439,y:519,w:146,h:290},
+  {x:754,y:71,w:66,h:290},{x:820,y:71,w:65,h:290},{x:885,y:71,w:66,h:290},{x:951,y:71,w:67,h:290},
+  {x:754,y:7,w:66,h:64},{x:754,y:362,w:66,h:63},
+];
+// PT2 pants face rects (from PT2P)
+const PTMK_PANTS_FACES=[
+  {x:206,y:597,w:64,h:64},{x:14,y:661,w:64,h:292},{x:78,y:661,w:64,h:292},
+  {x:142,y:661,w:64,h:292},{x:206,y:661,w:64,h:292},{x:206,y:954,w:64,h:63},
+  {x:754,y:597,w:64,h:64},{x:754,y:661,w:64,h:292},{x:818,y:661,w:63,h:292},
+  {x:881,y:661,w:65,h:292},{x:946,y:661,w:64,h:292},{x:754,y:954,w:64,h:63},
+  {x:439,y:519,w:146,h:290},
+];
+function _ptmkSetRow(rowId,el,cls){
+  document.querySelectorAll('#'+rowId+' .mk-btn').forEach(b=>b.classList.remove(cls));
+  el.classList.add(cls);
+}
+function setPtMkFill(el,v){ _ptmkSetRow('ptmk-fill-row',el,'on-fill'); PTMK_FILL=v; }
+function setPtMkFx(el,v)  { _ptmkSetRow('ptmk-fx-row',el,'on-fx');     PTMK_FX=v;  }
+function setPtMkTint(el,v){ _ptmkSetRow('ptmk-tint-row',el,'on-tint'); PTMK_TINT=v;}
+function setPtMkOpacity(el,v){ _ptmkSetRow('ptmk-op-row',el,'on-op');  PTMK_OPACITY=v;}
+function setPtMakerMode(m){
+  PTMK_MODE=m;
+  document.getElementById('ptmk-mode-shirt').classList.toggle('active',m==='shirt');
+  document.getElementById('ptmk-mode-pants').classList.toggle('active',m==='pants');
+  const s=m==='shirt';
+  document.getElementById('ptmk-btn-lbl').textContent='Generate PT '+(s?'Shirt':'Pants');
+  document.getElementById('ptmk-out-head').textContent='Output · PT 2.0 '+(s?'Shirt':'Pants');
+  document.getElementById('ptmk-out-badge').textContent='PT 2.0 '+(s?'SHIRT':'PANTS')+' · 1024×1024';
+  document.getElementById('ptmk-dl-lbl').textContent='Download '+(s?'Shirt':'Pants');
+  document.getElementById('dl-ptmk').download='polytoria_'+(s?'shirt':'pants')+'_made.png';
+}
+function ptmkDrop(e){e.preventDefault();e.currentTarget.classList.remove('hover');const f=e.dataTransfer.files[0];if(f)ptmkProcess(f);}
+function ptmkLoad(e){const f=e.target.files[0];e.target.value='';if(f)ptmkProcess(f);}
+function ptmkProcess(file){
+  const r=new FileReader();
+  r.onload=ev=>{
+    const img=new Image();
+    img.onload=()=>{
+      S.ptmk=img;
+      const pw=document.getElementById('pw-ptmk');
+      const cv=document.getElementById('cv-ptmk');
+      pw.style.display='block';
+      cv.width=img.width;cv.height=img.height;
+      cv.getContext('2d').drawImage(img,0,0);
+      document.getElementById('ptmk-ico').textContent='✅';
+      document.getElementById('ptmk-t').textContent='Texture loaded — '+img.width+'×'+img.height;
+      document.getElementById('btn-ptmk').disabled=false;
+    };
+    img.src=ev.target.result;
+  };
+  r.readAsDataURL(file);
+}
+function convPtMaker(){
+  if(!S.ptmk)return;
+  setSt('st-ptmk','⚙ Generating PT '+PTMK_MODE+' template…','info');
+  const out=mkOut(1024,1024);
+  const ctx=out.getContext('2d');
+  ctx.clearRect(0,0,1024,1024);
+  const faces=PTMK_MODE==='shirt'?PTMK_SHIRT_FACES:PTMK_PANTS_FACES;
+  const texC=mkSrc(S.ptmk);
+  // Temporarily swap MK_ vars to reuse _fillFaces/_applyFx/_applyTint
+  const [sf,sF,sX,sT,sO]=[MK_FILL,PTMK_FILL,MK_FX,MK_TINT,MK_OPACITY];
+  MK_FILL=PTMK_FILL; MK_FX=PTMK_FX; MK_TINT=PTMK_TINT; MK_OPACITY=PTMK_OPACITY;
+  ctx.globalAlpha=PTMK_OPACITY;
+  _fillFaces(ctx,texC,faces);
+  ctx.globalAlpha=1;
+  _applyTint(ctx,faces);
+  _applyFx(ctx,faces);
+  MK_FILL=sf; MK_FX=sX; MK_TINT=sT; MK_OPACITY=sO;
+  // Show output
+  const cv=document.getElementById('out-ptmk-cv');
+  cv.width=1024;cv.height=1024;cv.getContext('2d').drawImage(out,0,0);
+  document.getElementById('out-ptmk').style.display='block';
+  document.getElementById('out-ptmk').classList.remove('hidden');
+  document.getElementById('em-ptmk').style.display='none';
+  const dl=document.getElementById('dl-ptmk');
+  const prefix=document.getElementById('set-prefix')?.value||'polytoria_';
+  const ext=CFG.outputFmt==='webp'?'webp':'png';
+  const fname=prefix+(PTMK_MODE==='shirt'?'shirt':'pants')+'_made.'+ext;
+  const mime=ext==='webp'?'image/webp':'image/png';
+  const url=out.toDataURL(mime);
+  dl.href=url;dl.download=fname;
+  if(CFG.autodl){const a=document.createElement('a');a.href=url;a.download=fname;a.click();}
+  convCount++;document.getElementById('conv-count').textContent=convCount;
+  showToast('✓ '+fname);saveSettings();
+  setSt('st-ptmk','✓ Done'+(CFG.autodl?' — downloaded automatically.':' — click download.'),'ok');
+}
+let MK_MODE='shirt', MK_FILL='stretch', MK_FX='none', MK_TINT='none', MK_OPACITY=1.0;
+
+function _mkSetRow(rowId, el, cls){
+  document.querySelectorAll('#'+rowId+' .mk-btn').forEach(b=>b.classList.remove(cls));
+  el.classList.add(cls);
+}
+function setMkFill(el,v){ _mkSetRow('mk-fill-row',el,'on-fill'); MK_FILL=v; }
+function setMkFx(el,v)  { _mkSetRow('mk-fx-row',el,'on-fx');     MK_FX=v;   }
+function setMkTint(el,v){ _mkSetRow('mk-tint-row',el,'on-tint'); MK_TINT=v; }
+function setMkOpacity(el,v){ _mkSetRow('mk-op-row',el,'on-op');  MK_OPACITY=v; }
+
+// ── Fill helpers ──
+function _fillFaces(ctx, texC, faces){
+  const W=585,H=559;
+  if(MK_FILL==='tile'){
+    const pat=ctx.createPattern(texC,'repeat');
+    faces.forEach(({x,y,w,h})=>{
+      ctx.save();ctx.beginPath();ctx.rect(x,y,w,h);ctx.clip();
+      ctx.fillStyle=pat;ctx.fillRect(0,0,W,H);ctx.restore();
+    });
+  } else if(MK_FILL==='fullspread'){
+    // One image stretched across the whole 585×559 canvas, clipped to faces
+    const big=mkOut(W,H); big.getContext('2d').drawImage(texC,0,0,W,H);
+    faces.forEach(({x,y,w,h})=>{
+      ctx.drawImage(big,x,y,w,h,x,y,w,h);
+    });
+  } else if(MK_FILL==='mirror'){
+    const tw=texC.width,th=texC.height;
+    const mc=mkOut(tw*2,th*2); const mc2=mc.getContext('2d');
+    mc2.drawImage(texC,0,0);
+    mc2.save();mc2.translate(tw*2,0);mc2.scale(-1,1);mc2.drawImage(texC,0,0);mc2.restore();
+    mc2.save();mc2.translate(0,th*2);mc2.scale(1,-1);mc2.drawImage(texC,0,0);mc2.restore();
+    mc2.save();mc2.translate(tw*2,th*2);mc2.scale(-1,-1);mc2.drawImage(texC,0,0);mc2.restore();
+    const pat=ctx.createPattern(mc,'repeat');
+    faces.forEach(({x,y,w,h})=>{
+      ctx.save();ctx.beginPath();ctx.rect(x,y,w,h);ctx.clip();
+      ctx.fillStyle=pat;ctx.fillRect(0,0,W,H);ctx.restore();
+    });
+  } else if(MK_FILL==='fit'){
+    // Letterbox-fit texture inside each face, centred
+    faces.forEach(({x,y,w,h})=>{
+      const scale=Math.min(w/texC.width,h/texC.height);
+      const dw=texC.width*scale, dh=texC.height*scale;
+      ctx.save();ctx.beginPath();ctx.rect(x,y,w,h);ctx.clip();
+      ctx.drawImage(texC,x+(w-dw)/2,y+(h-dh)/2,dw,dh);
+      ctx.restore();
+    });
+  } else if(MK_FILL==='diagonal'){
+    faces.forEach(({x,y,w,h})=>{
+      ctx.save();ctx.beginPath();ctx.rect(x,y,w,h);ctx.clip();
+      const cx=x+w/2,cy=y+h/2;
+      ctx.translate(cx,cy);ctx.rotate(Math.PI/4);
+      const sc=Math.sqrt(2)*Math.max(w,h)/Math.min(texC.width,texC.height)*1.1;
+      const dw=texC.width*sc,dh=texC.height*sc;
+      ctx.drawImage(texC,-dw/2,-dh/2,dw,dh);
+      ctx.restore();
+    });
+  } else { // stretch (default)
+    faces.forEach(({x,y,w,h})=>{
+      ctx.drawImage(texC,0,0,texC.width,texC.height,x,y,w,h);
+    });
+  }
+}
+
+// ── Effect helpers ──
+function _fxFake3D(ctx,faces){
+  faces.forEach(({x,y,w,h})=>{
+    ctx.save();ctx.beginPath();ctx.rect(x,y,w,h);ctx.clip();
+    const hi=ctx.createLinearGradient(x,y,x+w*.4,y+h*.4);
+    hi.addColorStop(0,'rgba(255,255,255,0.38)');hi.addColorStop(1,'rgba(255,255,255,0)');
+    ctx.fillStyle=hi;ctx.fillRect(x,y,w,h);
+    const sh=ctx.createLinearGradient(x+w,y+h,x+w*.55,y+h*.55);
+    sh.addColorStop(0,'rgba(0,0,0,0.48)');sh.addColorStop(1,'rgba(0,0,0,0)');
+    ctx.fillStyle=sh;ctx.fillRect(x,y,w,h);
+    ctx.strokeStyle='rgba(255,255,255,0.28)';ctx.lineWidth=2;
+    ctx.beginPath();ctx.moveTo(x+1,y+h-1);ctx.lineTo(x+1,y+1);ctx.lineTo(x+w-1,y+1);ctx.stroke();
+    ctx.strokeStyle='rgba(0,0,0,0.42)';
+    ctx.beginPath();ctx.moveTo(x+w-1,y+1);ctx.lineTo(x+w-1,y+h-1);ctx.lineTo(x+1,y+h-1);ctx.stroke();
+    ctx.restore();
+  });
+}
+function _fxVintage(ctx,faces){
+  faces.forEach(({x,y,w,h})=>{
+    ctx.save();ctx.beginPath();ctx.rect(x,y,w,h);ctx.clip();
+    ctx.fillStyle='rgba(110,60,15,0.30)';ctx.fillRect(x,y,w,h);
+    const vg=ctx.createRadialGradient(x+w/2,y+h/2,Math.min(w,h)*0.18,x+w/2,y+h/2,Math.max(w,h)*0.82);
+    vg.addColorStop(0,'rgba(0,0,0,0)');vg.addColorStop(1,'rgba(0,0,0,0.52)');
+    ctx.fillStyle=vg;ctx.fillRect(x,y,w,h);ctx.restore();
+  });
+}
+function _fxGlitch(ctx,faces){
+  faces.forEach(({x,y,w,h})=>{
+    const id=ctx.getImageData(x,y,w,h),d=id.data;
+    let seed=42;
+    const rnd=()=>{seed=(seed*1664525+1013904223)&0xffffffff;return(seed>>>0)/0xffffffff;};
+    const tmp=new Uint8ClampedArray(d);
+    for(let r=0;r<h;r++){
+      if(rnd()<0.13){
+        const sh=Math.round((rnd()*24)-12);
+        for(let c=0;c<w;c++){
+          const sc=((c-sh)+w)%w;
+          const di=(r*w+c)*4,si=(r*w+sc)*4;
+          d[di]=tmp[si];d[di+1]=tmp[si+1];d[di+2]=tmp[si+2];d[di+3]=tmp[si+3];
+        }
+      }
+    }
+    ctx.putImageData(id,x,y);
+    // chromatic fringe
+    const id2=ctx.getImageData(x,y,w,h),d2=id2.data;
+    const id3=new ImageData(new Uint8ClampedArray(d2),w,h);
+    for(let r=0;r<h;r++) for(let c=0;c<w;c++){
+      const i=(r*w+c)*4;
+      const si=(r*w+Math.min(w-1,c+2))*4;
+      d2[i]=id3.data[si]; // R channel shift
+    }
+    ctx.putImageData(id2,x,y);
+  });
+}
+function _fxScanlines(ctx,faces){
+  ctx.fillStyle='rgba(0,0,0,0.22)';
+  faces.forEach(({x,y,w,h})=>{
+    for(let r=y;r<y+h;r+=2) ctx.fillRect(x,r,w,1);
+  });
+}
+function _fxVignette(ctx,faces){
+  faces.forEach(({x,y,w,h})=>{
+    const vg=ctx.createRadialGradient(x+w/2,y+h/2,Math.min(w,h)*0.14,x+w/2,y+h/2,Math.max(w,h)*0.88);
+    vg.addColorStop(0,'rgba(0,0,0,0)');vg.addColorStop(1,'rgba(0,0,0,0.72)');
+    ctx.fillStyle=vg;ctx.fillRect(x,y,w,h);
+  });
+}
+function _fxPixelate(ctx,faces,px=8){
+  faces.forEach(({x,y,w,h})=>{
+    const sw=Math.max(1,Math.ceil(w/px)),sh=Math.max(1,Math.ceil(h/px));
+    const tmp=mkOut(sw,sh);const tc=tmp.getContext('2d');
+    tc.imageSmoothingEnabled=false;
+    tc.drawImage(ctx.canvas,x,y,w,h,0,0,sw,sh);
+    ctx.imageSmoothingEnabled=false;
+    ctx.drawImage(tmp,0,0,sw,sh,x,y,w,h);
+    ctx.imageSmoothingEnabled=CFG.smooth;
+  });
+}
+function _fxNeon(ctx,faces){
+  const cols=['#ff006e','#00f5d4','#fee440','#f15bb5','#00bbf9','#9b5de5'];
+  faces.forEach(({x,y,w,h},i)=>{
+    const col=cols[i%cols.length];
+    ctx.save();ctx.shadowColor=col;ctx.shadowBlur=10;
+    ctx.strokeStyle=col;ctx.lineWidth=2.5;
+    ctx.strokeRect(x+1.5,y+1.5,w-3,h-3);ctx.restore();
+  });
+}
+function _fxGrayscale(ctx,faces){
+  faces.forEach(({x,y,w,h})=>{
+    const id=ctx.getImageData(x,y,w,h),d=id.data;
+    for(let i=0;i<d.length;i+=4){
+      if(d[i+3]>0){const g=d[i]*0.299+d[i+1]*0.587+d[i+2]*0.114;d[i]=d[i+1]=d[i+2]=g;}
+    }
+    ctx.putImageData(id,x,y);
+  });
+}
+function _fxInvert(ctx,faces){
+  faces.forEach(({x,y,w,h})=>{
+    const id=ctx.getImageData(x,y,w,h),d=id.data;
+    for(let i=0;i<d.length;i+=4){
+      if(d[i+3]>0){d[i]=255-d[i];d[i+1]=255-d[i+1];d[i+2]=255-d[i+2];}
+    }
+    ctx.putImageData(id,x,y);
+  });
+}
+function _fxRainbow(ctx,faces){
+  faces.forEach(({x,y,w,h})=>{
+    const rg=ctx.createLinearGradient(x,y,x+w,y+h);
+    ['rgba(255,0,0,0.28)','rgba(255,165,0,0.28)','rgba(255,255,0,0.28)',
+     'rgba(0,220,0,0.28)','rgba(0,80,255,0.28)','rgba(128,0,200,0.28)']
+    .forEach((c,i,a)=>rg.addColorStop(i/(a.length-1),c));
+    ctx.fillStyle=rg;ctx.fillRect(x,y,w,h);
+  });
+}
+function _fxGrunge(ctx,faces){
+  faces.forEach(({x,y,w,h})=>{
+    const id=ctx.getImageData(x,y,w,h),d=id.data;
+    let seed=77;
+    const rnd=()=>{seed=(seed*1664525+1013904223)&0xffffffff;return(seed>>>0)/0xffffffff;};
+    for(let i=0;i<d.length;i+=4){
+      if(d[i+3]>0){const n=(rnd()-0.5)*90;
+        d[i]=Math.max(0,Math.min(255,d[i]+n));
+        d[i+1]=Math.max(0,Math.min(255,d[i+1]+n));
+        d[i+2]=Math.max(0,Math.min(255,d[i+2]+n));
+      }
+    }
+    ctx.putImageData(id,x,y);
+  });
+}
+function _applyTint(ctx,faces){
+  const tints={red:'rgba(255,30,30,0.32)',orange:'rgba(255,140,0,0.30)',
+    gold:'rgba(255,205,0,0.28)',green:'rgba(0,210,80,0.30)',
+    blue:'rgba(30,100,255,0.30)',purple:'rgba(150,40,255,0.30)',
+    pink:'rgba(255,90,200,0.28)',cyan:'rgba(0,220,220,0.28)',
+    dark:'rgba(0,0,0,0.44)',light:'rgba(255,255,255,0.36)'};
+  const col=tints[MK_TINT];if(!col)return;
+  ctx.fillStyle=col;
+  faces.forEach(({x,y,w,h})=>ctx.fillRect(x,y,w,h));
+}
+function _applyFx(ctx,faces){
+  if(MK_FX==='fake3d') _fxFake3D(ctx,faces);
+  else if(MK_FX==='vintage') _fxVintage(ctx,faces);
+  else if(MK_FX==='glitch') _fxGlitch(ctx,faces);
+  else if(MK_FX==='scanlines') _fxScanlines(ctx,faces);
+  else if(MK_FX==='vignette') _fxVignette(ctx,faces);
+  else if(MK_FX==='pixelate') _fxPixelate(ctx,faces);
+  else if(MK_FX==='neon') _fxNeon(ctx,faces);
+  else if(MK_FX==='grayscale') _fxGrayscale(ctx,faces);
+  else if(MK_FX==='invert') _fxInvert(ctx,faces);
+  else if(MK_FX==='rainbow') _fxRainbow(ctx,faces);
+  else if(MK_FX==='grunge') _fxGrunge(ctx,faces);
+}
 // All face rects for Roblox 585×559 shirt template
 const MK_SHIRT_FACES=[
   {x:231,y:8,w:128,h:64},{x:231,y:74,w:128,h:128},
@@ -1995,23 +2239,13 @@ function setMakerMode(m){
   MK_MODE=m;
   document.getElementById('mk-mode-shirt').classList.toggle('active',m==='shirt');
   document.getElementById('mk-mode-pants').classList.toggle('active',m==='pants');
-  const isShirt=m==='shirt';
-  document.getElementById('mk-btn-lbl').textContent='Generate '+(isShirt?'Shirt':'Pants')+' Template';
-  document.getElementById('mk-hint').textContent='Texture fills every face of the Roblox '+(isShirt?'shirt':'pants')+' template. Transparent gaps stay empty so Roblox renders correctly.';
-  document.getElementById('mk-out-head').textContent='Output · Roblox '+(isShirt?'Shirt':'Pants');
-  document.getElementById('mk-out-badge').textContent='ROBLOX '+(isShirt?'SHIRT':'PANTS')+' · 585×559';
-  document.getElementById('mk-dl-lbl').textContent='Download '+(isShirt?'Shirt':'Pants');
-  document.getElementById('dl-mk').download='roblox_'+(isShirt?'shirt':'pants')+'_made.png';
-}
-function setMkFill(el,v){
-  document.querySelectorAll('#mk-fill-stretch,#mk-fill-tile').forEach(b=>b.classList.remove('active'));
-  el.classList.add('active');
-  MK_FILL=v;
-}
-function setMkOpacity(el,v){
-  el.closest('.select-row')?.querySelectorAll('.btn-sm').forEach(b=>b.classList.remove('active'));
-  el.classList.add('active');
-  MK_OPACITY=v;
+  const s=m==='shirt';
+  document.getElementById('mk-btn-lbl').textContent='Generate '+(s?'Shirt':'Pants')+' Template';
+  document.getElementById('mk-hint').textContent='Texture fills every face of the Roblox '+(s?'shirt':'pants')+' template. Transparent gaps stay empty so Roblox renders correctly.';
+  document.getElementById('mk-out-head').textContent='Output · Roblox '+(s?'Shirt':'Pants');
+  document.getElementById('mk-out-badge').textContent='ROBLOX '+(s?'SHIRT':'PANTS')+' · 585×559';
+  document.getElementById('mk-dl-lbl').textContent='Download '+(s?'Shirt':'Pants');
+  document.getElementById('dl-mk').download='roblox_'+(s?'shirt':'pants')+'_made.png';
 }
 function mkDrop(e){e.preventDefault();e.currentTarget.classList.remove('hover');const f=e.dataTransfer.files[0];if(f)mkProcess(f);}
 function mkLoad(e){const f=e.target.files[0];e.target.value='';if(f)mkProcess(f);}
@@ -2044,19 +2278,11 @@ function convMaker(){
   const faces=MK_MODE==='shirt'?MK_SHIRT_FACES:MK_PANTS_FACES;
   const texC=mkSrc(S.mk);
   ctx.globalAlpha=MK_OPACITY;
-  if(MK_FILL==='tile'){
-    const pat=ctx.createPattern(texC,'repeat');
-    faces.forEach(({x,y,w,h})=>{
-      ctx.save();ctx.beginPath();ctx.rect(x,y,w,h);ctx.clip();
-      ctx.fillStyle=pat;ctx.fillRect(0,0,585,559);
-      ctx.restore();
-    });
-  } else {
-    faces.forEach(({x,y,w,h})=>{
-      ctx.drawImage(texC,0,0,texC.width,texC.height,x,y,w,h);
-    });
-  }
+  _fillFaces(ctx,texC,faces);
   ctx.globalAlpha=1;
+  // Apply tint then effect
+  _applyTint(ctx,faces);
+  _applyFx(ctx,faces);
   // Show output
   const cv=document.getElementById('out-mk-cv');
   cv.width=585;cv.height=559;cv.getContext('2d').drawImage(out,0,0);
@@ -2138,6 +2364,25 @@ function convFullKit(){
 
 // ── INIT ──
 loadSettings();
+// Apply user-settings constants to DOM
+(function applyUserSettings(){
+  try{
+    if(typeof APP_TITLE!=='undefined'){
+      document.title=APP_TITLE;
+      const st=document.getElementById('splash-title'); if(st)st.textContent=APP_TITLE;
+      const sn=document.getElementById('sb-name'); if(sn)sn.textContent=APP_TITLE.replace('PT ','');
+    }
+    if(typeof APP_VERSION!=='undefined'){
+      const sv=document.getElementById('sb-ver'); if(sv)sv.textContent=APP_VERSION+' · pixel-accurate';
+    }
+    if(typeof APP_AUTHOR!=='undefined'&&typeof APP_AUTHOR_URL!=='undefined'){
+      const sa=document.getElementById('splash-author'); if(sa){sa.textContent=APP_AUTHOR;sa.href=APP_AUTHOR_URL;}
+    }
+    if(typeof SPLASH_DESC!=='undefined'){
+      const sd=document.getElementById('splash-desc'); if(sd)sd.innerHTML=SPLASH_DESC;
+    }
+  }catch(e){}
+})();
 </script>
 </body>
 </html>
