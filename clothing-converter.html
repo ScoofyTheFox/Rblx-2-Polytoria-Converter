@@ -59,7 +59,8 @@ body{
 }
 
 /* ── BG ── */
-.bg-blobs{position:fixed;inset:0;z-index:0;pointer-events:none;}
+.checker{background:repeating-conic-gradient(#1a1a28 0% 25%,#0d0d1c 0% 50%) 0 0/16px 16px!important;}
+
 .bg-blobs::before{
   content:'';position:absolute;inset:0;
   background:
@@ -765,8 +766,18 @@ kbd{
       <span class="nb-text">PT 2.0 → Roblox</span>
       <span class="nav-tag tag-tool">NEW</span>
     </button>
+    <button class="nav-btn" id="nbtn-fullkit" data-p="fullkit" onclick="goTo(this,'fullkit')">
+      <span class="nav-ico" style="background:rgba(6,214,160,0.14)">🎽</span>
+      <span class="nb-text">Full Kit</span>
+      <span class="nav-tag tag-new">NEW</span>
+    </button>
     <div class="sb-div"></div>
     <div class="nav-lbl">Tools</div>
+    <button class="nav-btn" data-p="maker" onclick="goTo(this,'maker')">
+      <span class="nav-ico" style="background:rgba(255,120,50,0.16)">🪄</span>
+      <span class="nb-text">Clothing Maker</span>
+      <span class="nav-tag tag-new">NEW</span>
+    </button>
     <button class="nav-btn" data-p="preview" onclick="goTo(this,'preview')">
       <span class="nav-ico" style="background:rgba(255,209,102,0.1)">🔍</span>
       <span class="nb-text">Region Preview</span>
@@ -831,7 +842,7 @@ kbd{
           <div class="inp-prev" id="pw-rbx"><canvas id="cv-rbx"></canvas><span class="prev-badge" id="rbx-pw-badge">INPUT</span></div>
           <div class="status" id="st-rbx"></div>
           <button class="btn-conv" id="btn-rbx" onclick="convRbx()" disabled>⚡ <span id="rbx-btn-label">Convert to Polytoria 2.0</span></button>
-          <div class="hint-box" id="rbx-ib">Shirt: torso (6 faces + back), both arms + caps · Pants: both legs only</div>
+          <div class="hint-box" id="rbx-ib">Shirt: torso (6 faces + back), both arms + caps · Pants: both legs only · <strong>Any size auto-rescaled to 585×559</strong></div>
         </div>
         <div class="out-card">
           <div class="hidden" id="out-rbx">
@@ -933,6 +944,118 @@ kbd{
       </div>
     </div>
 
+    <!-- ── PANEL: FULL KIT ── -->
+    <div class="panel" id="panel-fullkit">
+      <div class="sec-h">Full Kit — Roblox Shirt + Pants → PT 2.0</div>
+      <div class="sec-s">Upload a Roblox <strong>shirt</strong> and a Roblox <strong>pants</strong> template. Both will be combined into a single 1024×1024 Polytoria PNG — shirt covers the torso &amp; arms, pants covers the legs.</div>
+      <div class="conv-layout">
+        <div class="drop-card">
+          <div>
+            <div class="drop-title">Upload Both Templates</div>
+            <div class="drop-sub">Drop shirt first, then pants — or vice versa.</div>
+          </div>
+          <!-- Shirt drop -->
+          <div style="margin-bottom:4px;font-size:0.7rem;color:var(--sub);font-family:'JetBrains Mono',monospace;letter-spacing:0.3px;">👕 SHIRT TEMPLATE</div>
+          <div class="dz" id="fk-shirt-dz" ondragover="dzo(event,this)" ondragleave="dzl(this)" ondrop="fkDrop(event,'shirt')">
+            <input type="file" accept="image/*" onchange="fkLoad(event,'shirt')" id="fk-shirt-input">
+            <div class="dz-inner">
+              <span class="dz-ico" id="fk-shirt-ico">👕</span>
+              <div class="dz-t" id="fk-shirt-t">Drop Roblox shirt here</div>
+              <div class="dz-s">585×559 · PNG / JPG</div>
+            </div>
+          </div>
+          <div class="inp-prev" id="pw-fkShirt" style="display:none"><canvas id="cv-fkShirt"></canvas><span class="prev-badge">SHIRT INPUT</span></div>
+          <!-- Pants drop -->
+          <div style="margin:8px 0 4px;font-size:0.7rem;color:var(--sub);font-family:'JetBrains Mono',monospace;letter-spacing:0.3px;">👖 PANTS TEMPLATE</div>
+          <div class="dz" id="fk-pants-dz" ondragover="dzo(event,this)" ondragleave="dzl(this)" ondrop="fkDrop(event,'pants')">
+            <input type="file" accept="image/*" onchange="fkLoad(event,'pants')" id="fk-pants-input">
+            <div class="dz-inner">
+              <span class="dz-ico" id="fk-pants-ico">👖</span>
+              <div class="dz-t" id="fk-pants-t">Drop Roblox pants here</div>
+              <div class="dz-s">585×559 · PNG / JPG</div>
+            </div>
+          </div>
+          <div class="inp-prev" id="pw-fkPants" style="display:none"><canvas id="cv-fkPants"></canvas><span class="prev-badge">PANTS INPUT</span></div>
+          <div class="status" id="st-fk"></div>
+          <button class="btn-conv" id="btn-fk" onclick="convFullKit()" disabled style="background:linear-gradient(135deg,#06d6a0,#5b8dee);box-shadow:0 3px 14px rgba(6,214,160,0.3);">🎽 <span>Combine into PT 2.0</span></button>
+          <div class="hint-box">Combines torso+arms from shirt and legs from pants into one 1024×1024 PT file.</div>
+        </div>
+        <div class="out-card">
+          <div class="hidden" id="out-fk">
+            <div class="out-head">
+              <span class="out-title">Output · Full Kit PT 2.0</span>
+              <a class="btn-dl" id="dl-fk" href="#" download="polytoria_fullkit.png">⬇ Download Full Kit</a>
+            </div>
+            <div class="out-wrap"><canvas id="out-fk-cv" width="1024" height="1024"></canvas><span class="prev-badge">PT 2.0 FULL KIT · 1024×1024</span></div>
+          </div>
+          <div class="empty" id="em-fk"><span class="empty-ico">🎽</span><span>Upload shirt + pants then hit Combine</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── PANEL: CLOTHING MAKER ── -->
+    <div class="panel" id="panel-maker">
+      <div class="sec-h">🪄 Roblox Clothing Maker</div>
+      <div class="sec-s">Upload <strong>any image</strong> (texture, pattern, photo…) and it gets stamped into every face of a Roblox <strong>shirt</strong> or <strong>pants</strong> template. Download the ready-to-upload 585×559 PNG.</div>
+      <div class="conv-layout">
+        <div class="drop-card">
+          <div>
+            <div class="drop-title">1 — Choose type</div>
+          </div>
+          <div class="mode-toggle" style="width:100%;margin-bottom:8px;">
+            <button class="mode-btn active" id="mk-mode-shirt" onclick="setMakerMode('shirt')" style="flex:1">👕 Shirt</button>
+            <button class="mode-btn" id="mk-mode-pants" onclick="setMakerMode('pants')" style="flex:1">👖 Pants</button>
+          </div>
+          <div class="drop-title" style="margin-bottom:4px;">2 — Upload your texture</div>
+          <div class="dz" id="mk-dz" ondragover="dzo(event,this)" ondragleave="dzl(this)" ondrop="mkDrop(event)">
+            <input type="file" accept="image/*" onchange="mkLoad(event)" id="mk-file-input">
+            <div class="dz-inner">
+              <span class="dz-ico" id="mk-ico">🖼</span>
+              <div class="dz-t" id="mk-t">Drop any image here</div>
+              <div class="dz-s">wood, metal, camo, photo… anything goes</div>
+            </div>
+          </div>
+          <div class="inp-prev" id="pw-mk" style="display:none"><canvas id="cv-mk"></canvas><span class="prev-badge">TEXTURE</span></div>
+
+          <div class="drop-title" style="margin:8px 0 4px;">3 — Fill options</div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px;">
+            <div style="flex:1;min-width:130px;">
+              <div style="font-size:0.62rem;color:var(--sub);font-family:'JetBrains Mono',monospace;margin-bottom:3px;">FILL MODE</div>
+              <div class="select-row" style="gap:4px;">
+                <button class="btn-sm active" id="mk-fill-stretch" onclick="setMkFill(this,'stretch')">Stretch</button>
+                <button class="btn-sm" id="mk-fill-tile" onclick="setMkFill(this,'tile')">Tile</button>
+              </div>
+            </div>
+            <div style="flex:1;min-width:130px;">
+              <div style="font-size:0.62rem;color:var(--sub);font-family:'JetBrains Mono',monospace;margin-bottom:3px;">OPACITY</div>
+              <div class="select-row" style="gap:4px;">
+                <button class="btn-sm" onclick="setMkOpacity(this,0.5)">50%</button>
+                <button class="btn-sm" onclick="setMkOpacity(this,0.75)">75%</button>
+                <button class="btn-sm active" onclick="setMkOpacity(this,1.0)">100%</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="status" id="st-mk"></div>
+          <button class="btn-conv" id="btn-mk" onclick="convMaker()" disabled style="background:linear-gradient(135deg,#ff6432,#a78bfa);box-shadow:0 3px 14px rgba(255,100,50,0.3);">🪄 <span id="mk-btn-lbl">Generate Shirt Template</span></button>
+          <div class="hint-box" id="mk-hint">Texture fills every face of the Roblox shirt template. Transparent gaps stay empty so Roblox renders correctly.</div>
+        </div>
+        <div class="out-card">
+          <div class="hidden" id="out-mk">
+            <div class="out-head">
+              <span class="out-title" id="mk-out-head">Output · Roblox Shirt</span>
+              <a class="btn-dl" id="dl-mk" href="#" download="roblox_shirt_made.png">⬇ <span id="mk-dl-lbl">Download Shirt</span></a>
+            </div>
+            <div class="out-wrap" style="background:repeating-conic-gradient(#1a1a2a 0% 25%,#0c0c1a 0% 50%) 0 0/16px 16px">
+              <canvas id="out-mk-cv" width="585" height="559" style="width:100%;image-rendering:pixelated;border-radius:7px;display:block;" class="checker"></canvas>
+              <span class="prev-badge" id="mk-out-badge">ROBLOX SHIRT · 585×559</span>
+            </div>
+          </div>
+          <div class="empty" id="em-mk"><span class="empty-ico">🪄</span><span>Your Roblox template appears here</span></div>
+        </div>
+      </div>
+    </div>
+
     <!-- ── PANEL: PREVIEW ── -->
     <div class="panel" id="panel-preview">
       <div class="sec-h">Region Preview</div>
@@ -1023,6 +1146,18 @@ kbd{
           <span class="tool-ico">🔍</span>
           <div class="tool-name">Region Preview</div>
           <div class="tool-desc">Color overlay on any PT 2.0 template</div>
+        </div>
+        <div class="tool-card" onclick="goTo(document.getElementById('nbtn-fullkit'),'fullkit')">
+          <span class="tool-ico">🎽</span>
+          <div class="tool-name">Full Kit Combiner</div>
+          <div class="tool-desc">Roblox shirt + pants → one PT 2.0 PNG</div>
+          <span class="tool-badge" style="background:rgba(6,214,160,0.15);color:var(--c3)">NEW</span>
+        </div>
+        <div class="tool-card" onclick="goTo(document.querySelector('[data-p=maker]'),'maker')">
+          <span class="tool-ico">🪄</span>
+          <div class="tool-name">Clothing Maker</div>
+          <div class="tool-desc">Any texture → Roblox shirt or pants 585×559</div>
+          <span class="tool-badge" style="background:rgba(255,120,50,0.15);color:#ff9060">NEW</span>
         </div>
         <div class="tool-card" onclick="goTo(document.querySelector('[data-p=about]'),'about')">
           <span class="tool-ico">📐</span>
@@ -1146,6 +1281,8 @@ kbd{
           <div class="shortcut-row"><span class="shortcut-keys"><kbd>1</kbd></span><span class="shortcut-desc">Roblox → PT 2.0</span></div>
           <div class="shortcut-row"><span class="shortcut-keys"><kbd>2</kbd></span><span class="shortcut-desc">Old → PT 2.0</span></div>
           <div class="shortcut-row"><span class="shortcut-keys"><kbd>3</kbd></span><span class="shortcut-desc">Region Preview</span></div>
+          <div class="shortcut-row"><span class="shortcut-keys"><kbd>4</kbd></span><span class="shortcut-desc">Full Kit</span></div>
+          <div class="shortcut-row"><span class="shortcut-keys"><kbd>5</kbd></span><span class="shortcut-desc">Clothing Maker</span></div>
           <div class="shortcut-row"><span class="shortcut-keys"><kbd>,</kbd></span><span class="shortcut-desc">Settings</span></div>
         </div>
         <div class="setting-row">
@@ -1389,6 +1526,8 @@ document.addEventListener('keydown',e=>{
   else if(k==='1'&&!ctrl)goTo(document.getElementById('nbtn-rbx'),'rbx');
   else if(k==='2'&&!ctrl)goTo(document.getElementById('nbtn-old'),'old');
   else if(k==='3'&&!ctrl)goTo(document.querySelector('[data-p=preview]'),'preview');
+  else if(k==='4'&&!ctrl)goTo(document.getElementById('nbtn-fullkit'),'fullkit');
+  else if(k==='5'&&!ctrl)goTo(document.querySelector('[data-p=maker]'),'maker');
   else if(k===','&&!ctrl)goTo(document.querySelector('[data-p=settings]'),'settings');
 });
 
@@ -1446,7 +1585,7 @@ function updatePanelText(panel){
   setEl(panel+'-ib','innerHTML',t.ib);
 }
 
-const S={rbx:null,old:null,pt2rbx:null,preview:null};
+const S={rbx:null,old:null,pt2rbx:null,preview:null,fkShirt:null,fkPants:null,mk:null};
 updatePanelText('rbx');updatePanelText('old');updatePanelText('pt2rbx');
 
 // ── NAV ──
@@ -1458,6 +1597,8 @@ const META={
   tools:{sec:'App',page:'All Tools'},
   settings:{sec:'App',page:'Settings'},
   about:{sec:'App',page:'About & Coords'},
+  fullkit:{sec:'Full Kit',page:'Shirt + Pants → PT 2.0'},
+  maker:{sec:'Tools',page:'Clothing Maker'},
 };
 function goTo(el,id){
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
@@ -1501,10 +1642,20 @@ const RBXS={
 };
 const RBXP={
   TF:{x:231,y:74,w:128,h:128},
-  LLT:{x:260,y:204,w:64,h:64},LLF:{x:260,y:268,w:64,h:128},LLR:{x:196,y:268,w:64,h:128},
-  LLBk:{x:132,y:268,w:64,h:128},LLL:{x:68,y:268,w:64,h:128},LLB:{x:260,y:396,w:64,h:64},
-  RLT:{x:324,y:204,w:64,h:64},RLF:{x:324,y:268,w:64,h:128},RLL:{x:388,y:268,w:64,h:128},
-  RLBk:{x:452,y:268,w:64,h:128},RLR:{x:516,y:268,w:64,h:128},RLB:{x:324,y:396,w:64,h:64},
+  // Right leg — LEFT cluster in Roblox pants template (faces L B R F left→right)
+  RLT:{x:200,y:204,w:64,h:64},   // top cap (above front face)
+  RLL:{x:8,y:268,w:64,h:128},    // Left face
+  RLBk:{x:72,y:268,w:64,h:128},  // Back face
+  RLR:{x:136,y:268,w:64,h:128},  // Right face
+  RLF:{x:200,y:268,w:64,h:128},  // Front face
+  RLB:{x:200,y:396,w:64,h:64},   // bottom cap
+  // Left leg — RIGHT cluster in Roblox pants template (faces F L B R left→right)
+  LLT:{x:264,y:204,w:64,h:64},   // top cap (above front face)
+  LLF:{x:264,y:268,w:64,h:128},  // Front face
+  LLL:{x:328,y:268,w:64,h:128},  // Left face
+  LLBk:{x:392,y:268,w:64,h:128}, // Back face
+  LLR:{x:456,y:268,w:64,h:128},  // Right face
+  LLB:{x:264,y:396,w:64,h:64},   // bottom cap
 };
 const PTOLD={
   TF:{x:199,y:184,w:202,h:202},TT:{x:199,y:74,w:202,h:102},TB:{x:199,y:395,w:202,h:102},
@@ -1581,6 +1732,15 @@ function cr(src,sx,sy,sw,sh,dctx,dx,dy,dw,dh){
   dctx.drawImage(t,0,0,sw,sh,dx,dy,dw,dh);
 }
 function mkSrc(img){const c=document.createElement('canvas');c.width=img.width;c.height=img.height;c.getContext('2d').drawImage(img,0,0);return c;}
+// Always normalise Roblox templates to 585×559 before reading coords
+function mkRbxSrc(img){
+  const c=mkOut(585,559);
+  const ctx=c.getContext('2d');
+  ctx.imageSmoothingEnabled=true;
+  ctx.imageSmoothingQuality='high';
+  ctx.drawImage(img,0,0,585,559);
+  return c;
+}
 function mkOut(w,h){const c=document.createElement('canvas');c.width=w;c.height=h;return c;}
 
 function setSt(id,msg,type='info'){
@@ -1655,7 +1815,7 @@ function applyPantsFromOld(src,ctx){
 function convRbx(){
   if(!S.rbx)return;
   setSt('st-rbx','⚙ Converting '+MODE+'…','info');
-  const src=mkSrc(S.rbx),out=mkOut(1024,1024),ctx=out.getContext('2d');
+  const src=mkRbxSrc(S.rbx),out=mkOut(1024,1024),ctx=out.getContext('2d');
   if(MODE==='shirt')applyShirtFromRbx(src,ctx);
   else applyPantsFromRbx(src,ctx);
   showOut(out,'rbx',MODE_TEXT[MODE].rbx.fname);
@@ -1803,6 +1963,177 @@ function doPreview(img){
   drawMF(document.getElementById('pv-f'),tc);
   drawMB(document.getElementById('pv-b'),tc);
   drawMS(document.getElementById('pv-s'),tc);
+}
+
+// ── CLOTHING MAKER ──
+let MK_MODE='shirt', MK_FILL='stretch', MK_OPACITY=1.0;
+// All face rects for Roblox 585×559 shirt template
+const MK_SHIRT_FACES=[
+  {x:231,y:8,w:128,h:64},{x:231,y:74,w:128,h:128},
+  {x:165,y:74,w:64,h:128},{x:361,y:74,w:64,h:128},
+  {x:427,y:74,w:128,h:128},{x:231,y:204,w:128,h:64},
+  {x:308,y:289,w:64,h:64},{x:308,y:355,w:64,h:128},
+  {x:374,y:355,w:64,h:128},{x:440,y:355,w:64,h:128},
+  {x:506,y:355,w:64,h:128},{x:308,y:485,w:64,h:64},
+  {x:217,y:289,w:64,h:64},{x:217,y:355,w:64,h:128},
+  {x:151,y:355,w:64,h:128},{x:85,y:355,w:64,h:128},
+  {x:19,y:355,w:64,h:128},{x:217,y:485,w:64,h:64},
+];
+// All face rects for Roblox 585×559 pants template (torso waist + both legs)
+const MK_PANTS_FACES=[
+  {x:231,y:8,w:128,h:64},{x:231,y:74,w:128,h:128},
+  {x:165,y:74,w:64,h:128},{x:361,y:74,w:64,h:128},
+  {x:427,y:74,w:128,h:128},{x:231,y:204,w:128,h:64},
+  {x:200,y:204,w:64,h:64},{x:8,y:268,w:64,h:128},
+  {x:72,y:268,w:64,h:128},{x:136,y:268,w:64,h:128},
+  {x:200,y:268,w:64,h:128},{x:200,y:396,w:64,h:64},
+  {x:264,y:204,w:64,h:64},{x:264,y:268,w:64,h:128},
+  {x:328,y:268,w:64,h:128},{x:392,y:268,w:64,h:128},
+  {x:456,y:268,w:64,h:128},{x:264,y:396,w:64,h:64},
+];
+function setMakerMode(m){
+  MK_MODE=m;
+  document.getElementById('mk-mode-shirt').classList.toggle('active',m==='shirt');
+  document.getElementById('mk-mode-pants').classList.toggle('active',m==='pants');
+  const isShirt=m==='shirt';
+  document.getElementById('mk-btn-lbl').textContent='Generate '+(isShirt?'Shirt':'Pants')+' Template';
+  document.getElementById('mk-hint').textContent='Texture fills every face of the Roblox '+(isShirt?'shirt':'pants')+' template. Transparent gaps stay empty so Roblox renders correctly.';
+  document.getElementById('mk-out-head').textContent='Output · Roblox '+(isShirt?'Shirt':'Pants');
+  document.getElementById('mk-out-badge').textContent='ROBLOX '+(isShirt?'SHIRT':'PANTS')+' · 585×559';
+  document.getElementById('mk-dl-lbl').textContent='Download '+(isShirt?'Shirt':'Pants');
+  document.getElementById('dl-mk').download='roblox_'+(isShirt?'shirt':'pants')+'_made.png';
+}
+function setMkFill(el,v){
+  document.querySelectorAll('#mk-fill-stretch,#mk-fill-tile').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  MK_FILL=v;
+}
+function setMkOpacity(el,v){
+  el.closest('.select-row')?.querySelectorAll('.btn-sm').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  MK_OPACITY=v;
+}
+function mkDrop(e){e.preventDefault();e.currentTarget.classList.remove('hover');const f=e.dataTransfer.files[0];if(f)mkProcess(f);}
+function mkLoad(e){const f=e.target.files[0];e.target.value='';if(f)mkProcess(f);}
+function mkProcess(file){
+  const r=new FileReader();
+  r.onload=ev=>{
+    const img=new Image();
+    img.onload=()=>{
+      S.mk=img;
+      const pw=document.getElementById('pw-mk');
+      const cv=document.getElementById('cv-mk');
+      pw.style.display='block';
+      cv.width=img.width;cv.height=img.height;
+      cv.getContext('2d').drawImage(img,0,0);
+      document.getElementById('mk-ico').textContent='✅';
+      document.getElementById('mk-t').textContent='Texture loaded — '+img.width+'×'+img.height;
+      document.getElementById('btn-mk').disabled=false;
+      setSt('st-mk','','');
+    };
+    img.src=ev.target.result;
+  };
+  r.readAsDataURL(file);
+}
+function convMaker(){
+  if(!S.mk)return;
+  setSt('st-mk','⚙ Generating '+MK_MODE+' template…','info');
+  const out=mkOut(585,559);
+  const ctx=out.getContext('2d');
+  ctx.clearRect(0,0,585,559);
+  const faces=MK_MODE==='shirt'?MK_SHIRT_FACES:MK_PANTS_FACES;
+  const texC=mkSrc(S.mk);
+  ctx.globalAlpha=MK_OPACITY;
+  if(MK_FILL==='tile'){
+    const pat=ctx.createPattern(texC,'repeat');
+    faces.forEach(({x,y,w,h})=>{
+      ctx.save();ctx.beginPath();ctx.rect(x,y,w,h);ctx.clip();
+      ctx.fillStyle=pat;ctx.fillRect(0,0,585,559);
+      ctx.restore();
+    });
+  } else {
+    faces.forEach(({x,y,w,h})=>{
+      ctx.drawImage(texC,0,0,texC.width,texC.height,x,y,w,h);
+    });
+  }
+  ctx.globalAlpha=1;
+  // Show output
+  const cv=document.getElementById('out-mk-cv');
+  cv.width=585;cv.height=559;cv.getContext('2d').drawImage(out,0,0);
+  document.getElementById('out-mk').style.display='block';
+  document.getElementById('out-mk').classList.remove('hidden');
+  document.getElementById('em-mk').style.display='none';
+  const dl=document.getElementById('dl-mk');
+  const prefix=document.getElementById('set-prefix')?.value||'roblox_';
+  const ext=CFG.outputFmt==='webp'?'webp':'png';
+  const fname=prefix+(MK_MODE==='shirt'?'shirt':'pants')+'_made.'+ext;
+  const mime=ext==='webp'?'image/webp':'image/png';
+  const url=out.toDataURL(mime);
+  dl.href=url;dl.download=fname;
+  if(CFG.autodl){const a=document.createElement('a');a.href=url;a.download=fname;a.click();}
+  convCount++;document.getElementById('conv-count').textContent=convCount;
+  showToast('✓ '+fname);saveSettings();
+  setSt('st-mk','✓ Done'+(CFG.autodl?' — downloaded automatically.':' — click download.'),'ok');
+}
+function fkDrop(e,which){e.preventDefault();e.currentTarget.classList.remove('hover');const f=e.dataTransfer.files[0];if(f)fkProcess(f,which);}
+function fkLoad(e,which){const f=e.target.files[0];e.target.value='';if(f)fkProcess(f,which);}
+function fkProcess(file,which){
+  const r=new FileReader();
+  r.onload=ev=>{
+    const img=new Image();
+    img.onload=()=>{
+      const key=which==='shirt'?'fkShirt':'fkPants';
+      S[key]=img;
+      const pw=document.getElementById('pw-'+key);
+      const cv=document.getElementById('cv-'+key);
+      if(pw&&cv){pw.style.display='block';cv.width=img.width;cv.height=img.height;cv.getContext('2d').drawImage(img,0,0);}
+      const ico=document.getElementById('fk-'+which+'-ico');
+      const t=document.getElementById('fk-'+which+'-t');
+      if(ico)ico.textContent=which==='shirt'?'✅':'✅';
+      if(t)t.textContent=which==='shirt'?'Shirt loaded ✓':'Pants loaded ✓';
+      document.getElementById('btn-fk').disabled=!(S.fkShirt&&S.fkPants);
+    };
+    img.src=ev.target.result;
+  };
+  r.readAsDataURL(file);
+}
+function convFullKit(){
+  if(!S.fkShirt||!S.fkPants)return;
+  setSt('st-fk','⚙ Combining shirt + pants…','info');
+  const shirtSrc=mkRbxSrc(S.fkShirt);
+  const pantsSrc=mkRbxSrc(S.fkPants);
+  const out=mkOut(1024,1024);
+  const ctx=out.getContext('2d');
+  // Apply shirt (torso + both arms) from Roblox shirt template
+  applyShirtFromRbx(shirtSrc,ctx);
+  // Apply pants (both legs only, no torso) from Roblox pants template
+  applyPantsFromRbx(pantsSrc,ctx);
+  // Show output
+  const ow=out.width,oh=out.height;
+  let finalOut=out;
+  if(CFG.bgFill&&CFG.bgFill!=='transparent'){
+    const bg=mkOut(ow,oh);const bctx=bg.getContext('2d');
+    bctx.fillStyle=CFG.bgFill==='black'?'#000':'#fff';
+    bctx.fillRect(0,0,ow,oh);bctx.drawImage(out,0,0);finalOut=bg;
+  }
+  const cv=document.getElementById('out-fk-cv');
+  cv.width=ow;cv.height=oh;cv.getContext('2d').drawImage(finalOut,0,0);
+  const sec=document.getElementById('out-fk');
+  sec.style.display='block';sec.classList.remove('hidden');
+  document.getElementById('em-fk').style.display='none';
+  const dl=document.getElementById('dl-fk');
+  const prefix=document.getElementById('set-prefix')?.value||'polytoria_';
+  const ext=CFG.outputFmt==='webp'?'webp':'png';
+  const fname=prefix+'fullkit.'+ext;
+  const mime=ext==='webp'?'image/webp':'image/png';
+  const url=finalOut.toDataURL(mime);
+  dl.href=url;dl.download=fname;
+  if(CFG.autodl){const a=document.createElement('a');a.href=url;a.download=fname;a.click();}
+  convCount++;
+  document.getElementById('conv-count').textContent=convCount;
+  showToast('✓ '+fname);
+  saveSettings();
+  setSt('st-fk','✓ Done'+(CFG.autodl?' — downloaded automatically.':' — click download above.'),'ok');
 }
 
 // ── INIT ──
