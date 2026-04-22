@@ -1,4 +1,4 @@
-## taking a break as of april 22 2026 so no updates for a while
+## taking a break as of april 22 2026 so no updates for a while (it should work rn tho)
 
 # 🧥Rblx 2 Polytoria Clothing Converter
 
