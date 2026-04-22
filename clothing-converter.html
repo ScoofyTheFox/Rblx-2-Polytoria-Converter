@@ -17,680 +17,713 @@
 <script>
 const APP_TITLE      = 'PT Clothing Converter';
 const APP_VERSION    = 'v3.3';
-const APP_AUTHOR     = '@scoofyx';
-const APP_AUTHOR_URL = 'https://www.youtube.com/@scoofyx';
+const APP_AUTHOR     = 'Scoofyx';
+const APP_AUTHOR_URL = 'https://scoofy.xyz';
 </script>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
-/* ══════════════════════════════════════
-   THEME TOKENS
-══════════════════════════════════════ */
-:root{
-  --r:12px;--r2:8px;--r3:20px;
-  --blur:saturate(180%) blur(24px);
-  --blur2:saturate(160%) blur(14px);
-  --sbw:216px;
-  --trans:.18s cubic-bezier(.4,0,.2,1);
-}
-[data-theme="dark"]{
-  --bg:#040c18;--bg2:#060f20;--bg3:#0a1630;
-  --glass:rgba(10,30,60,0.55);--glass2:rgba(20,50,90,0.65);
-  --glass3:rgba(30,70,120,0.5);
-  --border:rgba(80,180,255,0.10);--border2:rgba(80,180,255,0.22);
-  --glow:rgba(0,180,255,0.18);--glow2:rgba(0,180,255,0.35);
-  --text:#d8eeff;--sub:#4a7fa0;--muted:#1e3a55;
-  --c1:#00b4ff;--c2:#8b5cf6;--c3:#00d4a0;
-  --warn:#ffd166;--err:#ff4466;
-  --sh1:rgba(0,180,255,0.25);--sh2:rgba(139,92,246,0.2);--sh3:rgba(0,212,160,0.2);
-  --shine:rgba(255,255,255,0.07);--shine2:rgba(255,255,255,0.12);
-  --noise:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
-  --orb1:radial-gradient(ellipse 60% 55% at 12% 18%,rgba(0,120,255,0.14) 0%,transparent 65%);
-  --orb2:radial-gradient(ellipse 50% 40% at 88% 82%,rgba(139,92,246,0.12) 0%,transparent 60%);
-  --orb3:radial-gradient(ellipse 35% 28% at 50% 48%,rgba(0,212,160,0.06) 0%,transparent 60%);
-  --grid:linear-gradient(rgba(0,180,255,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,180,255,0.025) 1px,transparent 1px);
-}
-[data-theme="light"]{
-  --bg:#c8dff5;--bg2:#daeaf8;--bg3:#edf5fd;
-  --glass:rgba(255,255,255,0.55);--glass2:rgba(255,255,255,0.72);
-  --glass3:rgba(255,255,255,0.88);
-  --border:rgba(0,120,200,0.14);--border2:rgba(0,120,200,0.28);
-  --glow:rgba(0,120,200,0.12);--glow2:rgba(0,120,200,0.25);
-  --text:#092040;--sub:#2a6090;--muted:#90b8d8;
-  --c1:#0080c8;--c2:#5b21b6;--c3:#059669;
-  --warn:#d97706;--err:#dc2626;
-  --sh1:rgba(0,128,200,0.2);--sh2:rgba(91,33,182,0.15);--sh3:rgba(5,150,105,0.15);
-  --shine:rgba(255,255,255,0.55);--shine2:rgba(255,255,255,0.8);
-  --noise:none;
-  --orb1:radial-gradient(ellipse 65% 55% at 15% 20%,rgba(255,255,255,0.7) 0%,transparent 65%);
-  --orb2:radial-gradient(ellipse 50% 40% at 85% 80%,rgba(200,230,255,0.6) 0%,transparent 60%);
-  --orb3:radial-gradient(ellipse 40% 35% at 55% 45%,rgba(210,245,255,0.5) 0%,transparent 60%);
-  --grid:linear-gradient(rgba(0,100,200,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(0,100,200,0.04) 1px,transparent 1px);
+/* ─────────────────────────────────────
+   TOKENS
+───────────────────────────────────── */
+:root {
+  --bg:       #0a0a0a;
+  --surface:  #111111;
+  --surface2: #181818;
+  --border:   #222222;
+  --border2:  #333333;
+  --text:     #f0e8ff;
+  --sub:      #6b5b80;
+  --muted:    #2a1f35;
+  --c1:       #9b5cf5;
+  --c2:       #c084fc;
+  --c3:       #7c3aed;
+  --acc:      #ddb4fe;
+  --err:      #f87171;
+  --warn:     #fbbf24;
+  --r:        8px;
+  --r2:       5px;
+  --trans:    .12s ease;
+  --max:      900px;
+  --sbw:      200px;
 }
 
-/* ══════════════════════════════════════
-   BASE
-══════════════════════════════════════ */
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-html,body{height:100%;overflow:hidden;-webkit-font-smoothing:antialiased;}
-body{
-  font-family:'Space Grotesk',sans-serif;font-size:13px;
-  color:var(--text);background:var(--bg);display:flex;
-  transition:background var(--trans),color var(--trans);
+/* ─────────────────────────────────────
+   RESET + BASE
+───────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; -webkit-font-smoothing: antialiased; }
+body {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 13px;
+  color: var(--text);
+  background: var(--bg);
+  display: flex;
+  overflow: hidden;
 }
 
-/* ══════════════════════════════════════
-   BACKGROUND CANVAS
-══════════════════════════════════════ */
-.bg-wrap{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
-.bg-wrap::before{
-  content:'';position:absolute;inset:0;
-  background:var(--orb1),var(--orb2),var(--orb3);
-  transition:background var(--trans);
+/* ─────────────────────────────────────
+   VHS BG
+───────────────────────────────────── */
+.bg-wrap {
+  position: fixed; inset: 0; z-index: 0;
+  pointer-events: none; overflow: hidden;
 }
-.bg-wrap::after{
-  content:'';position:absolute;inset:0;
-  background-image:var(--grid),var(--noise);
-  background-size:52px 52px,200px 200px;
-  opacity:1;
+.bg-wrap::before {
+  content: '';
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 70% 50% at 50% -10%, rgba(100,40,180,0.15) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 30% at 100% 100%, rgba(60,0,120,0.08) 0%, transparent 55%);
 }
-/* Frutiger Aero floating bubbles */
-.bubble{
-  position:absolute;border-radius:50%;pointer-events:none;
-  background:radial-gradient(circle at 35% 35%,var(--shine2) 0%,var(--glass) 50%,transparent 75%);
-  border:1px solid var(--border2);
-  animation:floatBubble 18s ease-in-out infinite;
+.bg-wrap::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 3px,
+    rgba(0,0,0,0.12) 3px,
+    rgba(0,0,0,0.12) 4px
+  );
 }
-.bubble:nth-child(1){width:220px;height:220px;top:8%;left:5%;animation-delay:0s;opacity:.35;}
-.bubble:nth-child(2){width:140px;height:140px;top:55%;right:8%;animation-delay:-6s;opacity:.25;}
-.bubble:nth-child(3){width:80px;height:80px;top:30%;right:22%;animation-delay:-12s;opacity:.2;}
-@keyframes floatBubble{
-  0%,100%{transform:translateY(0) scale(1);}
-  33%{transform:translateY(-18px) scale(1.03);}
-  66%{transform:translateY(10px) scale(0.97);}
+.vhs-line {
+  position: absolute; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(155,92,245,0.4), transparent);
+  animation: vhsScan 7s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes vhsScan {
+  0%   { top: -2px; opacity: 0; }
+  5%   { opacity: 0.8; }
+  95%  { opacity: 0.3; }
+  100% { top: 100%; opacity: 0; }
+}
+.vhs-noise {
+  position: absolute; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  animation: grainShift 0.6s steps(2) infinite; opacity: 0.5;
+}
+@keyframes grainShift {
+  0%   { transform: translate(0,0); }
+  33%  { transform: translate(-1px, 1px); }
+  66%  { transform: translate(1px, -1px); }
+  100% { transform: translate(0, 0); }
+}
+.vhs-glitch {
+  position: absolute; left: 0; right: 0; height: 2px;
+  background: rgba(180,120,255,0.1);
+  animation: vhsGlitch 11s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes vhsGlitch {
+  0%,100% { top: 40%; opacity: 0; }
+  49% { opacity: 0; }
+  50% { top: 40%; opacity: 0.7; transform: scaleX(0.97) translateX(3px); }
+  51% { opacity: 0; }
+  79% { opacity: 0; }
+  80% { top: 75%; opacity: 0.4; transform: scaleX(1.02) translateX(-2px); }
+  81% { opacity: 0; }
+}
+.vhs-rgb { position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(90deg, rgba(255,0,255,0.012) 0%, transparent 2%, transparent 98%, rgba(0,255,255,0.012) 100%);
 }
 
-/* ══════════════════════════════════════
+/* ─────────────────────────────────────
    SPLASH
-══════════════════════════════════════ */
-#splash{
-  position:fixed;inset:0;z-index:1000;
-  display:flex;align-items:center;justify-content:center;
-  background:var(--bg);transition:background var(--trans);
+───────────────────────────────────── */
+#splash {
+  position: fixed; inset: 0; z-index: 1000;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--bg);
 }
-#splash::before{
-  content:'';position:absolute;inset:0;
-  background:var(--orb1),var(--orb2);pointer-events:none;
+.splash-box {
+  position: relative;
+  width: 360px; max-width: 92%;
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: 12px;
+  padding: 40px 36px 32px;
+  text-align: center;
+  animation: splashIn .35s ease both;
 }
-.splash-box{
-  position:relative;max-width:440px;width:92%;
-  background:var(--glass2);backdrop-filter:var(--blur);
-  border:1px solid var(--border2);border-radius:var(--r3);
-  padding:52px 48px 44px;text-align:center;
-  box-shadow:0 0 0 1px var(--border),0 40px 80px rgba(0,0,0,0.45),
-    inset 0 1px 0 var(--shine2),0 0 60px var(--glow);
-  animation:splashIn .5s cubic-bezier(.4,0,.2,1) both;
+.splash-box::before {
+  content: '';
+  position: absolute; top: 0; left: 10%; right: 10%; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--c1), transparent);
 }
-@keyframes splashIn{from{opacity:0;transform:translateY(22px) scale(.96);}to{opacity:1;transform:none;}}
-.splash-box::before{
-  content:'';position:absolute;top:0;left:15%;right:15%;height:1px;
-  background:linear-gradient(90deg,transparent,var(--c1),var(--c2),transparent);
+@keyframes splashIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+.splash-icon { font-size: 2.6rem; display: block; margin-bottom: 16px; animation: float 3s ease-in-out infinite; }
+@keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+.splash-title { font-size: 1.5rem; font-weight: 700; color: var(--text); margin-bottom: 4px; letter-spacing: -.3px; }
+.splash-by { font-size: .65rem; color: var(--sub); font-family: 'JetBrains Mono', monospace; margin-bottom: 3px; }
+.splash-by a { color: var(--c1); text-decoration: none; }
+.splash-desc { font-size: .75rem; color: var(--sub); line-height: 1.6; margin: 14px 0 22px; }
+.splash-desc strong { color: var(--text); }
+.splash-start {
+  width: 100%; padding: 10px; border: none; border-radius: var(--r);
+  background: var(--c1); color: #fff;
+  font-family: 'Space Grotesk', sans-serif; font-size: .88rem; font-weight: 700;
+  cursor: pointer; letter-spacing: .2px;
+  transition: all var(--trans);
 }
-/* Glossy top shine */
-.splash-box::after{
-  content:'';position:absolute;top:0;left:0;right:0;height:45%;
-  background:linear-gradient(180deg,var(--shine2) 0%,transparent 100%);
-  border-radius:var(--r3) var(--r3) 0 0;pointer-events:none;
-}
-.splash-icon{font-size:3.4rem;display:block;margin-bottom:20px;filter:drop-shadow(0 0 20px var(--sh1));animation:float 3.5s ease-in-out infinite;}
-@keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-8px);}}
-.splash-title{
-  font-size:1.9rem;font-weight:700;letter-spacing:-0.8px;margin-bottom:4px;
-  background:linear-gradient(135deg,var(--text) 30%,var(--c1) 70%,var(--c2));
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
-}
-.splash-by{font-size:0.7rem;color:var(--sub);font-family:'JetBrains Mono',monospace;margin-bottom:4px;}
-.splash-by a{color:var(--c1);text-decoration:none;}
-.splash-by a:hover{color:var(--c2);}
-.splash-desc{font-size:0.82rem;color:var(--sub);line-height:1.65;margin:16px 0 28px;font-family:'JetBrains Mono',monospace;}
-.splash-desc strong{color:var(--text);}
-.splash-start{
-  width:100%;padding:14px;border:none;border-radius:var(--r);
-  background:linear-gradient(135deg,var(--c1),var(--c2));
-  color:#fff;font-family:'Space Grotesk',sans-serif;font-size:0.96rem;font-weight:700;
-  cursor:pointer;position:relative;overflow:hidden;
-  box-shadow:0 4px 24px var(--sh1),0 0 0 1px rgba(255,255,255,0.1) inset;
-  transition:transform var(--trans),box-shadow var(--trans);
-}
-.splash-start::before{
-  content:'';position:absolute;top:0;left:0;right:0;height:50%;
-  background:linear-gradient(180deg,rgba(255,255,255,0.22) 0%,transparent 100%);pointer-events:none;
-}
-.splash-start:hover{transform:translateY(-2px);box-shadow:0 8px 32px var(--sh1),inset 0 1px 0 rgba(255,255,255,0.2);}
-.splash-start:active{transform:scale(.98);}
-.splash-note{margin-top:14px;font-size:0.62rem;color:var(--muted);font-family:'JetBrains Mono',monospace;}
-.splash-note a{color:var(--c1);text-decoration:none;}
-.splash-brand{
-  position:absolute;bottom:14px;left:0;right:0;text-align:center;
-  font-size:0.55rem;font-family:'JetBrains Mono',monospace;
-  color:var(--muted);letter-spacing:1px;
-}
-#splash.out{animation:splashOut .3s cubic-bezier(.4,0,.2,1) both;}
-@keyframes splashOut{to{opacity:0;transform:scale(1.04);}}
+.splash-start:hover { background: var(--c2); }
+.splash-note { margin-top: 10px; font-size: .58rem; color: var(--muted); font-family: 'JetBrains Mono', monospace; }
+.splash-note a { color: var(--sub); text-decoration: none; }
+.splash-brand { position: absolute; bottom: 10px; left: 0; right: 0; text-align: center; font-size: .5rem; font-family: 'JetBrains Mono', monospace; color: var(--muted); letter-spacing: 1px; }
+#splash.out { animation: splashOut .2s ease both; }
+@keyframes splashOut { to { opacity: 0; } }
 
-/* ══════════════════════════════════════
-   APP LAYOUT
-══════════════════════════════════════ */
-.app{display:flex;width:100%;height:100vh;position:relative;z-index:5;opacity:0;pointer-events:none;transition:opacity .3s .1s;}
-.app.visible{opacity:1;pointer-events:all;}
+/* ─────────────────────────────────────
+   APP SHELL
+───────────────────────────────────── */
+.app {
+  display: flex; width: 100%; height: 100vh;
+  position: relative; z-index: 5;
+  opacity: 0; pointer-events: none; transition: opacity .25s .1s;
+}
+.app.visible { opacity: 1; pointer-events: all; }
 
-/* ══════════════════════════════════════
+/* ─────────────────────────────────────
    SIDEBAR
-══════════════════════════════════════ */
-.sidebar{
-  width:var(--sbw);min-width:var(--sbw);height:100vh;
-  position:relative;z-index:10;
-  display:flex;flex-direction:column;
-  background:var(--glass);backdrop-filter:var(--blur);
-  border-right:1px solid var(--border);flex-shrink:0;overflow:hidden;
-  transition:width var(--trans),min-width var(--trans),background var(--trans);
+───────────────────────────────────── */
+.sidebar {
+  width: var(--sbw); min-width: var(--sbw);
+  height: 100vh; flex-shrink: 0;
+  display: flex; flex-direction: column;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  position: relative; z-index: 10;
+  transition: width var(--trans), min-width var(--trans);
+  overflow: hidden;
 }
-.sidebar::after{
-  content:'';position:absolute;top:0;left:0;right:0;height:1px;
-  background:linear-gradient(90deg,transparent,var(--c1) 40%,var(--c2) 60%,transparent);
-  opacity:.5;
-}
-/* glossy sidebar shine */
-.sidebar::before{
-  content:'';position:absolute;top:0;left:0;right:0;height:40%;
-  background:linear-gradient(180deg,var(--shine) 0%,transparent 100%);
-  pointer-events:none;z-index:0;
-}
-.sidebar.collapsed{width:50px;min-width:50px;}
-.sidebar.collapsed .sb-name,.sidebar.collapsed .sb-ver,
-.sidebar.collapsed .nav-lbl,.sidebar.collapsed .nav-tag,
-.sidebar.collapsed .nb-text,.sidebar.collapsed .sb-divider,
-.sidebar.collapsed .sb-foot,.sidebar.collapsed .sb-brand{display:none;}
-.sidebar.collapsed .sb-head{padding:10px 7px;display:flex;justify-content:center;}
-.sidebar.collapsed .sb-logo-row{justify-content:center;}
-.sidebar.collapsed .nav-btn{justify-content:center;padding:8px 0;}
-.sidebar.collapsed .nav-scroll{padding:6px 5px;}
-.sb-toggle{
-  position:absolute;top:16px;right:-14px;z-index:20;
-  width:28px;height:28px;border-radius:50%;
-  background:var(--glass2);backdrop-filter:var(--blur2);
-  border:1px solid var(--border2);
-  display:flex;align-items:center;justify-content:center;
-  font-size:12px;color:var(--sub);cursor:pointer;
-  transition:background var(--trans),color var(--trans),transform var(--trans);
-  box-shadow:0 2px 12px rgba(0,0,0,.35);
-}
-.sb-toggle:hover{background:var(--glass3);color:var(--text);}
-.sidebar.collapsed .sb-toggle{transform:rotate(180deg);}
-.sb-head{
-  padding:18px 14px 14px;border-bottom:1px solid var(--border);
-  position:relative;z-index:1;
-}
-.sb-logo-row{display:flex;align-items:center;gap:10px;}
-.sb-logo{
-  width:34px;height:34px;border-radius:10px;flex-shrink:0;
-  background:linear-gradient(135deg,var(--c1),var(--c2));
-  display:flex;align-items:center;justify-content:center;font-size:16px;
-  box-shadow:0 0 18px var(--sh1),0 4px 10px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,0.25);
-  position:relative;overflow:hidden;
-}
-.sb-logo::before{content:'';position:absolute;top:0;left:0;right:0;height:50%;background:linear-gradient(180deg,rgba(255,255,255,0.25),transparent);border-radius:10px 10px 0 0;}
-.sb-name{font-weight:700;font-size:0.83rem;letter-spacing:-.2px;
-  background:linear-gradient(90deg,var(--text),var(--sub));
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;}
-.sb-ver{font-size:0.55rem;color:var(--muted);font-family:'JetBrains Mono',monospace;margin-top:1px;letter-spacing:.3px;}
-.nav-scroll{flex:1;overflow-y:auto;padding:8px 7px;scrollbar-width:none;position:relative;z-index:1;}
-.nav-scroll::-webkit-scrollbar{display:none;}
-.nav-lbl{
-  font-size:0.52rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;
-  color:var(--muted);padding:10px 8px 4px;font-family:'JetBrains Mono',monospace;
-}
-.nav-btn{
-  display:flex;align-items:center;gap:9px;
-  width:100%;padding:8px 9px;border-radius:var(--r2);
-  background:transparent;border:1px solid transparent;
-  color:var(--sub);cursor:pointer;
-  font-family:'Space Grotesk',sans-serif;font-size:0.79rem;font-weight:600;
-  text-align:left;margin-bottom:2px;
-  transition:background var(--trans),color var(--trans),border-color var(--trans),box-shadow var(--trans);
-  position:relative;overflow:hidden;
-}
-.nav-btn::before{
-  content:'';position:absolute;top:0;left:0;right:0;height:50%;
-  background:linear-gradient(180deg,var(--shine) 0%,transparent 100%);
-  opacity:0;transition:opacity var(--trans);pointer-events:none;
-}
-.nav-btn:hover{background:var(--glass2);color:var(--text);border-color:var(--border);}
-.nav-btn:hover::before{opacity:1;}
-.nav-btn.active{
-  background:var(--glass2);border-color:var(--border2);color:var(--text);
-  box-shadow:0 0 12px var(--glow),inset 0 1px 0 var(--shine);
-}
-.nav-btn.active::before{opacity:1;}
-.nav-btn.active::after{
-  content:'';position:absolute;left:0;top:20%;bottom:20%;
-  width:2.5px;border-radius:0 3px 3px 0;
-  background:linear-gradient(180deg,var(--c1),var(--c2));
-  box-shadow:0 0 8px var(--c1);
-}
-.nav-ico{
-  width:26px;height:26px;border-radius:7px;flex-shrink:0;
-  display:flex;align-items:center;justify-content:center;font-size:13px;
-  background:var(--glass3);border:1px solid var(--border);
-  transition:box-shadow var(--trans);position:relative;overflow:hidden;
-}
-.nav-ico::before{content:'';position:absolute;top:0;left:0;right:0;height:50%;background:linear-gradient(180deg,var(--shine2),transparent);}
-.nav-btn.active .nav-ico{box-shadow:0 0 10px var(--glow2);}
-.nav-tag{
-  margin-left:auto;font-size:0.46rem;font-family:'JetBrains Mono',monospace;
-  font-weight:700;padding:2px 5px;border-radius:4px;letter-spacing:.5px;
-}
-.tag-new{background:rgba(0,212,160,0.15);color:var(--c3);border:1px solid rgba(0,212,160,0.25);}
-.tag-tool{background:rgba(255,209,102,0.12);color:var(--warn);border:1px solid rgba(255,209,102,0.2);}
-.sb-divider{height:1px;background:var(--border);margin:4px 8px;}
-.sb-foot{
-  padding:10px 14px 12px;border-top:1px solid var(--border);position:relative;z-index:1;
-}
-.sb-stat{display:flex;justify-content:space-between;align-items:center;font-size:0.58rem;font-family:'JetBrains Mono',monospace;margin-bottom:3px;}
-.sb-stat-k{color:var(--muted);}
-.sb-stat-v{color:var(--c3);background:rgba(0,212,160,0.08);padding:1px 5px;border-radius:3px;font-weight:700;border:1px solid rgba(0,212,160,0.15);}
-.sb-brand{margin-top:7px;font-size:0.52rem;font-family:'JetBrains Mono',monospace;color:var(--muted);text-align:center;letter-spacing:.5px;}
+.sidebar.collapsed { width: 48px; min-width: 48px; }
+.sidebar.collapsed .sb-name,
+.sidebar.collapsed .sb-ver,
+.sidebar.collapsed .nav-lbl,
+.sidebar.collapsed .nav-tag,
+.sidebar.collapsed .nb-text,
+.sidebar.collapsed .sb-divider,
+.sidebar.collapsed .sb-foot { display: none; }
+.sidebar.collapsed .sb-head { padding: 10px 7px; justify-content: center; display: flex; }
+.sidebar.collapsed .sb-logo-row { justify-content: center; }
+.sidebar.collapsed .nav-btn { justify-content: center; padding: 8px 0; }
+.sidebar.collapsed .nav-scroll { padding: 6px 6px; }
 
-/* ══════════════════════════════════════
-   MAIN + TOPBAR
-══════════════════════════════════════ */
-.main{flex:1;display:flex;flex-direction:column;height:100vh;overflow:hidden;position:relative;}
-.topbar{
-  height:48px;flex-shrink:0;display:flex;align-items:center;padding:0 20px;gap:10px;
-  background:var(--glass);backdrop-filter:var(--blur2);border-bottom:1px solid var(--border);
-  position:relative;z-index:5;
+.sb-toggle {
+  position: absolute; top: 16px; right: -12px; z-index: 20;
+  width: 24px; height: 24px; border-radius: 50%;
+  background: var(--surface2); border: 1px solid var(--border2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; color: var(--sub); cursor: pointer;
+  transition: all var(--trans);
 }
-.topbar::after{
-  content:'';position:absolute;top:0;left:0;right:0;height:50%;
-  background:linear-gradient(180deg,var(--shine) 0%,transparent 100%);pointer-events:none;
-}
-.tb-crumb{display:flex;align-items:center;gap:6px;}
-.tb-sec{font-size:0.66rem;color:var(--muted);font-family:'JetBrains Mono',monospace;letter-spacing:.3px;}
-.tb-sep{color:var(--muted);opacity:.3;font-size:1rem;}
-.tb-page{font-weight:700;font-size:0.83rem;letter-spacing:-.2px;color:var(--text);}
-.tb-r{margin-left:auto;display:flex;align-items:center;gap:7px;}
-.scoofy-brand{
-  font-size:0.52rem;font-family:'JetBrains Mono',monospace;color:var(--muted);
-  letter-spacing:.4px;white-space:nowrap;padding:2px 8px;border-radius:4px;
-  background:var(--glass2);border:1px solid var(--border);
-}
-.mode-toggle{
-  display:flex;align-items:center;background:var(--glass2);
-  border:1px solid var(--border);border-radius:var(--r2);padding:2px;gap:1px;
-}
-.mode-btn{
-  display:flex;align-items:center;gap:3px;padding:4px 9px;border-radius:6px;
-  background:transparent;border:none;color:var(--sub);
-  font-family:'Space Grotesk',sans-serif;font-size:0.72rem;font-weight:700;
-  cursor:pointer;transition:all var(--trans);white-space:nowrap;
-}
-.mode-btn:hover{color:var(--text);}
-.mode-btn.active{
-  background:linear-gradient(135deg,var(--c1),var(--c2));color:#fff;
-  box-shadow:0 2px 10px var(--sh1);position:relative;overflow:hidden;
-}
-.mode-btn.active::before{
-  content:'';position:absolute;top:0;left:0;right:0;height:50%;
-  background:linear-gradient(180deg,rgba(255,255,255,0.2),transparent);pointer-events:none;
-}
-.tb-icon{
-  width:30px;height:30px;border-radius:var(--r2);
-  background:var(--glass2);border:1px solid var(--border);
-  display:flex;align-items:center;justify-content:center;
-  cursor:pointer;font-size:14px;color:var(--sub);
-  transition:background var(--trans),color var(--trans),box-shadow var(--trans);
-  position:relative;overflow:hidden;
-}
-.tb-icon::before{content:'';position:absolute;top:0;left:0;right:0;height:50%;background:linear-gradient(180deg,var(--shine),transparent);pointer-events:none;}
-.tb-icon:hover{background:var(--glass3);color:var(--text);box-shadow:0 0 10px var(--glow);}
+.sb-toggle:hover { color: var(--c2); border-color: var(--c1); }
+.sidebar.collapsed .sb-toggle { transform: rotate(180deg); }
 
-/* ══════════════════════════════════════
+.sb-head {
+  padding: 16px 12px 12px;
+  border-bottom: 1px solid var(--border);
+}
+.sb-logo-row { display: flex; align-items: center; gap: 8px; }
+.sb-logo {
+  width: 28px; height: 28px; border-radius: 6px; flex-shrink: 0;
+  background: var(--c1);
+  display: flex; align-items: center; justify-content: center; font-size: 13px;
+}
+.sb-name { font-weight: 700; font-size: .78rem; color: var(--text); }
+.sb-ver { font-size: .5rem; color: var(--muted); font-family: 'JetBrains Mono', monospace; margin-top: 1px; }
+
+.nav-scroll { flex: 1; overflow-y: auto; padding: 8px 6px; scrollbar-width: none; }
+.nav-scroll::-webkit-scrollbar { display: none; }
+
+.nav-lbl {
+  font-size: .48rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--muted); padding: 10px 8px 3px; font-family: 'JetBrains Mono', monospace;
+}
+.nav-btn {
+  display: flex; align-items: center; gap: 8px;
+  width: 100%; padding: 6px 8px; border-radius: var(--r2);
+  background: transparent; border: none;
+  color: var(--sub); cursor: pointer;
+  font-family: 'Space Grotesk', sans-serif; font-size: .74rem; font-weight: 500;
+  text-align: left; margin-bottom: 1px;
+  transition: all var(--trans);
+  position: relative;
+}
+.nav-btn:hover { background: var(--surface2); color: var(--text); }
+.nav-btn.active { background: var(--surface2); color: var(--c2); }
+.nav-btn.active::before {
+  content: '';
+  position: absolute; left: 0; top: 20%; bottom: 20%;
+  width: 2px; border-radius: 0 2px 2px 0;
+  background: var(--c1);
+}
+.nav-ico {
+  width: 22px; height: 22px; border-radius: 5px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; background: var(--surface2); border: 1px solid var(--border);
+}
+.nav-btn.active .nav-ico { border-color: var(--border2); }
+.nav-tag {
+  margin-left: auto; font-size: .42rem; font-family: 'JetBrains Mono', monospace;
+  font-weight: 700; padding: 2px 4px; border-radius: 3px; letter-spacing: .5px;
+}
+.tag-new { background: rgba(155,92,245,.12); color: var(--c1); border: 1px solid rgba(155,92,245,.2); }
+.tag-tool { background: rgba(251,191,36,.08); color: var(--warn); border: 1px solid rgba(251,191,36,.15); }
+.sb-divider { height: 1px; background: var(--border); margin: 4px 8px; }
+.sb-foot {
+  padding: 10px 12px 12px; border-top: 1px solid var(--border);
+}
+.sb-stat { display: flex; justify-content: space-between; font-size: .54rem; font-family: 'JetBrains Mono', monospace; margin-bottom: 2px; }
+.sb-stat-k { color: var(--muted); }
+.sb-stat-v { color: var(--c1); font-weight: 700; }
+.sb-brand { margin-top: 6px; font-size: .48rem; font-family: 'JetBrains Mono', monospace; color: var(--muted); text-align: center; letter-spacing: .5px; }
+
+/* ─────────────────────────────────────
+   MAIN
+───────────────────────────────────── */
+.main { flex: 1; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+
+/* ─────────────────────────────────────
+   TOPBAR
+───────────────────────────────────── */
+.topbar {
+  height: 48px; flex-shrink: 0;
+  display: flex; align-items: center; padding: 0 20px; gap: 8px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg);
+}
+.tb-crumb { display: flex; align-items: center; gap: 6px; }
+.tb-sec { font-size: .6rem; color: var(--muted); font-family: 'JetBrains Mono', monospace; }
+.tb-sep { color: var(--border2); font-size: .9rem; }
+.tb-page { font-size: .78rem; font-weight: 600; color: var(--text); }
+.tb-r { margin-left: auto; display: flex; align-items: center; gap: 6px; }
+.scoofy-brand {
+  font-size: .48rem; font-family: 'JetBrains Mono', monospace; color: var(--muted);
+  letter-spacing: .5px; padding: 2px 6px; border-radius: 3px;
+  background: var(--surface); border: 1px solid var(--border);
+}
+.mode-toggle {
+  display: flex; background: var(--surface); border: 1px solid var(--border); border-radius: var(--r2); padding: 2px; gap: 1px;
+}
+.mode-btn {
+  padding: 3px 10px; border-radius: 3px; border: none;
+  background: transparent; color: var(--sub);
+  font-family: 'Space Grotesk', sans-serif; font-size: .68rem; font-weight: 600;
+  cursor: pointer; transition: all var(--trans); white-space: nowrap;
+}
+.mode-btn:hover { color: var(--text); }
+.mode-btn.active { background: var(--c1); color: #fff; }
+.tb-icon {
+  width: 28px; height: 28px; border-radius: var(--r2);
+  background: var(--surface); border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; font-size: 12px; color: var(--sub);
+  transition: all var(--trans);
+}
+.tb-icon:hover { border-color: var(--border2); color: var(--text); }
+
+/* ─────────────────────────────────────
    CONTENT + PANELS
-══════════════════════════════════════ */
-.content{flex:1;overflow-y:auto;padding:18px;scrollbar-width:thin;scrollbar-color:var(--border) transparent;}
-.content::-webkit-scrollbar{width:4px;}
-.content::-webkit-scrollbar-thumb{background:var(--border2);border-radius:4px;}
-.panel{display:none;animation:fadeUp .18s ease;}
-.panel.active{display:block;}
-@keyframes fadeUp{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
-
-/* ══════════════════════════════════════
-   CARDS
-══════════════════════════════════════ */
-.card{
-  background:var(--glass);backdrop-filter:var(--blur2);
-  border:1px solid var(--border);border-radius:var(--r);padding:16px;
-  position:relative;overflow:hidden;
-  box-shadow:0 4px 24px rgba(0,0,0,.2),inset 0 1px 0 var(--shine);
-  transition:background var(--trans),border-color var(--trans);
+───────────────────────────────────── */
+.content {
+  flex: 1; overflow-y: auto; padding: 32px 28px;
+  scrollbar-width: thin; scrollbar-color: var(--border) transparent;
 }
-.card::after{content:'';position:absolute;top:0;left:0;right:0;height:40%;background:linear-gradient(180deg,var(--shine) 0%,transparent 100%);pointer-events:none;border-radius:var(--r) var(--r) 0 0;}
-.drop-card{
-  background:var(--glass);backdrop-filter:var(--blur2);
-  border:1px solid var(--border);border-radius:var(--r);padding:15px;
-  display:flex;flex-direction:column;gap:10px;
-  position:relative;overflow:hidden;
-  box-shadow:0 4px 24px rgba(0,0,0,.18),inset 0 1px 0 var(--shine);
-}
-.drop-card::before{content:'';position:absolute;top:0;left:0;right:0;height:35%;background:linear-gradient(180deg,var(--shine) 0%,transparent 100%);pointer-events:none;z-index:0;}
-.out-card{background:var(--glass);backdrop-filter:var(--blur2);border:1px solid var(--border);border-radius:var(--r);padding:15px;position:relative;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,.18),inset 0 1px 0 var(--shine);}
-.out-card::after{content:'';position:absolute;top:0;left:0;right:0;height:38%;background:linear-gradient(180deg,var(--shine) 0%,transparent 100%);pointer-events:none;}
+.content::-webkit-scrollbar { width: 3px; }
+.content::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+.panel { display: none; animation: fadeUp .15s ease; }
+.panel.active { display: block; }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: none; } }
 
-/* ══════════════════════════════════════
+/* Page header */
+.page-header { margin-bottom: 28px; }
+.page-title { font-size: 1.3rem; font-weight: 700; color: var(--text); letter-spacing: -.4px; margin-bottom: 4px; }
+.page-sub { font-size: .78rem; color: var(--sub); }
+
+/* ─────────────────────────────────────
+   CONVERTER LAYOUT
+───────────────────────────────────── */
+.conv-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: start; }
+.g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; align-items: start; }
+.gap { margin-bottom: 14px; }
+
+/* Input card */
+.drop-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 20px;
+  display: flex; flex-direction: column; gap: 12px;
+}
+.drop-title { font-size: .82rem; font-weight: 600; color: var(--text); }
+.drop-sub { font-size: .7rem; color: var(--sub); margin-top: 1px; }
+
+/* Output card */
+.out-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 20px;
+}
+
+/* Generic card */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 16px;
+}
+.card-lbl { font-size: .52rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; font-family: 'JetBrains Mono', monospace; }
+
+/* ─────────────────────────────────────
    DROP ZONE
-══════════════════════════════════════ */
-.dz{
-  border:1.5px dashed var(--border2);border-radius:var(--r);
-  min-height:90px;display:flex;align-items:center;justify-content:center;
-  position:relative;overflow:hidden;cursor:pointer;
-  transition:border-color var(--trans),background var(--trans),box-shadow var(--trans);
-  background:var(--glass);
+───────────────────────────────────── */
+.dz {
+  border: 1px dashed var(--border2); border-radius: var(--r);
+  min-height: 96px; display: flex; align-items: center; justify-content: center;
+  position: relative; overflow: hidden; cursor: pointer;
+  background: var(--surface2);
+  transition: all var(--trans);
+  -webkit-tap-highlight-color: transparent; user-select: none;
 }
-.dz::before{content:'';position:absolute;top:0;left:0;right:0;height:50%;background:linear-gradient(180deg,var(--shine) 0%,transparent 100%);pointer-events:none;}
-.dz:hover{border-color:var(--c1);background:var(--glass2);box-shadow:0 0 16px var(--glow),inset 0 1px 0 var(--shine2);}
-.dz.hover{border-color:var(--c1);background:var(--glass3);box-shadow:0 0 24px var(--glow2);}
-.dz input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
-.dz-inner{display:flex;flex-direction:column;align-items:center;gap:5px;padding:14px;text-align:center;position:relative;z-index:1;}
-.dz-ico{font-size:1.8rem;filter:drop-shadow(0 0 8px var(--sh1));}
-.dz-t{font-size:.8rem;font-weight:600;color:var(--text);}
-.dz-s{font-size:.65rem;color:var(--sub);font-family:'JetBrains Mono',monospace;}
+.dz input[type=file] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; font-size: 0; }
+.dz:hover { border-color: var(--c1); background: rgba(155,92,245,.04); }
+.dz:active { transform: scale(.995); }
+.dz.hover { border-color: var(--c2); }
+.dz-inner { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 14px; text-align: center; position: relative; z-index: 1; pointer-events: none; }
+.dz-ico { font-size: 1.5rem; opacity: .6; }
+.dz-t { font-size: .74rem; font-weight: 500; color: var(--text); }
+.dz-s { font-size: .62rem; color: var(--sub); font-family: 'JetBrains Mono', monospace; }
+.dz-browse {
+  margin-top: 6px; padding: 4px 14px; border-radius: 20px;
+  background: var(--c1); color: #fff; font-size: .64rem; font-weight: 700;
+  border: none; cursor: pointer; pointer-events: all;
+  font-family: 'Space Grotesk', sans-serif; position: relative; z-index: 2;
+  -webkit-tap-highlight-color: transparent; transition: all var(--trans);
+}
+.dz-browse:hover { background: var(--c2); }
 
-/* ══════════════════════════════════════
+/* ─────────────────────────────────────
    BUTTONS
-══════════════════════════════════════ */
-.btn-conv{
-  width:100%;padding:12px;border:none;border-radius:var(--r);
-  background:linear-gradient(135deg,var(--c1),var(--c2));
-  color:#fff;font-family:'Space Grotesk',sans-serif;font-size:.87rem;font-weight:700;
-  cursor:pointer;position:relative;overflow:hidden;
-  box-shadow:0 4px 18px var(--sh1),inset 0 1px 0 rgba(255,255,255,0.15);
-  transition:transform var(--trans),box-shadow var(--trans),opacity var(--trans);
-  letter-spacing:.1px;
+───────────────────────────────────── */
+.btn-conv {
+  width: 100%; padding: 10px; border: none; border-radius: var(--r);
+  background: var(--c1); color: #fff;
+  font-family: 'Space Grotesk', sans-serif; font-size: .82rem; font-weight: 700;
+  cursor: pointer; letter-spacing: .1px;
+  transition: all var(--trans);
 }
-.btn-conv::before{content:'';position:absolute;top:0;left:0;right:0;height:50%;background:linear-gradient(180deg,rgba(255,255,255,0.2),transparent);pointer-events:none;}
-.btn-conv:hover{transform:translateY(-2px);box-shadow:0 8px 28px var(--sh1),inset 0 1px 0 rgba(255,255,255,0.2);}
-.btn-conv:active{transform:scale(.98);}
-.btn-conv:disabled{opacity:.25;cursor:default;transform:none!important;box-shadow:none!important;}
-.btn-conv.teal{background:linear-gradient(135deg,var(--c3),var(--c1));box-shadow:0 4px 18px var(--sh3);}
-.btn-dl{
-  display:flex;align-items:center;gap:5px;padding:5px 12px;border-radius:var(--r2);
-  background:var(--glass2);border:1px solid var(--border2);
-  color:var(--text);font-size:.72rem;font-weight:600;
-  text-decoration:none;cursor:pointer;position:relative;overflow:hidden;
-  transition:all var(--trans);box-shadow:inset 0 1px 0 var(--shine);
+.btn-conv:hover { background: var(--c2); }
+.btn-conv:active { transform: scale(.98); }
+.btn-conv:disabled { opacity: .2; cursor: default; transform: none !important; }
+.btn-conv.teal { background: var(--c3); }
+.btn-dl {
+  display: flex; align-items: center; gap: 4px; padding: 5px 12px;
+  border-radius: var(--r2); background: var(--surface2); border: 1px solid var(--border2);
+  color: var(--c2); font-size: .68rem; font-weight: 600;
+  text-decoration: none; cursor: pointer; transition: all var(--trans);
 }
-.btn-dl::before{content:'';position:absolute;top:0;left:0;right:0;height:50%;background:linear-gradient(180deg,var(--shine2),transparent);pointer-events:none;}
-.btn-dl:hover{background:var(--glass3);border-color:var(--c1);box-shadow:0 0 12px var(--glow),inset 0 1px 0 var(--shine2);}
-.btn-danger{
-  padding:6px 13px;border:1px solid rgba(255,68,102,.3);border-radius:var(--r2);
-  background:rgba(255,68,102,.1);color:var(--err);font-size:.73rem;font-weight:600;
-  cursor:pointer;transition:all var(--trans);font-family:'Space Grotesk',sans-serif;
+.btn-dl:hover { border-color: var(--c1); color: var(--c1); }
+.btn-danger {
+  padding: 5px 12px; border: 1px solid rgba(248,113,113,.2); border-radius: var(--r2);
+  background: rgba(248,113,113,.06); color: var(--err); font-size: .68rem; font-weight: 600;
+  cursor: pointer; transition: all var(--trans); font-family: 'Space Grotesk', sans-serif;
 }
-.btn-danger:hover{background:rgba(255,68,102,.2);border-color:var(--err);}
-.btn-sm{
-  padding:4px 10px;border-radius:6px;border:1px solid var(--border);
-  background:var(--glass);color:var(--sub);font-size:.68rem;font-family:'Space Grotesk',sans-serif;
-  font-weight:600;cursor:pointer;transition:all var(--trans);
+.btn-danger:hover { background: rgba(248,113,113,.12); }
+.btn-sm {
+  padding: 4px 10px; border-radius: var(--r2); border: 1px solid var(--border);
+  background: transparent; color: var(--sub); font-size: .64rem;
+  font-family: 'Space Grotesk', sans-serif; font-weight: 600; cursor: pointer; transition: all var(--trans);
 }
-.btn-sm:hover{background:var(--glass2);color:var(--text);border-color:var(--border2);}
-.btn-sm.active{background:var(--glass3);border-color:var(--c1);color:var(--c1);box-shadow:0 0 8px var(--glow);}
+.btn-sm:hover { color: var(--text); border-color: var(--border2); }
+.btn-sm.active { background: var(--c1); border-color: transparent; color: #fff; }
 
-/* ══════════════════════════════════════
-   TYPOGRAPHY + LAYOUT BITS
-══════════════════════════════════════ */
-.conv-layout{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:start;}
-.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:start;}
-.gap{margin-bottom:14px;}
-.sec-h{font-size:1.2rem;font-weight:700;letter-spacing:-.4px;margin-bottom:6px;color:var(--text);}
-.sec-s{font-size:.8rem;color:var(--sub);line-height:1.6;margin-bottom:14px;}
-.card-lbl{font-size:.58rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--sub);margin-bottom:8px;font-family:'JetBrains Mono',monospace;}
-.drop-title{font-size:.82rem;font-weight:700;color:var(--text);position:relative;z-index:1;}
-.drop-sub{font-size:.73rem;color:var(--sub);position:relative;z-index:1;}
-.hint-box{
-  font-size:.67rem;color:var(--sub);line-height:1.55;
-  padding:7px 10px;border-radius:var(--r2);border-left:2px solid var(--c1);
-  background:var(--glass);font-family:'JetBrains Mono',monospace;
-  box-shadow:inset 0 1px 0 var(--shine);
+/* ─────────────────────────────────────
+   OUTPUT
+───────────────────────────────────── */
+.out-head { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+.out-title { font-size: .78rem; font-weight: 600; flex: 1; color: var(--text); }
+.out-wrap { position: relative; border-radius: var(--r2); overflow: hidden; background: #000; border: 1px solid var(--border); }
+.cmp-row { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 8px; }
+.cmp-item { position: relative; border-radius: var(--r2); overflow: hidden; }
+.cmp-item canvas { width: 100%; display: block; border-radius: var(--r2); }
+.cmp-lbl { position: absolute; bottom: 3px; right: 5px; font-size: .46rem; font-family: 'JetBrains Mono', monospace; color: rgba(255,255,255,.4); background: rgba(0,0,0,.6); padding: 1px 3px; border-radius: 2px; }
+.prev-badge { position: absolute; top: 6px; right: 6px; font-size: .46rem; font-family: 'JetBrains Mono', monospace; background: rgba(0,0,0,.7); color: var(--sub); padding: 2px 5px; border-radius: 3px; border: 1px solid var(--border); }
+.inp-prev { display: none; border-radius: var(--r2); overflow: hidden; position: relative; }
+.inp-prev canvas { width: 100%; display: block; max-height: 110px; object-fit: cover; }
+.empty { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; padding: 40px; text-align: center; min-height: 140px; }
+.empty-ico { font-size: 2rem; opacity: .15; }
+.empty span:last-child { font-size: .68rem; color: var(--muted); font-family: 'JetBrains Mono', monospace; }
+.hidden { display: none !important; }
+
+/* ─────────────────────────────────────
+   STATUS + TOAST
+───────────────────────────────────── */
+.status { font-size: .65rem; font-family: 'JetBrains Mono', monospace; padding: 0; max-height: 0; overflow: hidden; transition: max-height .18s, padding .18s; border-radius: var(--r2); }
+.status.show { max-height: 40px; padding: 5px 8px; }
+.status.info { background: rgba(155,92,245,.08); color: var(--c2); border: 1px solid rgba(155,92,245,.15); }
+.status.ok   { background: rgba(124,58,237,.1);  color: var(--acc); border: 1px solid rgba(155,92,245,.15); }
+.status.err  { background: rgba(248,113,113,.08); color: var(--err); border: 1px solid rgba(248,113,113,.15); }
+#toast {
+  position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(12px);
+  background: var(--surface); border: 1px solid var(--border2); border-radius: 20px;
+  padding: 7px 18px; font-size: .68rem; font-family: 'JetBrains Mono', monospace;
+  color: var(--acc); opacity: 0; pointer-events: none; z-index: 9999;
+  transition: opacity .15s, transform .15s; white-space: nowrap;
 }
-.hint-box strong{color:var(--c1);}
-.out-head{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
-.out-title{font-size:.8rem;font-weight:700;flex:1;color:var(--text);}
-.out-wrap{position:relative;border-radius:var(--r);overflow:hidden;background:#000;box-shadow:0 0 0 1px var(--border),0 4px 20px rgba(0,0,0,.4);}
-.cmp-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;}
-.cmp-item{position:relative;border-radius:var(--r2);overflow:hidden;}
-.cmp-item canvas{width:100%;display:block;border-radius:var(--r2);}
-.cmp-lbl{position:absolute;bottom:4px;right:6px;font-size:.5rem;font-family:'JetBrains Mono',monospace;color:rgba(255,255,255,.6);background:rgba(0,0,0,.5);padding:1px 4px;border-radius:3px;}
-.prev-badge{position:absolute;top:7px;right:7px;font-size:.5rem;font-family:'JetBrains Mono',monospace;background:rgba(0,0,0,.65);color:rgba(255,255,255,.7);padding:2px 6px;border-radius:4px;backdrop-filter:blur(4px);border:1px solid rgba(255,255,255,.08);}
-.inp-prev{display:none;border-radius:var(--r2);overflow:hidden;position:relative;margin-top:4px;}
-.inp-prev canvas{width:100%;display:block;max-height:120px;object-fit:cover;}
-.empty{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:40px;text-align:center;min-height:160px;}
-.empty-ico{font-size:2.4rem;opacity:.4;filter:drop-shadow(0 0 10px var(--sh1));}
-.empty span:last-child{font-size:.75rem;color:var(--muted);font-family:'JetBrains Mono',monospace;}
-.hidden{display:none!important;}
+#toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-/* ══════════════════════════════════════
-   STATUS
-══════════════════════════════════════ */
-.status{font-size:.7rem;font-family:'JetBrains Mono',monospace;padding:0;max-height:0;overflow:hidden;transition:max-height .2s,padding .2s;border-radius:var(--r2);}
-.status.show{max-height:40px;padding:6px 9px;}
-.status.info{background:rgba(0,180,255,.1);color:var(--c1);border:1px solid rgba(0,180,255,.2);}
-.status.ok{background:rgba(0,212,160,.1);color:var(--c3);border:1px solid rgba(0,212,160,.2);}
-.status.err{background:rgba(255,68,102,.1);color:var(--err);border:1px solid rgba(255,68,102,.2);}
-
-/* ══════════════════════════════════════
-   TOAST
-══════════════════════════════════════ */
-#toast{
-  position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(20px);
-  background:var(--glass2);backdrop-filter:var(--blur);
-  border:1px solid var(--border2);border-radius:30px;
-  padding:8px 20px;font-size:.75rem;font-family:'JetBrains Mono',monospace;
-  color:var(--text);opacity:0;pointer-events:none;z-index:9999;
-  transition:opacity .2s,transform .2s;white-space:nowrap;
-  box-shadow:0 4px 20px rgba(0,0,0,.4),inset 0 1px 0 var(--shine);
+/* ─────────────────────────────────────
+   HINT + MISC
+───────────────────────────────────── */
+.hint-box {
+  font-size: .62rem; color: var(--sub); line-height: 1.55;
+  padding: 8px 10px; border-radius: var(--r2); border-left: 2px solid var(--c1);
+  background: var(--surface2); font-family: 'JetBrains Mono', monospace;
 }
-#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+.hint-box strong { color: var(--c2); }
+.sec-h { font-size: 1.1rem; font-weight: 700; color: var(--text); letter-spacing: -.3px; margin-bottom: 4px; }
+.sec-s { font-size: .74rem; color: var(--sub); line-height: 1.55; margin-bottom: 14px; }
+.drop-title { font-size: .8rem; font-weight: 600; color: var(--text); }
+.drop-sub { font-size: .7rem; color: var(--sub); }
 
-/* ══════════════════════════════════════
-   MANNEQUIN + MQ
-══════════════════════════════════════ */
-.mq-sec{display:none;margin-top:14px;}
-.mq-sec.show{display:block;}
-.mq-row{display:flex;gap:12px;flex-wrap:wrap;}
-.mq-view{background:var(--glass);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;text-align:center;flex:1;min-width:140px;box-shadow:inset 0 1px 0 var(--shine);}
-.mq-view canvas{width:100%;display:block;}
-.mq-lbl{font-size:.58rem;font-family:'JetBrains Mono',monospace;color:var(--sub);padding:3px 0 5px;letter-spacing:.5px;}
+/* ─────────────────────────────────────
+   MQ / MANNEQUIN
+───────────────────────────────────── */
+.mq-sec { display: none; margin-top: 14px; }
+.mq-sec.show { display: block; }
+.mq-row { display: flex; gap: 10px; flex-wrap: wrap; }
+.mq-view { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); overflow: hidden; text-align: center; flex: 1; min-width: 130px; }
+.mq-view canvas { width: 100%; display: block; }
+.mq-lbl { font-size: .52rem; font-family: 'JetBrains Mono', monospace; color: var(--muted); padding: 3px 0 4px; letter-spacing: .5px; }
 
-/* ══════════════════════════════════════
+/* ─────────────────────────────────────
    SETTINGS
-══════════════════════════════════════ */
-.settings-sec{margin-bottom:18px;}
-.settings-sec-title{font-size:.68rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--sub);font-family:'JetBrains Mono',monospace;margin-bottom:8px;padding-left:2px;}
-.settings-grid{background:var(--glass);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;box-shadow:inset 0 1px 0 var(--shine);}
-.setting-row{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid var(--border);}
-.setting-row:last-child{border-bottom:none;}
-.setting-name{font-size:.78rem;font-weight:600;color:var(--text);margin-bottom:2px;}
-.setting-desc{font-size:.64rem;color:var(--sub);font-family:'JetBrains Mono',monospace;}
-.toggle{
-  width:38px;height:22px;border-radius:11px;background:var(--muted);
-  cursor:pointer;position:relative;transition:background var(--trans),box-shadow var(--trans);flex-shrink:0;
-  border:1px solid var(--border);
-}
-.toggle::before{
-  content:'';position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;
-  background:#fff;transition:transform var(--trans);box-shadow:0 1px 4px rgba(0,0,0,.3);
-}
-.toggle.on{background:linear-gradient(135deg,var(--c1),var(--c3));border-color:var(--c1);box-shadow:0 0 8px var(--glow);}
-.toggle.on::before{transform:translateX(16px);}
-.select-row{display:flex;gap:4px;flex-wrap:wrap;}
-.setting-input{
-  background:var(--glass2);border:1px solid var(--border);border-radius:var(--r2);
-  color:var(--text);padding:5px 9px;font-size:.73rem;font-family:'JetBrains Mono',monospace;
-  width:160px;outline:none;transition:border-color var(--trans),box-shadow var(--trans);
-}
-.setting-input:focus{border-color:var(--c1);box-shadow:0 0 8px var(--glow);}
+───────────────────────────────────── */
+.settings-sec { margin-bottom: 20px; }
+.settings-sec-title { font-size: .6rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--c1); font-family: 'JetBrains Mono', monospace; margin-bottom: 8px; }
+.settings-grid { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); overflow: hidden; }
+.setting-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; border-bottom: 1px solid var(--border); }
+.setting-row:last-child { border-bottom: none; }
+.setting-name { font-size: .74rem; font-weight: 500; color: var(--text); margin-bottom: 1px; }
+.setting-desc { font-size: .6rem; color: var(--muted); font-family: 'JetBrains Mono', monospace; }
+.toggle { width: 34px; height: 18px; border-radius: 9px; background: var(--surface2); cursor: pointer; position: relative; transition: all var(--trans); flex-shrink: 0; border: 1px solid var(--border); }
+.toggle::before { content: ''; position: absolute; top: 2px; left: 2px; width: 12px; height: 12px; border-radius: 50%; background: var(--muted); transition: all var(--trans); }
+.toggle.on { background: var(--c1); border-color: var(--c1); }
+.toggle.on::before { transform: translateX(16px); background: #fff; }
+.select-row { display: flex; gap: 3px; flex-wrap: wrap; }
+.setting-input { background: var(--surface2); border: 1px solid var(--border); border-radius: var(--r2); color: var(--text); padding: 5px 8px; font-size: .68rem; font-family: 'JetBrains Mono', monospace; width: 150px; outline: none; transition: all var(--trans); }
+.setting-input:focus { border-color: var(--c1); }
+textarea.setting-input { resize: vertical; }
 
-/* ══════════════════════════════════════
-   SHORTCUTS + ABOUT
-══════════════════════════════════════ */
-.shortcuts-grid{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;}
-.shortcut-row{display:flex;align-items:center;gap:8px;font-size:.72rem;color:var(--sub);}
-.shortcut-keys{display:flex;gap:3px;}
-kbd{
-  background:var(--glass2);border:1px solid var(--border2);border-radius:5px;
-  padding:2px 6px;font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--text);
-  box-shadow:inset 0 1px 0 var(--shine);
-}
-.about-sec{background:var(--glass);border:1px solid var(--border);border-radius:var(--r);padding:14px;box-shadow:inset 0 1px 0 var(--shine);}
-.about-title{font-size:.75rem;font-weight:700;color:var(--c1);margin-bottom:8px;font-family:'JetBrains Mono',monospace;letter-spacing:.5px;}
-.about-text{font-size:.72rem;color:var(--sub);line-height:1.65;}
-.about-text strong{color:var(--text);}
-.coord-table{width:100%;border-collapse:collapse;font-size:.68rem;font-family:'JetBrains Mono',monospace;}
-.coord-table th{color:var(--sub);font-weight:600;padding:3px 8px;text-align:left;border-bottom:1px solid var(--border);}
-.coord-table td{padding:3px 8px;border-bottom:1px solid rgba(255,255,255,.03);}
-.coord-table .hl{color:var(--c1);font-weight:600;}
+/* ─────────────────────────────────────
+   SHORTCUTS / ABOUT
+───────────────────────────────────── */
+.shortcuts-grid { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 8px; }
+.shortcut-row { display: flex; align-items: center; gap: 6px; font-size: .68rem; color: var(--sub); }
+.shortcut-keys { display: flex; gap: 2px; }
+kbd { background: var(--surface2); border: 1px solid var(--border2); border-radius: 4px; padding: 2px 5px; font-family: 'JetBrains Mono', monospace; font-size: .62rem; color: var(--text); }
+.about-sec { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); padding: 14px; }
+.about-title { font-size: .7rem; font-weight: 700; color: var(--c1); margin-bottom: 8px; font-family: 'JetBrains Mono', monospace; letter-spacing: .5px; }
+.coord-table { width: 100%; border-collapse: collapse; font-size: .62rem; font-family: 'JetBrains Mono', monospace; }
+.coord-table th { color: var(--muted); font-weight: 600; padding: 3px 6px; text-align: left; border-bottom: 1px solid var(--border); }
+.coord-table td { padding: 3px 6px; border-bottom: 1px solid rgba(255,255,255,.02); }
+.coord-table .hl { color: var(--c2); font-weight: 600; }
 
-/* ══════════════════════════════════════
+/* ─────────────────────────────────────
+   MAKERS
+───────────────────────────────────── */
+.mk-section { margin-bottom: 8px; }
+.mk-lbl { font-size: .58rem; font-weight: 700; color: var(--muted); font-family: 'JetBrains Mono', monospace; letter-spacing: .5px; margin-bottom: 4px; text-transform: uppercase; }
+.mk-lbl span { color: var(--muted); font-weight: 400; text-transform: none; }
+.mk-row { display: flex; flex-wrap: wrap; gap: 3px; }
+.mk-btn { padding: 3px 8px; border-radius: 3px; border: 1px solid var(--border); background: transparent; color: var(--sub); font-size: .6rem; font-family: 'Space Grotesk', sans-serif; font-weight: 600; cursor: pointer; transition: all var(--trans); }
+.mk-btn:hover { color: var(--text); border-color: var(--border2); }
+.mk-btn.on-fill, .mk-btn.on-fx, .mk-btn.on-tint, .mk-btn.on-op { background: var(--c1); border-color: transparent; color: #fff; }
+.pf-strip { border-top: 1px solid var(--border); margin-top: 10px; padding-top: 10px; }
+.pf-row { display: flex; flex-wrap: wrap; gap: 3px; align-items: center; margin-bottom: 4px; }
+.pf-lbl { font-size: .54rem; font-family: 'JetBrains Mono', monospace; color: var(--muted); margin-right: 4px; text-transform: uppercase; letter-spacing: .5px; }
+.fk-sub-lbl { font-size: .58rem; font-weight: 700; color: var(--muted); font-family: 'JetBrains Mono', monospace; letter-spacing: 1px; text-transform: uppercase; }
+
+/* ─────────────────────────────────────
    TOOLS GRID
-══════════════════════════════════════ */
-.tools-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;}
-.tool-card{
-  background:var(--glass);border:1px solid var(--border);border-radius:var(--r);
-  padding:16px;cursor:pointer;position:relative;overflow:hidden;
-  transition:all var(--trans);display:flex;flex-direction:column;gap:6px;
-  box-shadow:inset 0 1px 0 var(--shine);
-}
-.tool-card::before{content:'';position:absolute;top:0;left:0;right:0;height:45%;background:linear-gradient(180deg,var(--shine) 0%,transparent 100%);pointer-events:none;}
-.tool-card:hover{background:var(--glass2);border-color:var(--border2);transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,0,0,.25),inset 0 1px 0 var(--shine2),0 0 14px var(--glow);}
-.tool-ico{font-size:1.6rem;filter:drop-shadow(0 0 8px var(--sh1));}
-.tool-name{font-size:.8rem;font-weight:700;color:var(--text);}
-.tool-desc{font-size:.68rem;color:var(--sub);line-height:1.45;}
-.tool-badge{font-size:.5rem;font-family:'JetBrains Mono',monospace;font-weight:700;padding:2px 6px;border-radius:4px;width:fit-content;letter-spacing:.4px;}
-.tb-s{background:rgba(0,180,255,.15);color:var(--c1);border:1px solid rgba(0,180,255,.2);}
-.tb-p{background:rgba(139,92,246,.15);color:var(--c2);border:1px solid rgba(139,92,246,.2);}
-.tb-u{background:rgba(0,212,160,.15);color:var(--c3);border:1px solid rgba(0,212,160,.2);}
+───────────────────────────────────── */
+.tools-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; }
+.tool-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); padding: 16px; cursor: pointer; transition: all var(--trans); position: relative; }
+.tool-card:hover { border-color: var(--border2); }
+.tool-ico { font-size: 1.4rem; display: block; margin-bottom: 8px; opacity: .7; }
+.tool-name { font-size: .74rem; font-weight: 600; color: var(--text); margin-bottom: 3px; }
+.tool-desc { font-size: .62rem; color: var(--sub); font-family: 'JetBrains Mono', monospace; }
+.tool-badge { position: absolute; top: 10px; right: 10px; font-size: .44rem; font-family: 'JetBrains Mono', monospace; font-weight: 700; padding: 2px 5px; border-radius: 3px; letter-spacing: .5px; }
+.tb-s { background: rgba(155,92,245,.12); color: var(--c1); border: 1px solid rgba(155,92,245,.2); }
+.tb-p { background: rgba(124,58,237,.12); color: var(--acc); border: 1px solid rgba(155,92,245,.18); }
+.tb-u { background: rgba(251,191,36,.08); color: var(--warn); border: 1px solid rgba(251,191,36,.15); }
 
-/* ══════════════════════════════════════
-   LEGEND + REGION PREVIEW
-══════════════════════════════════════ */
-.legend{display:flex;flex-wrap:wrap;gap:6px;padding:8px 0 2px;}
-.leg{display:flex;align-items:center;gap:4px;font-size:.65rem;color:var(--sub);font-family:'JetBrains Mono',monospace;}
-.ldot{width:10px;height:10px;border-radius:2px;flex-shrink:0;}
+/* ─────────────────────────────────────
+   CHECKER + LEGEND
+───────────────────────────────────── */
+.checker { background: repeating-conic-gradient(#111 0% 25%, #0d0d0d 0% 50%) 0 0/14px 14px; }
+.legend { display: flex; flex-wrap: wrap; gap: 6px; padding: 6px 0 0; }
+.leg { display: flex; align-items: center; gap: 4px; font-size: .56rem; color: var(--sub); font-family: 'JetBrains Mono', monospace; }
+.ldot { width: 8px; height: 8px; border-radius: 2px; }
 
-/* ══════════════════════════════════════
-   POST-FILTER STRIP
-══════════════════════════════════════ */
-.pf-strip{
-  margin-top:10px;padding:10px;border-radius:var(--r);
-  background:var(--glass);border:1px solid var(--border);
-  display:flex;flex-direction:column;gap:6px;
-  box-shadow:inset 0 1px 0 var(--shine);
+/* ─────────────────────────────────────
+   LAYERS
+───────────────────────────────────── */
+.layers-wrap { display: flex; flex-direction: column; gap: 4px; margin-bottom: 6px; }
+.layer-row {
+  display: flex; align-items: center; gap: 5px;
+  background: var(--surface2); border: 1px solid var(--border); border-radius: var(--r2);
+  padding: 5px 6px; cursor: default; transition: all var(--trans);
+  position: relative; user-select: none;
 }
-.pf-row{display:flex;flex-wrap:wrap;align-items:center;gap:3px;}
-.pf-lbl{font-size:.58rem;font-family:'JetBrains Mono',monospace;color:var(--muted);
-  letter-spacing:.4px;white-space:nowrap;margin-right:4px;min-width:56px;}
+.layer-row.dragging { opacity: .3; }
+.layer-row.drag-over { border-color: var(--c1); }
+.layer-drag-handle { cursor: grab; color: var(--muted); padding: 0 2px; flex-shrink: 0; display: flex; flex-direction: column; gap: 2px; }
+.layer-drag-handle:active { cursor: grabbing; }
+.layer-drag-handle span { display: block; width: 10px; height: 1.5px; background: var(--muted); border-radius: 1px; }
+.layer-thumb { width: 32px; height: 32px; border-radius: 3px; flex-shrink: 0; background: #000; overflow: hidden; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: .6rem; color: var(--muted); }
+.layer-thumb canvas { width: 100%; height: 100%; object-fit: cover; display: block; image-rendering: pixelated; }
+.layer-info { flex: 1; min-width: 0; }
+.layer-name { font-size: .66rem; font-weight: 500; color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.layer-controls { display: flex; align-items: center; gap: 3px; }
+.layer-op-slider { width: 44px; height: 3px; border-radius: 2px; accent-color: var(--c1); cursor: pointer; -webkit-appearance: none; appearance: none; background: var(--muted); }
+.layer-op-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 8px; height: 8px; border-radius: 50%; background: var(--c1); }
+.layer-op-val { font-size: .52rem; color: var(--sub); font-family: 'JetBrains Mono', monospace; width: 22px; text-align: right; }
+.layer-blend { font-size: .52rem; background: var(--surface); border: 1px solid var(--border); color: var(--text); border-radius: 3px; padding: 2px 3px; cursor: pointer; font-family: 'JetBrains Mono', monospace; max-width: 56px; }
+.layer-vis-btn, .layer-del-btn, .layer-up-btn, .layer-dn-btn {
+  width: 18px; height: 18px; border-radius: 3px; border: 1px solid var(--border);
+  background: transparent; color: var(--sub); font-size: .58rem;
+  cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  transition: all var(--trans); padding: 0;
+}
+.layer-vis-btn:hover, .layer-up-btn:hover, .layer-dn-btn:hover { color: var(--text); border-color: var(--border2); }
+.layer-del-btn:hover { border-color: var(--err); color: var(--err); }
+.layer-vis-btn.hidden-layer { opacity: .3; }
+.layers-add-btn {
+  width: 100%; padding: 6px; border-radius: var(--r2); border: 1px dashed var(--border);
+  background: transparent; color: var(--sub); font-size: .68rem; cursor: pointer;
+  transition: all var(--trans); font-family: 'Space Grotesk', sans-serif; font-weight: 500;
+}
+.layers-add-btn:hover { border-color: var(--c1); color: var(--c1); }
 
-/* ══════════════════════════════════════
-   MAKER BUTTONS
-══════════════════════════════════════ */
-.mk-section{margin-bottom:8px;}
-.mk-lbl{font-size:.56rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);
-  font-family:'JetBrains Mono',monospace;margin-bottom:4px;display:flex;align-items:center;gap:5px;}
-.mk-lbl span{opacity:.7;font-size:.6rem;font-weight:400;text-transform:none;letter-spacing:0;}
-.mk-row{display:flex;flex-wrap:wrap;gap:3px;}
-.mk-btn{
-  padding:3px 8px;border-radius:6px;border:1px solid var(--border);
-  background:var(--glass);color:var(--sub);
-  font-size:.65rem;font-family:'Space Grotesk',sans-serif;font-weight:600;
-  cursor:pointer;transition:all var(--trans);white-space:nowrap;
-  box-shadow:inset 0 1px 0 var(--shine);
-}
-.mk-btn:hover{background:var(--glass2);color:var(--text);border-color:var(--border2);}
-.mk-btn.on-fill{background:rgba(0,180,255,.15);border-color:rgba(0,180,255,.35);color:var(--c1);box-shadow:0 0 8px var(--glow),inset 0 1px 0 var(--shine);}
-.mk-btn.on-fx{background:rgba(139,92,246,.15);border-color:rgba(139,92,246,.35);color:var(--c2);box-shadow:0 0 8px var(--sh2),inset 0 1px 0 var(--shine);}
-.mk-btn.on-tint{background:rgba(255,209,102,.15);border-color:rgba(255,209,102,.3);color:var(--warn);box-shadow:inset 0 1px 0 var(--shine);}
-.mk-btn.on-op{background:rgba(0,212,160,.15);border-color:rgba(0,212,160,.35);color:var(--c3);box-shadow:0 0 8px var(--sh3),inset 0 1px 0 var(--shine);}
+/* ─────────────────────────────────────
+   LAYER EDITOR
+───────────────────────────────────── */
+.layer-editor { border: 1px solid var(--border); border-radius: var(--r); overflow: hidden; margin-bottom: 8px; }
+.le-toolbar { display: flex; align-items: center; gap: 3px; padding: 5px 7px; background: var(--surface2); border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+.le-tool-group { display: flex; gap: 2px; }
+.le-tool { width: 26px; height: 26px; border-radius: var(--r2); border: 1px solid var(--border); background: transparent; color: var(--sub); font-size: .78rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all var(--trans); padding: 0; }
+.le-tool:hover { color: var(--text); }
+.le-tool.active { background: var(--c1); color: #fff; border-color: transparent; }
+.le-btn { padding: 3px 8px; border-radius: 3px; border: 1px solid var(--border); background: transparent; color: var(--sub); font-size: .6rem; font-weight: 600; cursor: pointer; transition: all var(--trans); font-family: 'Space Grotesk', sans-serif; white-space: nowrap; }
+.le-btn:hover { color: var(--text); border-color: var(--border2); }
+.le-btn.active { border-color: var(--c1); color: var(--c1); }
+.le-canvas-wrap { position: relative; width: 100%; background: repeating-conic-gradient(#111 0% 25%, #0d0d0d 0% 50%) 0 0/14px 14px; }
+.le-canvas { width: 100%; display: block; image-rendering: pixelated; cursor: default; }
+.le-overlay { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; image-rendering: pixelated; }
+.le-canvas.tool-pointer { cursor: move; }
+.le-canvas.tool-rect, .le-canvas.tool-lasso { cursor: crosshair; }
+.adv-mode .layer-editor { display: block !important; }
+.adv-mode .layers-wrap, .adv-mode .layers-add-btn { display: flex !important; }
+.simple-mode .layer-editor, .simple-mode .layers-wrap, .simple-mode .layers-add-btn { display: none !important; }
 
-/* ══════════════════════════════════════
-   CHECKER (transparent bg)
-══════════════════════════════════════ */
-.checker{background:repeating-conic-gradient(#111 0% 25%,#191919 0% 50%) 0 0/16px 16px!important;}
-[data-theme="light"] .checker{background:repeating-conic-gradient(#ccc 0% 25%,#ddd 0% 50%) 0 0/16px 16px!important;}
+/* ─────────────────────────────────────
+   TEMPLATES
+───────────────────────────────────── */
+.tpl-filter-bar { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 16px; }
+.tpl-filter { padding: 4px 12px; border-radius: 20px; border: 1px solid var(--border); background: transparent; color: var(--sub); font-size: .66rem; font-weight: 600; cursor: pointer; transition: all var(--trans); font-family: 'Space Grotesk', sans-serif; }
+.tpl-filter:hover { color: var(--text); border-color: var(--border2); }
+.tpl-filter.active { background: var(--c1); color: #fff; border-color: transparent; }
+.tpl-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; }
+.tpl-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); overflow: hidden; transition: all var(--trans); }
+.tpl-card:hover { border-color: var(--border2); }
+.tpl-card[data-hidden="true"] { display: none; }
+.tpl-preview { width: 100%; aspect-ratio: 1; background: #000; display: flex; align-items: center; justify-content: center; }
+.tpl-preview img { width: 100%; height: 100%; object-fit: cover; image-rendering: pixelated; display: block; }
+.tpl-preview-placeholder { opacity: .15; font-size: 2.5rem; }
+.tpl-info { padding: 10px 12px 6px; }
+.tpl-label { font-size: .76rem; font-weight: 600; color: var(--text); margin-bottom: 5px; text-transform: capitalize; }
+.tpl-badges { display: flex; flex-wrap: wrap; gap: 3px; margin-bottom: 7px; }
+.tpl-badge { font-size: .52rem; font-family: 'JetBrains Mono', monospace; font-weight: 700; padding: 2px 5px; border-radius: 3px; }
+.tpl-badge.polyshirt { background: rgba(155,92,245,.12); color: var(--c1); border: 1px solid rgba(155,92,245,.2); }
+.tpl-badge.polypants { background: rgba(124,58,237,.12); color: var(--acc); border: 1px solid rgba(155,92,245,.15); }
+.tpl-badge.fullkit   { background: rgba(155,92,245,.08); color: var(--c2); border: 1px solid rgba(155,92,245,.12); }
+.tpl-badge.rblxshirt { background: rgba(251,191,36,.08); color: var(--warn); border: 1px solid rgba(251,191,36,.15); }
+.tpl-badge.rblxpants { background: rgba(248,113,113,.06); color: var(--err); border: 1px solid rgba(248,113,113,.12); }
+.tpl-btns { display: flex; flex-wrap: wrap; gap: 3px; padding: 0 12px 10px; }
+.tpl-btn { flex: 1; min-width: 70px; padding: 5px 8px; border-radius: var(--r2); border: 1px solid var(--border2); background: transparent; color: var(--sub); font-size: .6rem; font-weight: 600; cursor: pointer; text-align: center; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 3px; transition: all var(--trans); font-family: 'Space Grotesk', sans-serif; }
+.tpl-btn:hover { background: var(--c1); border-color: transparent; color: #fff; }
+.tpl-empty { text-align: center; padding: 40px; color: var(--muted); font-family: 'JetBrains Mono', monospace; font-size: .72rem; }
 
-/* ══════════════════════════════════════
-   FULLKIT DROP ZONES
-══════════════════════════════════════ */
-.fk-sub-lbl{font-size:.62rem;color:var(--sub);font-family:'JetBrains Mono',monospace;letter-spacing:.5px;margin-bottom:4px;}
+/* ─────────────────────────────────────
+   CREDITS
+───────────────────────────────────── */
+.credits-hero { text-align: center; padding: 40px 20px 28px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); margin-bottom: 14px; }
+.credits-avatar { width: 80px; height: 80px; border-radius: 50%; margin: 0 auto 14px; overflow: hidden; background: var(--surface2); border: 1px solid var(--border2); display: flex; align-items: center; justify-content: center; font-size: 2.5rem; }
+.credits-avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.credits-name { font-size: 1.5rem; font-weight: 700; color: var(--text); margin-bottom: 3px; letter-spacing: -.3px; }
+.credits-title { font-size: .68rem; color: var(--muted); font-family: 'JetBrains Mono', monospace; }
+.credits-links { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+.credits-link { flex: 1; min-width: 150px; display: flex; align-items: center; gap: 10px; padding: 12px 14px; border-radius: var(--r); border: 1px solid var(--border); background: var(--surface); text-decoration: none; color: var(--text); transition: all var(--trans); }
+.credits-link:hover { border-color: var(--border2); }
+.credits-link-ico { font-size: 1.2rem; width: 32px; height: 32px; border-radius: var(--r2); display: flex; align-items: center; justify-content: center; background: var(--surface2); flex-shrink: 0; }
+.credits-link-ico.kofi-ico { color: #ff5e5e; }
+.credits-link-ico.web-ico { color: var(--c1); }
+.credits-link-name { font-size: .76rem; font-weight: 600; }
+.credits-link-sub { font-size: .62rem; color: var(--sub); font-family: 'JetBrains Mono', monospace; }
+.credits-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); padding: 14px; }
+.credits-card-title { font-size: .68rem; font-weight: 700; color: var(--c1); margin-bottom: 6px; font-family: 'JetBrains Mono', monospace; }
+.credits-card-body { font-size: .72rem; color: var(--sub); line-height: 1.65; }
+.credits-footer { text-align: center; margin-top: 18px; font-size: .56rem; color: var(--muted); font-family: 'JetBrains Mono', monospace; letter-spacing: .5px; }
 
-/* ══════════════════════════════════════
-   FOX / FURRY TAB
-══════════════════════════════════════ */
-.fox-hero{
-  text-align:center;padding:32px 20px 24px;border-radius:var(--r3);
-  background:linear-gradient(135deg,rgba(255,107,53,.15),rgba(255,140,66,.1),rgba(100,60,20,.15));
-  border:1px solid rgba(255,107,53,.25);margin-bottom:18px;
-  position:relative;overflow:hidden;box-shadow:inset 0 1px 0 rgba(255,200,150,.15),0 0 30px rgba(255,107,53,.1);
+/* ─────────────────────────────────────
+   RESPONSIVE
+───────────────────────────────────── */
+@media (max-width: 700px) {
+  :root { --sbw: 0px; }
+  html, body { overflow: auto; }
+  .app { flex-direction: column; height: auto; min-height: 100vh; }
+  .sidebar { display: none; }
+  .main { height: auto; overflow: visible; }
+  .content { overflow: visible; height: auto; padding: 16px 14px 80px; }
+  .panel.active { overflow: visible; }
+  .conv-layout, .g2 { grid-template-columns: 1fr; }
+  .topbar { padding: 0 12px; height: auto; min-height: 44px; flex-wrap: wrap; padding-top: 6px; padding-bottom: 6px; gap: 5px; }
+  .mode-toggle { order: 3; width: 100%; }
+  .mode-btn { flex: 1; }
+  .scoofy-brand { display: none; }
 }
-.fox-hero::before{content:'';position:absolute;top:0;left:0;right:0;height:45%;background:linear-gradient(180deg,rgba(255,200,150,.1),transparent);pointer-events:none;}
-.fox-hero h1{font-size:2rem;font-weight:700;background:linear-gradient(135deg,#ff8c42,#ff6b35,#ff4500);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:6px;}
-.fox-hero p{font-size:.85rem;color:var(--sub);font-family:'JetBrains Mono',monospace;}
-.fox-emoji-rain{font-size:1.6rem;letter-spacing:4px;margin-bottom:12px;display:block;filter:drop-shadow(0 0 10px rgba(255,107,53,.4));}
-.fox-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin-bottom:18px;}
-.fox-card{
-  background:var(--glass);border:1px solid var(--border);border-radius:var(--r);
-  padding:16px;position:relative;overflow:hidden;
-  box-shadow:inset 0 1px 0 var(--shine);transition:all var(--trans);
-}
-.fox-card::before{content:'';position:absolute;top:0;left:0;right:0;height:40%;background:linear-gradient(180deg,rgba(255,150,80,.07) 0%,transparent 100%);pointer-events:none;}
-.fox-card:hover{border-color:rgba(255,107,53,.35);box-shadow:0 0 16px rgba(255,107,53,.15),inset 0 1px 0 rgba(255,200,150,.1);}
-.fox-card-title{font-size:.78rem;font-weight:700;color:var(--text);margin-bottom:6px;display:flex;align-items:center;gap:6px;}
-.fox-card-body{font-size:.72rem;color:var(--sub);line-height:1.6;}
-.fox-card-body a{color:#ff8c42;text-decoration:none;}
-.fox-card-body a:hover{color:#ff6b35;}
-.fox-ascii{
-  font-family:'JetBrains Mono',monospace;font-size:.65rem;color:#ff8c42;
-  background:rgba(255,107,53,.06);border:1px solid rgba(255,107,53,.15);
-  border-radius:var(--r);padding:14px;white-space:pre;line-height:1.3;
-  box-shadow:inset 0 1px 0 rgba(255,200,150,.08);
-}
-.fox-gen{
-  background:linear-gradient(135deg,rgba(255,107,53,.12),rgba(255,140,66,.08));
-  border:1px solid rgba(255,107,53,.2);border-radius:var(--r);padding:16px;
-  text-align:center;box-shadow:inset 0 1px 0 rgba(255,200,150,.08);
-}
-.fox-name-out{
-  font-size:1.5rem;font-weight:700;
-  background:linear-gradient(135deg,#ff8c42,#ff6b35);
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
-  margin:10px 0 4px;font-family:'JetBrains Mono',monospace;
-}
-.fox-trait-out{font-size:.8rem;color:var(--sub);font-family:'JetBrains Mono',monospace;}
 
-/* ══════════════════════════════════════
-   RESPONSIVE TWEAKS
-══════════════════════════════════════ */
-@media(max-width:700px){
-  :root{--sbw:190px;}
-  .conv-layout{grid-template-columns:1fr;}
-  .g2{grid-template-columns:1fr;}
+/* ─────────────────────────────────────
+   MOBILE NAV
+───────────────────────────────────── */
+#mobile-nav {
+  display: none;
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 100;
+  background: var(--surface); border-top: 1px solid var(--border);
+  padding: 6px 0 max(6px, env(safe-area-inset-bottom));
 }
+.mnav-btn {
+  display: flex; flex-direction: column; align-items: center; gap: 1px;
+  background: none; border: none; color: var(--muted); cursor: pointer;
+  font-size: 1.1rem; padding: 4px 10px; border-radius: var(--r2);
+  transition: color var(--trans); -webkit-tap-highlight-color: transparent; min-width: 46px;
+}
+.mnav-btn span { font-size: .5rem; font-family: 'JetBrains Mono', monospace; font-weight: 600; letter-spacing: .3px; }
+.mnav-btn.active { color: var(--c1); }
+@media (min-width: 701px) { #mobile-nav { display: none !important; } }
+@media (max-width: 700px) { #mobile-nav { display: flex; justify-content: space-around; } }
 </style>
 </head>
 <body>
 <!-- Background -->
 <div class="bg-wrap">
-  <div class="bubble"></div>
-  <div class="bubble"></div>
-  <div class="bubble"></div>
+  <div class="vhs-line"></div>
+  <div class="vhs-glitch"></div>
+  <div class="vhs-noise"></div>
+  <div class="vhs-rgb"></div>
 </div>
 
 <!-- ═══════════════════ SPLASH ═══════════════════ -->
@@ -698,10 +731,10 @@ kbd{
   <div class="splash-box">
     <span class="splash-icon">🧥</span>
     <div class="splash-title" id="splash-title">PT Clothing Converter</div>
-    <div class="splash-by">by <a href="https://www.youtube.com/@scoofyx" target="_blank" id="splash-author">@scoofyx</a> · free to use, no gatekeeping</div>
+    <div class="splash-by">by <a href="https://scoofy.xyz" target="_blank" id="splash-author">Scoofyx</a> · free to use, no gatekeeping</div>
     <div class="splash-desc" id="splash-desc">Convert <strong>Roblox templates</strong> or upgrade <strong>old Polytoria</strong> clothing to PT 2.0 format.<br>Everything runs in your browser — nothing is uploaded anywhere.</div>
     <button class="splash-start" onclick="enterApp()">Open Converter →</button>
-    <div class="splash-note">Works offline · pixel-perfect · <a href="https://www.youtube.com/@scoofyx" target="_blank">subscribe</a> 🔔</div>
+    <div class="splash-note">Works offline · pixel-perfect · <a href="https://scoofy.xyz" target="_blank">scoofy.xyz</a></div>
     <div class="splash-brand">Scoofy™ 2026</div>
   </div>
 </div>
@@ -724,51 +757,46 @@ kbd{
   <div class="nav-scroll">
     <div class="nav-lbl">Convert</div>
     <button class="nav-btn active" id="nbtn-rbx" data-p="rbx" onclick="goTo(this,'rbx')">
-      <span class="nav-ico" style="background:rgba(0,180,255,0.15)">🎮</span>
+      <span class="nav-ico">🎮</span>
       <span class="nb-text">Roblox → PT 2.0</span>
     </button>
     <button class="nav-btn" id="nbtn-old" data-p="old" onclick="goTo(this,'old')">
-      <span class="nav-ico" style="background:rgba(0,212,160,0.12)">🔄</span>
+      <span class="nav-ico">🔄</span>
       <span class="nb-text">Old → PT 2.0</span>
       <span class="nav-tag tag-new">UPGRADE</span>
     </button>
     <button class="nav-btn" id="nbtn-pt2rbx" data-p="pt2rbx" onclick="goTo(this,'pt2rbx')">
-      <span class="nav-ico" style="background:rgba(255,209,102,0.14)">🔁</span>
+      <span class="nav-ico">🔁</span>
       <span class="nb-text">PT 2.0 → Roblox</span>
       <span class="nav-tag tag-tool">NEW</span>
     </button>
     <button class="nav-btn" id="nbtn-fullkit" data-p="fullkit" onclick="goTo(this,'fullkit')">
-      <span class="nav-ico" style="background:rgba(0,212,160,0.12)">🎽</span>
+      <span class="nav-ico">🎽</span>
       <span class="nb-text">Full Kit</span>
       <span class="nav-tag tag-new">NEW</span>
     </button>
     <div class="sb-divider"></div>
     <div class="nav-lbl">Create</div>
     <button class="nav-btn" data-p="ptmaker" onclick="goTo(this,'ptmaker')">
-      <span class="nav-ico" style="background:rgba(0,212,160,0.14)">✨</span>
+      <span class="nav-ico">✨</span>
       <span class="nb-text">PT Maker</span>
       <span class="nav-tag tag-new">NEW</span>
     </button>
     <button class="nav-btn" data-p="maker" onclick="goTo(this,'maker')">
-      <span class="nav-ico" style="background:rgba(255,120,50,0.16)">🪄</span>
-      <span class="nb-text">Clothing Maker</span>
+      <span class="nav-ico">🪄</span>
+      <span class="nb-text">Roblox Maker</span>
       <span class="nav-tag tag-new">NEW</span>
     </button>
     <div class="sb-divider"></div>
     <div class="nav-lbl">Tools</div>
     <button class="nav-btn" data-p="preview" onclick="goTo(this,'preview')">
-      <span class="nav-ico" style="background:rgba(255,209,102,0.12)">🔍</span>
+      <span class="nav-ico">🔍</span>
       <span class="nb-text">Region Preview</span>
       <span class="nav-tag tag-tool">TOOL</span>
     </button>
     <button class="nav-btn" data-p="tools" onclick="goTo(this,'tools')">
-      <span class="nav-ico" style="background:rgba(255,209,102,0.1)">🛠</span>
+      <span class="nav-ico">🛠</span>
       <span class="nb-text">All Tools</span>
-    </button>
-    <button class="nav-btn" data-p="foxes" onclick="goTo(this,'foxes')">
-      <span class="nav-ico" style="background:rgba(255,107,53,0.18)">🦊</span>
-      <span class="nb-text">Foxes & Furries</span>
-      <span class="nav-tag" style="background:rgba(255,107,53,0.15);color:#ff8c42;border:1px solid rgba(255,107,53,0.25)">🐾</span>
     </button>
     <div class="sb-divider"></div>
     <div class="nav-lbl">App</div>
@@ -779,6 +807,15 @@ kbd{
     <button class="nav-btn" data-p="about" onclick="goTo(this,'about')">
       <span class="nav-ico">📖</span>
       <span class="nb-text">About & Coords</span>
+    </button>
+    <button class="nav-btn" data-p="templates" onclick="goTo(this,'templates')">
+      <span class="nav-ico">🆓</span>
+      <span class="nb-text">Free Templates</span>
+      <span class="nav-tag tag-new">FREE</span>
+    </button>
+    <button class="nav-btn" data-p="credits" onclick="goTo(this,'credits')">
+      <span class="nav-ico">👤</span>
+      <span class="nb-text">Credits</span>
     </button>
   </div>
   <div class="sb-foot">
@@ -798,11 +835,14 @@ kbd{
     </div>
     <div class="tb-r">
       <span class="scoofy-brand">Scoofy™ 2026</span>
-      <div class="tb-icon" onclick="toggleTheme()" id="theme-btn" title="Toggle light/dark theme">🌙</div>
       <div class="tb-icon" onclick="refreshPanel()" title="Refresh — clear panel" style="color:var(--c3)">↺</div>
       <div class="mode-toggle">
         <button class="mode-btn active" id="mode-shirt" onclick="setMode('shirt')">👕 Shirt</button>
         <button class="mode-btn" id="mode-pants" onclick="setMode('pants')">👖 Pants</button>
+      </div>
+      <div class="mode-toggle">
+        <button class="mode-btn active" id="adv-simple" onclick="setAdvMode('simple')">Simple</button>
+        <button class="mode-btn" id="adv-advanced" onclick="setAdvMode('advanced')">⚙ Advanced</button>
       </div>
       <div class="tb-icon" onclick="goTo(document.querySelector('[data-p=settings]'),'settings')" title="Settings">⚙</div>
     </div>
@@ -812,14 +852,38 @@ kbd{
 
     <!-- ══ RBX PANEL ══ -->
     <div class="panel active" id="panel-rbx">
+      <div class="page-header"><div class="page-title">Roblox → Polytoria</div><div class="page-sub">Convert a Roblox template to Polytoria 2.0 format.</div></div>
       <div class="conv-layout">
         <div class="drop-card" id="rbx-in-card">
           <div><div class="drop-title" id="rbx-title">Roblox → Polytoria 2.0</div>
           <div class="drop-sub" id="rbx-desc">Drop your Roblox template and hit Convert.</div></div>
-          <div class="dz" id="rbx-dz" ondragover="dzo(event,this)" ondragleave="dzl(this)" ondrop="dzd(event,'rbx')">
+          <div class="dz" id="rbx-dz" ondragover="dzo(event,this)" ondragleave="dzl(this)" ondrop="dzd(event,'rbx')" onclick="triggerFile('rbx-file-input',event)">
             <input type="file" accept="image/*" onchange="lf(event,'rbx')" id="rbx-file-input">
-            <div class="dz-inner"><span class="dz-ico" id="rbx-dz-ico">📤</span><div class="dz-t" id="rbx-dz-t">Drop file here</div><div class="dz-s">or click to browse · PNG / JPG</div></div>
+            <div class="dz-inner"><span class="dz-ico" id="rbx-dz-ico">📤</span><div class="dz-t" id="rbx-dz-t">Tap or drop file here</div><div class="dz-s">PNG / JPG</div><button class="dz-browse" onclick="triggerFile('rbx-file-input',event)">📂 Browse</button></div>
           </div>
+          <!-- LAYER EDITOR -->
+          <div id="le-rbx" class="layer-editor" style="display:none">
+            <div class="le-toolbar">
+              <div class="le-tool-group">
+                <button class="le-tool active" id="let-rbx-pointer" onclick="setLeTool('rbx','pointer')" title="Move layer">✥</button>
+                <button class="le-tool" id="let-rbx-rect" onclick="setLeTool('rbx','rect')" title="Rectangle select">⬜</button>
+                <button class="le-tool" id="let-rbx-lasso" onclick="setLeTool('rbx','lasso')" title="Freehand lasso">🪢</button>
+              </div>
+              <div class="le-tool-group">
+                <button class="le-btn" id="le-cut-rbx" onclick="leCut('rbx')" title="Cut selection" style="display:none">✂ Cut</button>
+                <button class="le-btn" id="le-desel-rbx" onclick="leDeselect('rbx')" title="Deselect" style="display:none">⬚ Desel</button>
+              </div>
+              <div class="le-tool-group" style="margin-left:auto">
+                <button class="le-btn" id="le-bp-rbx" onclick="toggleBlueprint('rbx')" title="Blueprint overlay">🗺 Blueprint</button>
+              </div>
+            </div>
+            <div class="le-canvas-wrap" id="lew-rbx">
+              <canvas id="lec-rbx" class="le-canvas"></canvas>
+              <canvas id="leo-rbx" class="le-overlay"></canvas>
+            </div>
+          </div>
+          <div class="layers-wrap" id="layers-rbx"></div>
+          <button class="layers-add-btn" id="layers-add-rbx" style="display:none" onclick="addLayerFile('rbx')">＋ Add Layer</button>
           <div class="inp-prev" id="pw-rbx"><canvas id="cv-rbx"></canvas><span class="prev-badge" id="rbx-pw-badge">INPUT</span></div>
           <div class="status" id="st-rbx"></div>
           <button class="btn-conv" id="btn-rbx" onclick="convRbx()" disabled>⚡ <span id="rbx-btn-label">Convert to Polytoria 2.0</span></button>
@@ -868,13 +932,37 @@ kbd{
 
     <!-- ══ OLD PANEL ══ -->
     <div class="panel" id="panel-old">
+      <div class="page-header"><div class="page-title">Old → Polytoria 2.0</div><div class="page-sub">Upgrade an old Polytoria template to the new format.</div></div>
       <div class="conv-layout">
         <div class="drop-card" id="old-in-card">
           <div><div class="drop-title" id="old-title">Old Polytoria → PT 2.0</div><div class="drop-sub" id="old-desc">Drop your old PT template and hit Upgrade.</div></div>
-          <div class="dz" id="old-dz" ondragover="dzo(event,this)" ondragleave="dzl(this)" ondrop="dzd(event,'old')">
+          <div class="dz" id="old-dz" ondragover="dzo(event,this)" ondragleave="dzl(this)" ondrop="dzd(event,'old')" onclick="triggerFile('old-file-input',event)">
             <input type="file" accept="image/*" onchange="lf(event,'old')" id="old-file-input">
-            <div class="dz-inner"><span class="dz-ico" id="old-dz-ico">🔄</span><div class="dz-t" id="old-dz-t">Drop file here</div><div class="dz-s">or click to browse · 1024×1024</div></div>
+            <div class="dz-inner"><span class="dz-ico" id="old-dz-ico">🔄</span><div class="dz-t" id="old-dz-t">Tap or drop file here</div><div class="dz-s">1024×1024 · PNG / JPG</div><button class="dz-browse" onclick="triggerFile('old-file-input',event)">📂 Browse</button></div>
           </div>
+          <!-- LAYER EDITOR -->
+          <div id="le-old" class="layer-editor" style="display:none">
+            <div class="le-toolbar">
+              <div class="le-tool-group">
+                <button class="le-tool active" id="let-old-pointer" onclick="setLeTool('old','pointer')" title="Move layer">✥</button>
+                <button class="le-tool" id="let-old-rect" onclick="setLeTool('old','rect')" title="Rectangle select">⬜</button>
+                <button class="le-tool" id="let-old-lasso" onclick="setLeTool('old','lasso')" title="Freehand lasso">🪢</button>
+              </div>
+              <div class="le-tool-group">
+                <button class="le-btn" id="le-cut-old" onclick="leCut('old')" title="Cut selection" style="display:none">✂ Cut</button>
+                <button class="le-btn" id="le-desel-old" onclick="leDeselect('old')" title="Deselect" style="display:none">⬚ Desel</button>
+              </div>
+              <div class="le-tool-group" style="margin-left:auto">
+                <button class="le-btn" id="le-bp-old" onclick="toggleBlueprint('old')" title="Blueprint overlay">🗺 Blueprint</button>
+              </div>
+            </div>
+            <div class="le-canvas-wrap" id="lew-old">
+              <canvas id="lec-old" class="le-canvas"></canvas>
+              <canvas id="leo-old" class="le-overlay"></canvas>
+            </div>
+          </div>
+          <div class="layers-wrap" id="layers-old"></div>
+          <button class="layers-add-btn" id="layers-add-old" style="display:none" onclick="addLayerFile('old')">＋ Add Layer</button>
           <div class="inp-prev" id="pw-old"><canvas id="cv-old"></canvas><span class="prev-badge" id="old-pw-badge">INPUT</span></div>
           <div class="status" id="st-old"></div>
           <button class="btn-conv teal" id="btn-old" onclick="convOld()" disabled>⚡ <span id="old-btn-label">Upgrade to PT 2.0</span></button>
@@ -898,13 +986,37 @@ kbd{
 
     <!-- ══ PT2RBX PANEL ══ -->
     <div class="panel" id="panel-pt2rbx">
+      <div class="page-header"><div class="page-title">Polytoria → Roblox</div><div class="page-sub">Convert a PT 2.0 template back to Roblox format.</div></div>
       <div class="conv-layout">
         <div class="drop-card" id="pt2rbx-in-card">
           <div><div class="drop-title" id="pt2rbx-title">PT 2.0 → Roblox</div><div class="drop-sub" id="pt2rbx-desc">Drop your PT 2.0 template and hit Convert.</div></div>
-          <div class="dz" id="pt2rbx-dz" ondragover="dzo(event,this)" ondragleave="dzl(this)" ondrop="dzd(event,'pt2rbx')">
+          <div class="dz" id="pt2rbx-dz" ondragover="dzo(event,this)" ondragleave="dzl(this)" ondrop="dzd(event,'pt2rbx')" onclick="triggerFile('pt2rbx-file-input',event)">
             <input type="file" accept="image/*" onchange="lf(event,'pt2rbx')" id="pt2rbx-file-input">
-            <div class="dz-inner"><span class="dz-ico" id="pt2rbx-dz-ico">🔁</span><div class="dz-t" id="pt2rbx-dz-t">Drop PT 2.0 template here</div><div class="dz-s">or click to browse · PNG / JPG</div></div>
+            <div class="dz-inner"><span class="dz-ico" id="pt2rbx-dz-ico">🔁</span><div class="dz-t" id="pt2rbx-dz-t">Tap or drop PT 2.0 template here</div><div class="dz-s">PNG / JPG</div><button class="dz-browse" onclick="triggerFile('pt2rbx-file-input',event)">📂 Browse</button></div>
           </div>
+          <!-- LAYER EDITOR -->
+          <div id="le-pt2rbx" class="layer-editor" style="display:none">
+            <div class="le-toolbar">
+              <div class="le-tool-group">
+                <button class="le-tool active" id="let-pt2rbx-pointer" onclick="setLeTool('pt2rbx','pointer')" title="Move layer">✥</button>
+                <button class="le-tool" id="let-pt2rbx-rect" onclick="setLeTool('pt2rbx','rect')" title="Rectangle select">⬜</button>
+                <button class="le-tool" id="let-pt2rbx-lasso" onclick="setLeTool('pt2rbx','lasso')" title="Freehand lasso">🪢</button>
+              </div>
+              <div class="le-tool-group">
+                <button class="le-btn" id="le-cut-pt2rbx" onclick="leCut('pt2rbx')" title="Cut selection" style="display:none">✂ Cut</button>
+                <button class="le-btn" id="le-desel-pt2rbx" onclick="leDeselect('pt2rbx')" title="Deselect" style="display:none">⬚ Desel</button>
+              </div>
+              <div class="le-tool-group" style="margin-left:auto">
+                <button class="le-btn" id="le-bp-pt2rbx" onclick="toggleBlueprint('pt2rbx')" title="Blueprint overlay">🗺 Blueprint</button>
+              </div>
+            </div>
+            <div class="le-canvas-wrap" id="lew-pt2rbx">
+              <canvas id="lec-pt2rbx" class="le-canvas"></canvas>
+              <canvas id="leo-pt2rbx" class="le-overlay"></canvas>
+            </div>
+          </div>
+          <div class="layers-wrap" id="layers-pt2rbx"></div>
+          <button class="layers-add-btn" id="layers-add-pt2rbx" style="display:none" onclick="addLayerFile('pt2rbx')">＋ Add Layer</button>
           <div class="inp-prev" id="pw-pt2rbx"><canvas id="cv-pt2rbx"></canvas><span class="prev-badge" id="pt2rbx-pw-badge">INPUT</span></div>
           <div class="status" id="st-pt2rbx"></div>
           <button class="btn-conv" id="btn-pt2rbx" onclick="convPt2rbx()" disabled style="background:linear-gradient(135deg,#e05a00,#f59e0b);box-shadow:0 3px 14px rgba(224,90,0,0.3);">🔁 <span id="pt2rbx-btn-label">Convert to Roblox Shirt</span></button>
@@ -928,21 +1040,21 @@ kbd{
 
     <!-- ══ FULL KIT PANEL ══ -->
     <div class="panel" id="panel-fullkit">
-      <div class="sec-h">Full Kit — Shirt + Pants → PT 2.0</div>
+      <div class="page-header"><div class="page-title">Full Kit</div><div class="page-sub">Combine a Roblox shirt and pants template into one PT 2.0 file.</div></div>
       <div class="sec-s">Upload a Roblox <strong>shirt</strong> and <strong>pants</strong> template. Both combine into a single 1024×1024 Polytoria PNG.</div>
       <div class="conv-layout">
         <div class="drop-card">
           <div class="drop-title">Upload Both Templates</div>
           <div class="fk-sub-lbl" style="margin-top:8px;">👕 SHIRT TEMPLATE</div>
-          <div class="dz" id="fk-shirt-dz" ondragover="dzo(event,this)" ondragleave="dzl(this)" ondrop="fkDrop(event,'shirt')">
+          <div class="dz" id="fk-shirt-dz" ondragover="dzo(event,this)" ondragleave="dzl(this)" ondrop="fkDrop(event,'shirt')" onclick="triggerFile('fk-shirt-input',event)">
             <input type="file" accept="image/*" onchange="fkLoad(event,'shirt')" id="fk-shirt-input">
-            <div class="dz-inner"><span class="dz-ico" id="fk-shirt-ico">👕</span><div class="dz-t" id="fk-shirt-t">Drop Roblox shirt here</div><div class="dz-s">585×559 · PNG / JPG</div></div>
+            <div class="dz-inner"><span class="dz-ico" id="fk-shirt-ico">👕</span><div class="dz-t" id="fk-shirt-t">Tap or drop Roblox shirt here</div><div class="dz-s">PNG / JPG</div><button class="dz-browse" onclick="triggerFile('fk-shirt-input',event)">📂 Browse</button></div>
           </div>
           <div class="inp-prev" id="pw-fkShirt" style="display:none"><canvas id="cv-fkShirt"></canvas><span class="prev-badge">SHIRT INPUT</span></div>
           <div class="fk-sub-lbl" style="margin-top:8px;">👖 PANTS TEMPLATE</div>
-          <div class="dz" id="fk-pants-dz" ondragover="dzo(event,this)" ondragleave="dzl(this)" ondrop="fkDrop(event,'pants')">
+          <div class="dz" id="fk-pants-dz" ondragover="dzo(event,this)" ondragleave="dzl(this)" ondrop="fkDrop(event,'pants')" onclick="triggerFile('fk-pants-input',event)">
             <input type="file" accept="image/*" onchange="fkLoad(event,'pants')" id="fk-pants-input">
-            <div class="dz-inner"><span class="dz-ico" id="fk-pants-ico">👖</span><div class="dz-t" id="fk-pants-t">Drop Roblox pants here</div><div class="dz-s">585×559 · PNG / JPG</div></div>
+            <div class="dz-inner"><span class="dz-ico" id="fk-pants-ico">👖</span><div class="dz-t" id="fk-pants-t">Tap or drop Roblox pants here</div><div class="dz-s">PNG / JPG</div><button class="dz-browse" onclick="triggerFile('fk-pants-input',event)">📂 Browse</button></div>
           </div>
           <div class="inp-prev" id="pw-fkPants" style="display:none"><canvas id="cv-fkPants"></canvas><span class="prev-badge">PANTS INPUT</span></div>
           <div class="status" id="st-fk"></div>
@@ -961,7 +1073,7 @@ kbd{
 
     <!-- ══ PT MAKER PANEL ══ -->
     <div class="panel" id="panel-ptmaker">
-      <div class="sec-h">✨ Polytoria Clothing Maker</div>
+      <div class="page-header"><div class="page-title">PT Maker</div><div class="page-sub">Stamp any texture into every face of a Polytoria 2.0 template.</div></div>
       <div class="sec-s">Upload <strong>any image</strong> and stamp it into every face of a Polytoria 2.0 template. Output: 1024×1024 PNG.</div>
       <div class="conv-layout">
         <div class="drop-card">
@@ -971,10 +1083,33 @@ kbd{
             <button class="mode-btn" id="ptmk-mode-pants" onclick="setPtMakerMode('pants')" style="flex:1">👖 Pants</button>
           </div>
           <div class="drop-title" style="margin-bottom:4px;">2 — Upload texture</div>
-          <div class="dz" id="ptmk-dz" ondragover="dzo(event,this)" ondragleave="dzl(this)" ondrop="ptmkDrop(event)">
+          <div class="dz" id="ptmk-dz" ondragover="dzo(event,this)" ondragleave="dzl(this)" ondrop="ptmkDrop(event)" onclick="triggerFile('ptmk-file-input',event)">
             <input type="file" accept="image/*" onchange="ptmkLoad(event)" id="ptmk-file-input">
-            <div class="dz-inner"><span class="dz-ico" id="ptmk-ico">🖼</span><div class="dz-t" id="ptmk-t">Drop any image here</div><div class="dz-s">wood, metal, camo…</div></div>
+            <div class="dz-inner"><span class="dz-ico" id="ptmk-ico">🖼</span><div class="dz-t" id="ptmk-t">Tap or drop any image here</div><div class="dz-s">wood, metal, camo…</div><button class="dz-browse" onclick="triggerFile('ptmk-file-input',event)">📂 Browse</button></div>
           </div>
+          <!-- LAYER EDITOR -->
+          <div id="le-ptmk" class="layer-editor" style="display:none">
+            <div class="le-toolbar">
+              <div class="le-tool-group">
+                <button class="le-tool active" id="let-ptmk-pointer" onclick="setLeTool('ptmk','pointer')" title="Move layer">✥</button>
+                <button class="le-tool" id="let-ptmk-rect" onclick="setLeTool('ptmk','rect')" title="Rectangle select">⬜</button>
+                <button class="le-tool" id="let-ptmk-lasso" onclick="setLeTool('ptmk','lasso')" title="Freehand lasso">🪢</button>
+              </div>
+              <div class="le-tool-group">
+                <button class="le-btn" id="le-cut-ptmk" onclick="leCut('ptmk')" title="Cut selection" style="display:none">✂ Cut</button>
+                <button class="le-btn" id="le-desel-ptmk" onclick="leDeselect('ptmk')" title="Deselect" style="display:none">⬚ Desel</button>
+              </div>
+              <div class="le-tool-group" style="margin-left:auto">
+                <button class="le-btn" id="le-bp-ptmk" onclick="toggleBlueprint('ptmk')" title="Blueprint overlay">🗺 Blueprint</button>
+              </div>
+            </div>
+            <div class="le-canvas-wrap" id="lew-ptmk">
+              <canvas id="lec-ptmk" class="le-canvas"></canvas>
+              <canvas id="leo-ptmk" class="le-overlay"></canvas>
+            </div>
+          </div>
+          <div class="layers-wrap" id="layers-ptmk"></div>
+          <button class="layers-add-btn" id="layers-add-ptmk" style="display:none" onclick="addLayerFile('ptmk')">＋ Add Layer</button>
           <div class="inp-prev" id="pw-ptmk" style="display:none"><canvas id="cv-ptmk"></canvas><span class="prev-badge">TEXTURE</span></div>
           <div class="drop-title" style="margin:8px 0 4px;">3 — Style it ✨</div>
           <div class="mk-section"><div class="mk-lbl">Fill Mode</div><div class="mk-row" id="ptmk-fill-row"><button class="mk-btn on-fill" onclick="setPtMkFill(this,'stretch')">⬜ Stretch</button><button class="mk-btn" onclick="setPtMkFill(this,'tile')">▦ Tile</button><button class="mk-btn" onclick="setPtMkFill(this,'fullspread')">🌐 Full Spread</button><button class="mk-btn" onclick="setPtMkFill(this,'mirror')">⧎ Mirror</button><button class="mk-btn" onclick="setPtMkFill(this,'fit')">📐 Fit</button><button class="mk-btn" onclick="setPtMkFill(this,'diagonal')">◈ Diagonal</button></div></div>
@@ -997,7 +1132,7 @@ kbd{
 
     <!-- ══ ROBLOX MAKER PANEL ══ -->
     <div class="panel" id="panel-maker">
-      <div class="sec-h">🪄 Roblox Clothing Maker</div>
+      <div class="page-header"><div class="page-title">Roblox Maker</div><div class="page-sub">Stamp any texture into every face of a Roblox template.</div></div>
       <div class="sec-s">Upload <strong>any image</strong> and stamp it into every face of a Roblox template. Output: ready-to-upload 585×559 PNG.</div>
       <div class="conv-layout">
         <div class="drop-card">
@@ -1007,10 +1142,33 @@ kbd{
             <button class="mode-btn" id="mk-mode-pants" onclick="setMakerMode('pants')" style="flex:1">👖 Pants</button>
           </div>
           <div class="drop-title" style="margin-bottom:4px;">2 — Upload texture</div>
-          <div class="dz" id="mk-dz" ondragover="dzo(event,this)" ondragleave="dzl(this)" ondrop="mkDrop(event)">
+          <div class="dz" id="mk-dz" ondragover="dzo(event,this)" ondragleave="dzl(this)" ondrop="mkDrop(event)" onclick="triggerFile('mk-file-input',event)">
             <input type="file" accept="image/*" onchange="mkLoad(event)" id="mk-file-input">
-            <div class="dz-inner"><span class="dz-ico" id="mk-ico">🖼</span><div class="dz-t" id="mk-t">Drop any image here</div><div class="dz-s">wood, metal, camo, photo…</div></div>
+            <div class="dz-inner"><span class="dz-ico" id="mk-ico">🖼</span><div class="dz-t" id="mk-t">Tap or drop any image here</div><div class="dz-s">wood, metal, camo, photo…</div><button class="dz-browse" onclick="triggerFile('mk-file-input',event)">📂 Browse</button></div>
           </div>
+          <!-- LAYER EDITOR -->
+          <div id="le-mk" class="layer-editor" style="display:none">
+            <div class="le-toolbar">
+              <div class="le-tool-group">
+                <button class="le-tool active" id="let-mk-pointer" onclick="setLeTool('mk','pointer')" title="Move layer">✥</button>
+                <button class="le-tool" id="let-mk-rect" onclick="setLeTool('mk','rect')" title="Rectangle select">⬜</button>
+                <button class="le-tool" id="let-mk-lasso" onclick="setLeTool('mk','lasso')" title="Freehand lasso">🪢</button>
+              </div>
+              <div class="le-tool-group">
+                <button class="le-btn" id="le-cut-mk" onclick="leCut('mk')" title="Cut selection" style="display:none">✂ Cut</button>
+                <button class="le-btn" id="le-desel-mk" onclick="leDeselect('mk')" title="Deselect" style="display:none">⬚ Desel</button>
+              </div>
+              <div class="le-tool-group" style="margin-left:auto">
+                <button class="le-btn" id="le-bp-mk" onclick="toggleBlueprint('mk')" title="Blueprint overlay">🗺 Blueprint</button>
+              </div>
+            </div>
+            <div class="le-canvas-wrap" id="lew-mk">
+              <canvas id="lec-mk" class="le-canvas"></canvas>
+              <canvas id="leo-mk" class="le-overlay"></canvas>
+            </div>
+          </div>
+          <div class="layers-wrap" id="layers-mk"></div>
+          <button class="layers-add-btn" id="layers-add-mk" style="display:none" onclick="addLayerFile('mk')">＋ Add Layer</button>
           <div class="inp-prev" id="pw-mk" style="display:none"><canvas id="cv-mk"></canvas><span class="prev-badge">TEXTURE</span></div>
           <div class="drop-title" style="margin:8px 0 4px;">3 — Style it up ✨</div>
           <div class="mk-section"><div class="mk-lbl">Fill Mode <span>how texture maps onto each face</span></div><div class="mk-row" id="mk-fill-row"><button class="mk-btn on-fill" onclick="setMkFill(this,'stretch')">⬜ Stretch</button><button class="mk-btn" onclick="setMkFill(this,'tile')">▦ Tile</button><button class="mk-btn" onclick="setMkFill(this,'fullspread')">🌐 Full Spread</button><button class="mk-btn" onclick="setMkFill(this,'mirror')">⧎ Mirror</button><button class="mk-btn" onclick="setMkFill(this,'fit')">📐 Fit</button><button class="mk-btn" onclick="setMkFill(this,'diagonal')">◈ Diagonal</button></div></div>
@@ -1071,51 +1229,10 @@ kbd{
         <div class="tool-card" onclick="setMode('shirt');goTo(document.getElementById('nbtn-pt2rbx'),'pt2rbx')"><span class="tool-ico">🔁</span><div class="tool-name">PT 2.0 Shirt → Roblox</div><div class="tool-desc">Export back to 585×559 format</div><span class="tool-badge tb-s">NEW</span></div>
         <div class="tool-card" onclick="setMode('pants');goTo(document.getElementById('nbtn-pt2rbx'),'pt2rbx')"><span class="tool-ico">🔁</span><div class="tool-name">PT 2.0 Pants → Roblox</div><div class="tool-desc">Export legs back to Roblox format</div><span class="tool-badge tb-p">NEW</span></div>
         <div class="tool-card" onclick="goTo(document.querySelector('[data-p=ptmaker]'),'ptmaker')"><span class="tool-ico">✨</span><div class="tool-name">PT Clothing Maker</div><div class="tool-desc">Any texture → PT 2.0 1024×1024</div><span class="tool-badge tb-u">NEW</span></div>
-        <div class="tool-card" onclick="goTo(document.querySelector('[data-p=maker]'),'maker')"><span class="tool-ico">🪄</span><div class="tool-name">Roblox Clothing Maker</div><div class="tool-desc">Any texture → Roblox 585×559</div><span class="tool-badge" style="background:rgba(255,120,50,.15);color:#ff9060;border:1px solid rgba(255,120,50,.25)">NEW</span></div>
+        <div class="tool-card" onclick="goTo(document.querySelector('[data-p=maker]'),'maker')"><span class="tool-ico">🪄</span><div class="tool-name">Roblox Clothing Maker</div><div class="tool-desc">Any texture → Roblox 585×559</div><span class="tool-badge">NEW</span></div>
         <div class="tool-card" onclick="goTo(document.getElementById('nbtn-fullkit'),'fullkit')"><span class="tool-ico">🎽</span><div class="tool-name">Full Kit Combiner</div><div class="tool-desc">Shirt + pants → one PT 2.0 PNG</div><span class="tool-badge tb-u">NEW</span></div>
         <div class="tool-card" onclick="goTo(document.querySelector('[data-p=preview]'),'preview')"><span class="tool-ico">🔍</span><div class="tool-name">Region Preview</div><div class="tool-desc">Color overlay on any PT 2.0</div></div>
-        <div class="tool-card" onclick="goTo(document.querySelector('[data-p=foxes]'),'foxes')"><span class="tool-ico">🦊</span><div class="tool-name">Foxes & Furries</div><div class="tool-desc">Absolutely essential</div><span class="tool-badge" style="background:rgba(255,107,53,.15);color:#ff8c42;border:1px solid rgba(255,107,53,.25)">🐾</span></div>
         <div class="tool-card" onclick="goTo(document.querySelector('[data-p=about]'),'about')"><span class="tool-ico">📐</span><div class="tool-name">Coordinate Reference</div><div class="tool-desc">All pixel coords for PT 2.0</div></div>
-      </div>
-    </div>
-
-    <!-- ══ FOXES PANEL ══ -->
-    <div class="panel" id="panel-foxes">
-      <div class="fox-hero">
-        <span class="fox-emoji-rain">🦊 🦊 🐾 🦊 🦊</span>
-        <h1>Foxes &amp; Furries</h1>
-        <p>This tab exists for absolutely no reason whatsoever.</p>
-      </div>
-      <div class="fox-grid">
-        <div class="fox-card"><div class="fox-card-title">🦊 Why Foxes?</div><div class="fox-card-body">Nobody knows. They just showed up one day and never left. Foxes are the only animal that somehow managed to be both a dog and a cat at the same time. Science is still baffled.</div></div>
-        <div class="fox-card"><div class="fox-card-title">🌍 Fox Facts</div><div class="fox-card-body">• A fox's call is a "gekkering" 🗣️<br>• They use the Earth's magnetic field to hunt 🧲<br>• Baby foxes are called kits 🍼<br>• Arctic foxes change color seasonally ❄️<br>• They can rotate their ears 150° 👂</div></div>
-        <div class="fox-card"><div class="fox-card-title">🎨 Furry Art</div><div class="fox-card-body">The furry fandom is one of the largest creative communities on the internet. Millions of artists create characters called "fursonas." The fandom is full of genuinely kind people and incredible art. Don't believe what you hear.</div></div>
-        <div class="fox-card"><div class="fox-card-title">🦊 Types of Foxes</div><div class="fox-card-body">Red Fox · Arctic Fox · Fennec Fox · Gray Fox · Swift Fox · Kit Fox · Tibetan Sand Fox (the most derpy looking animal alive) · Corsac Fox · Cape Fox · Blanford's Fox</div></div>
-        <div class="fox-card"><div class="fox-card-title">🐾 The Connection</div><div class="fox-card-body">Foxes are the #1 most common fursona animal. Their design versatility, personality (clever, mischievous, independent) and distinctive looks make them perfect virtual avatars. This is completely relevant to a Polytoria clothing tool.</div></div>
-        <div class="fox-card"><div class="fox-card-title">🎮 Foxes in Games</div><div class="fox-card-body">Star Fox · Firefox (the browser counts) · Tails from Sonic · Nick Wilde from Zootopia · Vulpix in Pokémon · Carmelita Fox from Sly Cooper · Every single VRChat player ever</div></div>
-      </div>
-      <div class="fox-ascii">
-        ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡀⠀⢀⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-        ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⡾⢿⣿⣶⣿⡿⢷⣤⠀⠀⠀⠀⠀⠀⠀⠀⠀
-        ⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣼⠏⠀⢸⣿⣿⣿⡇⠀⠹⣧⡀⠀⠀⠀⠀⠀⠀⠀
-        ⠀⠀⠀⠀⠀⠀⠀⢀⣴⠟⠁⠀⠀⢸⣿⣿⣿⡇⠀⠀⠈⠻⣦⡀⠀⠀⠀⠀⠀
-        ⠀⠀⠀⠀⠀⠀⢠⡿⠁⠀⠀⠀⠀⣸⣿⣿⣿⣇⠀⠀⠀⠀⠈⢿⡄⠀⠀⠀⠀
-        ⠀⠀⠀⠀⠀⢠⡟⠀⠀⠀⠀⠀⣴⠟⠛⠛⠛⠻⣦⠀⠀⠀⠀⠀⢻⡄⠀⠀⠀
-        ⠀⠀⠀⠀⠀⣾⠃⠀⠀⠀⠀⠸⡿⠀🟠⠀🟠⠀⢿⡇⠀⠀⠀⠀⠈⣷⠀⠀⠀
-        ⠀⠀⠀⠀⠀⣿⠀⠀⠀⠀⠀⠀⠙⢦⣀⣀⣀⣠⠟⠁⠀⠀⠀⠀⠀⣿⠀⠀⠀
-        ⠀⠀⠀⠀⠀⣿⠀⠀⠀⠀⠀⠀⠀⠀⣤⠤⣤⠀⠀⠀⠀⠀⠀⠀⠀⣿⠀⠀⠀
-        ⠀⠀⠀⠀⠀⢿⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡿⠀⠀⠀
-        ⠀⠀⠀⠀⠀⠘⢷⣄⠀⠀⠀⣀⣀⡀⠀⠀⠀⢀⣀⣀⠀⠀⠀⣠⡾⠃⠀⠀⠀
-        ⠀⠀⠀⠀⠀⠀⠀⠉⠛⠛⠛⠉⠀⠀⠀⠀⠀⠀⠉⠛⠛⠛⠛⠉⠀⠀⠀⠀⠀
-        — a fox, chilling, judging you
-      </div>
-      <br>
-      <div class="fox-gen">
-        <div style="font-size:.8rem;color:var(--sub);font-family:'JetBrains Mono',monospace;margin-bottom:8px;">🎲 Fox Name Generator</div>
-        <div class="fox-name-out" id="fox-name">???</div>
-        <div class="fox-trait-out" id="fox-trait">Click below to discover your inner fox</div>
-        <br>
-        <button class="btn-conv" onclick="genFox()" style="width:auto;padding:8px 24px;margin-top:4px;background:linear-gradient(135deg,#ff6b35,#ff8c42);box-shadow:0 4px 18px rgba(255,107,53,0.4);">🦊 Generate Fox</button>
       </div>
     </div>
 
@@ -1123,15 +1240,7 @@ kbd{
     <div class="panel" id="panel-settings">
       <div class="sec-h">Settings</div>
       <div class="sec-s">All settings saved to your browser automatically.</div>
-      <div class="settings-sec">
-        <div class="settings-sec-title">🎨 Theme</div>
-        <div class="settings-grid">
-          <div class="setting-row">
-            <div><div class="setting-name">Color theme</div><div class="setting-desc">Dark (cryptic aero) or Light (frutiger aero)</div></div>
-            <div class="select-row"><button class="btn-sm active" id="theme-dark-btn" onclick="setTheme('dark')">🌙 Dark</button><button class="btn-sm" id="theme-light-btn" onclick="setTheme('light')">☀️ Light</button></div>
-          </div>
-        </div>
-      </div>
+
       <div class="settings-sec">
         <div class="settings-sec-title">📦 Output</div>
         <div class="settings-grid">
@@ -1176,12 +1285,27 @@ kbd{
         <div class="settings-sec-title">🔁 Reset</div>
         <div class="settings-grid"><div class="setting-row"><div><div class="setting-name">Reset all settings</div><div class="setting-desc">Restore every setting to defaults</div></div><button class="btn-danger" onclick="resetAllSettings()">Reset to Defaults</button></div></div>
       </div>
+      <div class="settings-sec">
+        <div class="settings-sec-title">✏️ Content — Credits & Links</div>
+        <div class="settings-grid">
+          <div class="setting-row"><div><div class="setting-name">Display name</div><div class="setting-desc">Shown in Credits hero</div></div><input class="setting-input" id="se-credits-name" placeholder="Scoofyx" oninput="saveContent()"></div>
+          <div class="setting-row"><div><div class="setting-name">Title</div><div class="setting-desc">Subtitle under your name</div></div><input class="setting-input" id="se-credits-title" placeholder="Creator of PT Clothing Converter" oninput="saveContent()"></div>
+          <div class="setting-row"><div><div class="setting-name">Ko-fi URL</div><div class="setting-desc">Full URL e.g. https://ko-fi.com/you</div></div><input class="setting-input" id="se-kofi-url" placeholder="https://ko-fi.com/YOURNAMEHERE" oninput="saveContent()"></div>
+          <div class="setting-row"><div><div class="setting-name">Website URL</div><div class="setting-desc">Your site link</div></div><input class="setting-input" id="se-web-url" placeholder="https://scoofy.xyz" oninput="saveContent()"></div>
+          <div class="setting-row"><div><div class="setting-name">Footer text</div><div class="setting-desc">Bottom of Credits page</div></div><input class="setting-input" id="se-credits-footer" placeholder="Scoofy™ 2026" oninput="saveContent()"></div>
+          <div class="setting-row" style="flex-direction:column;align-items:flex-start;gap:6px;">
+            <div><div class="setting-name">About text</div><div class="setting-desc">Description of the tool</div></div>
+            <textarea class="setting-input" id="se-credits-about" rows="3" style="width:100%;resize:vertical;" oninput="saveContent()"></textarea>
+          </div>
+          <div class="setting-row"><div><div class="setting-name">Reset content</div><div class="setting-desc">Restore all text to defaults</div></div><button class="btn-danger" onclick="resetContent()">Reset Content</button></div>
+        </div>
+      </div>
     </div>
 
     <!-- ══ ABOUT PANEL ══ -->
     <div class="panel" id="panel-about">
       <div class="sec-h">About & Coordinate Reference</div>
-      <div class="sec-s">Pixel-accurate coordinate maps scanned directly from the PT 2.0 template. Made by <a href="https://www.youtube.com/@scoofyx" style="color:var(--c1);text-decoration:none;">@scoofyx</a> · Scoofy™ 2026</div>
+      <div class="sec-s">Pixel-accurate coordinate maps scanned directly from the PT 2.0 template. Made by Scoofyx · Scoofy™ 2026</div>
       <div class="g2 gap">
         <div class="about-sec"><div class="about-title">PT 2.0 Shirt — Torso</div><table class="coord-table"><tr><th>Face</th><th>X</th><th>Y</th><th>W</th><th>H</th></tr><tr><td class="hl">Right (R)</td><td>350</td><td>103</td><td>89</td><td>290</td></tr><tr><td class="hl">Front (F)</td><td>439</td><td>104</td><td>146</td><td>289</td></tr><tr><td class="hl">Left (L)</td><td>585</td><td>104</td><td>87</td><td>288</td></tr><tr><td class="hl">Top cap</td><td>439</td><td>7</td><td>146</td><td>97</td></tr><tr><td class="hl">Bot cap</td><td>439</td><td>394</td><td>146</td><td>94</td></tr></table></div>
         <div class="about-sec"><div class="about-title">PT 2.0 Shirt — Right Arm</div><table class="coord-table"><tr><th>Face</th><th>X</th><th>Y</th><th>W</th><th>H</th></tr><tr><td class="hl">Left (L)</td><td>7</td><td>71</td><td>65</td><td>290</td></tr><tr><td class="hl">Back (B)</td><td>72</td><td>71</td><td>66</td><td>290</td></tr><tr><td class="hl">Right (R)</td><td>138</td><td>71</td><td>66</td><td>290</td></tr><tr><td class="hl">Front (F)</td><td>204</td><td>71</td><td>66</td><td>290</td></tr><tr><td class="hl">Top cap</td><td>204</td><td>7</td><td>66</td><td>63</td></tr><tr><td class="hl">Bot cap</td><td>204</td><td>362</td><td>66</td><td>63</td></tr></table></div>
@@ -1190,9 +1314,78 @@ kbd{
       </div>
     </div>
 
+    </div>
+
+    <!-- ══ TEMPLATES PANEL ══ -->
+    <div class="panel" id="panel-templates">
+      <div class="sec-h">🆓 Free Templates</div>
+      <div class="sec-s">Download and use freely. Made by Scoofyx · no credit required but appreciated 🙏</div>
+
+      <!-- FILTER BAR -->
+      <div class="tpl-filter-bar">
+        <button class="tpl-filter active" onclick="filterTemplates(this,'all')">All</button>
+        <button class="tpl-filter" onclick="filterTemplates(this,'polyshirt')">👕 PT Shirt</button>
+        <button class="tpl-filter" onclick="filterTemplates(this,'polypants')">👖 PT Pants</button>
+        <button class="tpl-filter" onclick="filterTemplates(this,'fullkit')">🎽 Full Kit</button>
+        <button class="tpl-filter" onclick="filterTemplates(this,'rblxshirt')">🎮 Rbx Shirt</button>
+        <button class="tpl-filter" onclick="filterTemplates(this,'rblxpants')">🎮 Rbx Pants</button>
+      </div>
+
+      <!-- TEMPLATE GRID — edit TEMPLATE_LIST to add/remove templates -->
+      <div class="tpl-grid" id="tpl-grid"></div>
+      <div class="tpl-empty" id="tpl-empty" style="display:none">No templates match this filter.</div>
+    </div>
+
+    <!-- ══ CREDITS PANEL ══ -->
+    <div class="panel" id="panel-credits">
+      <div class="credits-hero">
+        <div class="credits-avatar" id="credits-avatar">
+          <img src="assets/pfp.png" alt="pfp" onerror="this.style.display='none';document.getElementById('credits-pfp-fb').style.display='flex'">
+          <span id="credits-pfp-fb" style="display:none;align-items:center;justify-content:center;width:100%;height:100%;">🦊</span>
+        </div>
+        <div class="credits-name" id="credits-name">Scoofyx</div>
+        <div class="credits-title" id="credits-title">Creator of PT Clothing Converter</div>
+      </div>
+      <div class="credits-links">
+        <a class="credits-link kofi" href="https://ko-fi.com/YOURNAMEHERE" target="_blank">
+          <span class="credits-link-ico kofi-ico">☕</span>
+          <div>
+            <div class="credits-link-name">Ko-fi</div>
+            <div class="credits-link-sub">Support me</div>
+          </div>
+        </a>
+        <a class="credits-link web" href="https://scoofy.xyz" target="_blank">
+          <span class="credits-link-ico web-ico">🌐</span>
+          <div>
+            <div class="credits-link-name">Website</div>
+            <div class="credits-link-sub">scoofy.xyz</div>
+          </div>
+        </a>
+      </div>
+      <div class="credits-card">
+        <div class="credits-card-title">🛠 About this tool</div>
+        <div class="credits-card-body" id="credits-about">PT Clothing Converter is a free, browser-based tool for converting Roblox clothing templates to Polytoria 2.0 format — and back. No uploads, no sign-in, runs entirely on your device.</div>
+      </div>
+      <div class="credits-card" style="margin-top:10px;">
+        <div class="credits-card-title">💛 Support</div>
+        <div class="credits-card-body" id="credits-support">This tool is completely free. If it helps you, consider subscribing on YouTube or sharing it with other Polytoria creators. That's all the support needed!</div>
+      </div>
+      <div class="credits-footer" id="credits-footer">Scoofy™ 2026 · Made with ❤️ for the Polytoria community</div>
+    </div>
+
   </div><!-- /content -->
 </div><!-- /main -->
 </div><!-- /app -->
+
+<!-- Mobile bottom nav -->
+<nav id="mobile-nav">
+  <button class="mnav-btn active" onclick="goTo(this,'rbx')" data-p="rbx">🎮<span>Rbx→PT</span></button>
+  <button class="mnav-btn" onclick="goTo(this,'old')" data-p="old">🔄<span>Old→PT</span></button>
+  <button class="mnav-btn" onclick="goTo(this,'pt2rbx')" data-p="pt2rbx">🔁<span>PT→Rbx</span></button>
+  <button class="mnav-btn" onclick="goTo(this,'fullkit')" data-p="fullkit">🎽<span>Kit</span></button>
+  <button class="mnav-btn" onclick="goTo(this,'settings')" data-p="settings">⚙️<span>Settings</span></button>
+</nav>
+
 
 <div id="toast"></div>
 <script>
@@ -1214,19 +1407,6 @@ function setTheme(t){
     if(t==='light')setTheme('light');
   }catch(e){}
 })();
-// ── FOX GENERATOR ──
-const FOX_NAMES=['Ember','Blaze','Cinder','Frost','Nova','Zephyr','Copper','Russet','Sable','Ash','Flicker','Dusk','Hazel','Thorn','Echo','Vex','Rune','Pixel','Glitch','Neon'];
-const FOX_TRAITS=['chronically online','suspiciously fast','has nine lives (wrong species)','smells like petrichor','hacks for fun','leaves pawprints everywhere','nocturnal by choice','eats ramen at 3am','has strong opinions about anime','professionally chaotic','surprisingly chill','extremely fluffy','always watching','knows where you live'];
-function genFox(){
-  const n=FOX_NAMES[Math.floor(Math.random()*FOX_NAMES.length)];
-  const t=FOX_TRAITS[Math.floor(Math.random()*FOX_TRAITS.length)];
-  const el=document.getElementById('fox-name');
-  const tel=document.getElementById('fox-trait');
-  if(el)el.textContent='🦊 '+n;
-  if(tel)tel.textContent='"'+t+'"';
-  showToast('🦊 You are '+n+'!');
-}
-
 // ── SPLASH ──
 function toggleSidebar(){
   const sb=document.getElementById('sidebar');
@@ -1453,10 +1633,16 @@ const META={
   fullkit:{sec:'Full Kit',page:'Shirt + Pants → PT 2.0'},
   maker:{sec:'Tools',page:'Clothing Maker'},
   ptmaker:{sec:'Tools',page:'PT Clothing Maker'},
+  templates:{sec:'Free',page:'Templates'},
+  credits:{sec:'App',page:'Credits'},
 };
 function goTo(el,id){
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.mnav-btn').forEach(b=>b.classList.remove('active'));
   if(el)el.classList.add('active');
+  // Also highlight matching mobile nav btn
+  const mb=document.querySelector('#mobile-nav [data-p="'+id+'"]');
+  if(mb)mb.classList.add('active');
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
   const panel=document.getElementById('panel-'+id);
   if(panel)panel.classList.add('active');
@@ -1528,6 +1714,14 @@ const PTOLDP={
   LLR:{x:52,y:667,w:102,h:202},LLBt:{x:382,y:877,w:102,h:102},
 };
 
+// ── FILE TRIGGER (reliable cross-browser + mobile) ──
+function triggerFile(inputId, e){
+  if(e) e.stopPropagation();
+  const inp = document.getElementById(inputId);
+  if(!inp) return;
+  inp.value = '';
+  inp.click();
+}
 // ── FILE HANDLING ──
 function dzo(e,el){e.preventDefault();el.classList.add('hover');}
 function dzl(el){el.classList.remove('hover');}
@@ -1542,9 +1736,14 @@ function pf(file,panel){
   r.onload=ev=>{
     const img=new Image();
     img.onload=()=>{
-      S[panel]=img;
       if(panel==='preview'){doPreview(img);return;}
       showPrev(img,panel);
+      if(LAYERS[panel]!==undefined){
+        LAYERS[panel]=[];
+        addLayerFromImg(panel,img,file.name.replace(/\.\w+$/,''));
+        const addBtn=document.getElementById('layers-add-'+panel);
+        if(addBtn)addBtn.style.display='block';
+      }
     };
     img.src=ev.target.result;
   };
@@ -1642,10 +1841,12 @@ function applyShirtFromRbx(src,ctx){
   const R=RBXS,P=PT2S,cp=(s,d)=>cr(src,s.x,s.y,s.w,s.h,ctx,d.x,d.y,d.w,d.h);
   cp(R.TF,P.T_F);cp(R.TR,P.T_R);cp(R.TL,P.T_L);
   cp(R.TT,P.T_Top);cp(R.TB,P.T_Bot);cp(R.TBk,P.T_Bk);
-  cp(R.RAL,P.RArm_L);cp(R.RABk,P.RArm_B);cp(R.RAR,P.RArm_R);cp(R.RAF,P.RArm_F);
-  cp(R.RAT,P.RArm_Top);cp(R.RAB,P.RArm_Bot);
-  cp(R.LAF,P.LArm_F);cp(R.LAL,P.LArm_L);cp(R.LABk,P.LArm_B);cp(R.LAR,P.LArm_R);
-  cp(R.LAT,P.LArm_Top);cp(R.LAB,P.LArm_Bot);
+  // Roblox Right Arm → PT2 Left Arm (conventions are mirrored)
+  cp(R.RAF,P.LArm_F);cp(R.RAL,P.LArm_L);cp(R.RABk,P.LArm_B);cp(R.RAR,P.LArm_R);
+  cp(R.RAT,P.LArm_Top);cp(R.RAB,P.LArm_Bot);
+  // Roblox Left Arm → PT2 Right Arm
+  cp(R.LAF,P.RArm_F);cp(R.LAL,P.RArm_L);cp(R.LABk,P.RArm_B);cp(R.LAR,P.RArm_R);
+  cp(R.LAT,P.RArm_Top);cp(R.LAB,P.RArm_Bot);
 }
 function applyPantsFromRbx(src,ctx){
   const R=RBXP,P=PT2P,cp=(s,d)=>cr(src,s.x,s.y,s.w,s.h,ctx,d.x,d.y,d.w,d.h);
@@ -1658,10 +1859,10 @@ function applyShirtFromOld(src,ctx){
   const O=PTOLD,P=PT2S,cp=(s,d)=>cr(src,s.x,s.y,s.w,s.h,ctx,d.x,d.y,d.w,d.h);
   cp(O.TF,P.T_F);cp(O.TR,P.T_R);cp(O.TL,P.T_L);
   cp(O.TT,P.T_Top);cp(O.TB,P.T_Bot);cp(O.TBk,P.T_Bk);
-  cp(O.RAL,P.RArm_L);cp(O.RABk,P.RArm_B);cp(O.RAR,P.RArm_R);cp(O.RAF,P.RArm_F);
-  cp(O.RAT,P.RArm_Top);cp(O.RAB,P.RArm_Bot);
-  cp(O.LAF,P.LArm_F);cp(O.LAL,P.LArm_L);cp(O.LABk,P.LArm_B);cp(O.LAR,P.LArm_R);
-  cp(O.LAT,P.LArm_Top);cp(O.LAB,P.LArm_Bot);
+  cp(O.RAF,P.LArm_F);cp(O.RAL,P.LArm_L);cp(O.RABk,P.LArm_B);cp(O.RAR,P.LArm_R);
+  cp(O.RAT,P.LArm_Top);cp(O.RAB,P.LArm_Bot);
+  cp(O.LAF,P.RArm_F);cp(O.LAL,P.RArm_L);cp(O.LABk,P.RArm_B);cp(O.LAR,P.RArm_R);
+  cp(O.LAT,P.RArm_Top);cp(O.LAB,P.RArm_Bot);
 }
 function applyPantsFromOld(src,ctx){
   const O=PTOLDP,P=PT2P,cp=(s,d)=>cr(src,s.x,s.y,s.w,s.h,ctx,d.x,d.y,d.w,d.h);
@@ -1698,14 +1899,15 @@ function convOld(){
 
 // ── PT 2.0 → ROBLOX ──
 function applyShirtToRbx(src,ctx){
-  // Invert the RBX→PT2 mapping: PT2 coords are source, RBX coords are destination
   const R=RBXS,P=PT2S,cp=(s,d)=>cr(src,s.x,s.y,s.w,s.h,ctx,d.x,d.y,d.w,d.h);
   cp(P.T_F,R.TF); cp(P.T_R,R.TR); cp(P.T_L,R.TL);
   cp(P.T_Top,R.TT); cp(P.T_Bot,R.TB); cp(P.T_Bk,R.TBk);
-  cp(P.RArm_L,R.RAL); cp(P.RArm_B,R.RABk); cp(P.RArm_R,R.RAR); cp(P.RArm_F,R.RAF);
-  cp(P.RArm_Top,R.RAT); cp(P.RArm_Bot,R.RAB);
-  cp(P.LArm_F,R.LAF); cp(P.LArm_L,R.LAL); cp(P.LArm_B,R.LABk); cp(P.LArm_R,R.LAR);
-  cp(P.LArm_Top,R.LAT); cp(P.LArm_Bot,R.LAB);
+  // PT2 Left Arm → Roblox Right Arm
+  cp(P.LArm_F,R.RAF); cp(P.LArm_L,R.RAL); cp(P.LArm_B,R.RABk); cp(P.LArm_R,R.RAR);
+  cp(P.LArm_Top,R.RAT); cp(P.LArm_Bot,R.RAB);
+  // PT2 Right Arm → Roblox Left Arm
+  cp(P.RArm_F,R.LAF); cp(P.RArm_L,R.LAL); cp(P.RArm_B,R.LABk); cp(P.RArm_R,R.LAR);
+  cp(P.RArm_Top,R.LAT); cp(P.RArm_Bot,R.LAB);
 }
 function applyPantsToRbx(src,ctx){
   const R=RBXP,P=PT2P,cp=(s,d)=>cr(src,s.x,s.y,s.w,s.h,ctx,d.x,d.y,d.w,d.h);
@@ -1949,15 +2151,16 @@ function ptmkProcess(file){
   r.onload=ev=>{
     const img=new Image();
     img.onload=()=>{
-      S.ptmk=img;
       const pw=document.getElementById('pw-ptmk');
       const cv=document.getElementById('cv-ptmk');
-      pw.style.display='block';
-      cv.width=img.width;cv.height=img.height;
-      cv.getContext('2d').drawImage(img,0,0);
+      if(pw)pw.style.display='block';
+      if(cv){cv.width=img.width;cv.height=img.height;cv.getContext('2d').drawImage(img,0,0);}
       document.getElementById('ptmk-ico').textContent='✅';
       document.getElementById('ptmk-t').textContent='Texture loaded — '+img.width+'×'+img.height;
-      document.getElementById('btn-ptmk').disabled=false;
+      LAYERS['ptmk']=[];
+      addLayerFromImg('ptmk',img,file.name.replace(/\.\w+$/,''));
+      const addBtn=document.getElementById('layers-add-ptmk');
+      if(addBtn)addBtn.style.display='block';
     };
     img.src=ev.target.result;
   };
@@ -2257,16 +2460,17 @@ function mkProcess(file){
   r.onload=ev=>{
     const img=new Image();
     img.onload=()=>{
-      S.mk=img;
       const pw=document.getElementById('pw-mk');
       const cv=document.getElementById('cv-mk');
-      pw.style.display='block';
-      cv.width=img.width;cv.height=img.height;
-      cv.getContext('2d').drawImage(img,0,0);
+      if(pw)pw.style.display='block';
+      if(cv){cv.width=img.width;cv.height=img.height;cv.getContext('2d').drawImage(img,0,0);}
       document.getElementById('mk-ico').textContent='✅';
       document.getElementById('mk-t').textContent='Texture loaded — '+img.width+'×'+img.height;
-      document.getElementById('btn-mk').disabled=false;
       setSt('st-mk','','');
+      LAYERS['mk']=[];
+      addLayerFromImg('mk',img,file.name.replace(/\.\w+$/,''));
+      const addBtn=document.getElementById('layers-add-mk');
+      if(addBtn)addBtn.style.display='block';
     };
     img.src=ev.target.result;
   };
@@ -2365,8 +2569,780 @@ function convFullKit(){
   setSt('st-fk','✓ Done'+(CFG.autodl?' — downloaded automatically.':' — click download above.'),'ok');
 }
 
+// ══════════════════════════════════════
+// FREE TEMPLATES — auto-loads from free_templates/index.json
+// ══════════════════════════════════════
+// HOW TO ADD A TEMPLATE:
+//   1. Drop your PNG(s) into the free_templates/ folder
+//      Named like: camo_polyshirt.png, camo_polypants.png, camo_fullkit.png etc.
+//      Suffixes: _polyshirt  _polypants  _fullkit  _rblxshirt  _rblxpants
+//   2. Add the filename(s) (without .png) to free_templates/index.json
+//      e.g. ["camo_polyshirt", "camo_polypants", "military_fullkit"]
+//   That's it — the page groups them automatically by prefix.
+
+const TPL_FOLDER = 'free_templates/';
+const TPL_SUFFIXES = {
+  polyshirt: { label:'PT Shirt',  ext:'_polyshirt.png' },
+  polypants: { label:'PT Pants',  ext:'_polypants.png' },
+  fullkit:   { label:'Full Kit',  ext:'_fullkit.png'   },
+  rblxshirt: { label:'Rbx Shirt', ext:'_rblxshirt.png' },
+  rblxpants: { label:'Rbx Pants', ext:'_rblxpants.png' },
+};
+
+function buildTemplates(){
+  const grid = document.getElementById('tpl-grid');
+  const empty = document.getElementById('tpl-empty');
+  if(!grid) return;
+  grid.innerHTML = '';
+  empty.style.display = 'none';
+  empty.textContent = 'No templates yet — check back soon!';
+
+  fetch(TPL_FOLDER + 'index.json?_=' + Date.now())
+    .then(r => r.json())
+    .then(files => {
+      // Group filenames by prefix (everything before the last _suffix)
+      const suffixKeys = Object.keys(TPL_SUFFIXES);
+      const groups = {};
+      files.forEach(fname => {
+        // fname is like "camo_polyshirt" (no .png)
+        let matched = null;
+        for(const k of suffixKeys){
+          if(fname.endsWith('_' + k)){
+            matched = k;
+            break;
+          }
+        }
+        if(!matched) return;
+        const prefix = fname.slice(0, fname.length - ('_' + matched).length);
+        if(!groups[prefix]) groups[prefix] = [];
+        if(!groups[prefix].includes(matched)) groups[prefix].push(matched);
+      });
+
+      const prefixes = Object.keys(groups);
+      if(prefixes.length === 0){ empty.style.display = 'block'; return; }
+
+      prefixes.forEach(prefix => {
+        const variants = groups[prefix];
+        const previewKey = ['fullkit','polyshirt','polypants','rblxshirt','rblxpants'].find(k => variants.includes(k));
+        const previewSrc = TPL_FOLDER + prefix + '_' + previewKey + '.png';
+
+        const card = document.createElement('div');
+        card.className = 'tpl-card';
+        card.dataset.variants = variants.join(',');
+
+        // Preview image
+        const prev = document.createElement('div');
+        prev.className = 'tpl-preview';
+        const img = document.createElement('img');
+        img.src = previewSrc;
+        img.alt = prefix;
+        img.onerror = () => { img.style.display='none'; prev.innerHTML='<span class="tpl-preview-placeholder">🧥</span>'; };
+        prev.appendChild(img);
+
+        // Label + badges
+        const info = document.createElement('div');
+        info.className = 'tpl-info';
+        const lbl = document.createElement('div');
+        lbl.className = 'tpl-label';
+        lbl.textContent = prefix.replace(/_/g,' ');
+        const badges = document.createElement('div');
+        badges.className = 'tpl-badges';
+        variants.forEach(k => {
+          const b = document.createElement('span');
+          b.className = 'tpl-badge ' + k;
+          b.textContent = TPL_SUFFIXES[k].label;
+          badges.appendChild(b);
+        });
+        info.appendChild(lbl);
+        info.appendChild(badges);
+
+        // Download buttons
+        const btns = document.createElement('div');
+        btns.className = 'tpl-btns';
+        variants.forEach(k => {
+          const a = document.createElement('a');
+          a.className = 'tpl-btn';
+          a.href = TPL_FOLDER + prefix + '_' + k + '.png';
+          a.download = prefix + '_' + k + '.png';
+          a.innerHTML = '⬇ ' + TPL_SUFFIXES[k].label;
+          btns.appendChild(a);
+        });
+
+        card.appendChild(prev);
+        card.appendChild(info);
+        card.appendChild(btns);
+        grid.appendChild(card);
+      });
+    })
+    .catch(() => {
+      empty.style.display = 'block';
+      empty.textContent = 'Could not load templates — make sure index.json exists in free_templates/.';
+    });
+}
+
+function filterTemplates(el, type){
+  document.querySelectorAll('.tpl-filter').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  const cards = document.querySelectorAll('.tpl-card');
+  let visible = 0;
+  cards.forEach(card => {
+    const variants = card.dataset.variants ? card.dataset.variants.split(',') : [];
+    const show = type === 'all' || variants.includes(type);
+    card.dataset.hidden = show ? 'false' : 'true';
+    if(show) visible++;
+  });
+  const empty = document.getElementById('tpl-empty');
+  if(empty) empty.style.display = visible === 0 ? 'block' : 'none';
+}
+
+
+// ══════════════════════════════════════
+// SIMPLE / ADVANCED MODE
+// ══════════════════════════════════════
+let ADV_MODE = 'simple';
+function setAdvMode(m){
+  ADV_MODE = m;
+  document.getElementById('adv-simple').classList.toggle('active', m==='simple');
+  document.getElementById('adv-advanced').classList.toggle('active', m==='advanced');
+  document.querySelector('.content').classList.toggle('adv-mode', m==='advanced');
+  document.querySelector('.content').classList.toggle('simple-mode', m==='simple');
+  try{ localStorage.setItem('ptconv_advmode', m); }catch(e){}
+}
+(function(){
+  try{
+    const saved = localStorage.getItem('ptconv_advmode');
+    if(saved) setAdvMode(saved);
+    else setAdvMode('simple');
+  }catch(e){ setAdvMode('simple'); }
+})();
+
+// ══════════════════════════════════════
+// LAYER EDITOR ENGINE
+// ══════════════════════════════════════
+const LE = {}; // per-panel editor state
+
+function leInit(panel){
+  if(LE[panel]) return;
+  LE[panel] = {
+    tool: 'pointer',
+    blueprint: false,
+    sel: null,        // {type:'rect'|'lasso', points:[], bounds:{x,y,w,h}}
+    float: null,      // {canvas, x, y} — floating cut piece
+    dragging: false,
+    dragStart: null,
+    lassoPoints: [],
+    drawing: false,
+    activeLayerIdx: 0,
+  };
+  const canvas = document.getElementById('lec-'+panel);
+  const overlay = document.getElementById('leo-'+panel);
+  if(!canvas) return;
+  canvas.addEventListener('mousedown',  e => leMouseDown(panel, e));
+  canvas.addEventListener('mousemove',  e => leMouseMove(panel, e));
+  canvas.addEventListener('mouseup',    e => leMouseUp(panel, e));
+  canvas.addEventListener('touchstart', e => leTouchStart(panel, e), {passive:false});
+  canvas.addEventListener('touchmove',  e => leTouchMove(panel, e),  {passive:false});
+  canvas.addEventListener('touchend',   e => leTouchEnd(panel, e),   {passive:false});
+}
+
+function leGetPos(panel, e){
+  const canvas = document.getElementById('lec-'+panel);
+  const rect = canvas.getBoundingClientRect();
+  const scaleX = canvas.width / rect.width;
+  const scaleY = canvas.height / rect.height;
+  return {
+    x: (e.clientX - rect.left) * scaleX,
+    y: (e.clientY - rect.top)  * scaleY,
+  };
+}
+
+function leTouchStart(panel, e){ e.preventDefault(); if(e.touches[0]) leMouseDown(panel, e.touches[0]); }
+function leTouchMove(panel, e) { e.preventDefault(); if(e.touches[0]) leMouseMove(panel, e.touches[0]); }
+function leTouchEnd(panel, e)  { e.preventDefault(); leMouseUp(panel, e.changedTouches[0]||{}); }
+
+function leMouseDown(panel, e){
+  const st = LE[panel]; if(!st) return;
+  const pos = leGetPos(panel, e);
+  if(st.tool === 'pointer'){
+    if(st.float){
+      st.dragging = true;
+      st.dragStart = {mx: pos.x, my: pos.y, fx: st.float.x, fy: st.float.y};
+    }
+  } else if(st.tool === 'rect'){
+    st.drawing = true;
+    st.sel = {type:'rect', start: pos, end: pos};
+  } else if(st.tool === 'lasso'){
+    st.drawing = true;
+    st.lassoPoints = [pos];
+    st.sel = {type:'lasso', points:[pos]};
+  }
+}
+
+function leMouseMove(panel, e){
+  const st = LE[panel]; if(!st) return;
+  const pos = leGetPos(panel, e);
+  if(st.tool === 'pointer' && st.dragging && st.float){
+    st.float.x = st.dragStart.fx + (pos.x - st.dragStart.mx);
+    st.float.y = st.dragStart.fy + (pos.y - st.dragStart.my);
+    leRender(panel);
+  } else if(st.tool === 'rect' && st.drawing){
+    st.sel.end = pos;
+    leRender(panel);
+  } else if(st.tool === 'lasso' && st.drawing){
+    st.sel.points.push(pos);
+    leRender(panel);
+  }
+}
+
+function leMouseUp(panel, e){
+  const st = LE[panel]; if(!st) return;
+  st.dragging = false;
+  if(st.tool === 'rect' && st.drawing){
+    st.drawing = false;
+    if(st.sel){
+      const x1=Math.min(st.sel.start.x,st.sel.end.x), y1=Math.min(st.sel.start.y,st.sel.end.y);
+      const x2=Math.max(st.sel.start.x,st.sel.end.x), y2=Math.max(st.sel.start.y,st.sel.end.y);
+      st.sel.bounds = {x:x1,y:y1,w:x2-x1,h:y2-y1};
+      if(st.sel.bounds.w > 2 && st.sel.bounds.h > 2) showSelButtons(panel);
+    }
+  } else if(st.tool === 'lasso' && st.drawing){
+    st.drawing = false;
+    if(st.sel && st.sel.points.length > 3){
+      // Close path
+      st.sel.points.push(st.sel.points[0]);
+      // Compute bounding box
+      const xs = st.sel.points.map(p=>p.x), ys = st.sel.points.map(p=>p.y);
+      st.sel.bounds = {x:Math.min(...xs),y:Math.min(...ys),w:Math.max(...xs)-Math.min(...xs),h:Math.max(...ys)-Math.min(...ys)};
+      showSelButtons(panel);
+    }
+  }
+  leRender(panel);
+}
+
+function showSelButtons(panel){
+  const cutBtn = document.getElementById('le-cut-'+panel);
+  const deselBtn = document.getElementById('le-desel-'+panel);
+  if(cutBtn) cutBtn.style.display='inline-flex';
+  if(deselBtn) deselBtn.style.display='inline-flex';
+}
+function hideSelButtons(panel){
+  const cutBtn = document.getElementById('le-cut-'+panel);
+  const deselBtn = document.getElementById('le-desel-'+panel);
+  if(cutBtn) cutBtn.style.display='none';
+  if(deselBtn) deselBtn.style.display='none';
+}
+
+function leDeselect(panel){
+  const st = LE[panel]; if(!st) return;
+  st.sel = null;
+  hideSelButtons(panel);
+  leRender(panel);
+}
+
+function leCut(panel){
+  const st = LE[panel]; if(!st || !st.sel) return;
+  const layers = LAYERS[panel];
+  if(!layers.length) return;
+  const layerIdx = st.activeLayerIdx < layers.length ? st.activeLayerIdx : 0;
+  const layer = layers[layerIdx];
+  const src = mkSrc(layer.img);
+  const ctx = src.getContext('2d');
+  // Create float canvas from selection
+  const b = st.sel.bounds;
+  const floatC = mkOut(Math.ceil(b.w), Math.ceil(b.h));
+  const fctx = floatC.getContext('2d');
+  if(st.sel.type === 'lasso'){
+    fctx.save();
+    fctx.beginPath();
+    st.sel.points.forEach((p,i) => i===0 ? fctx.moveTo(p.x-b.x,p.y-b.y) : fctx.lineTo(p.x-b.x,p.y-b.y));
+    fctx.closePath(); fctx.clip();
+  }
+  fctx.drawImage(src, b.x, b.y, b.w, b.h, 0, 0, b.w, b.h);
+  if(st.sel.type === 'lasso') fctx.restore();
+  // Erase from source layer
+  if(st.sel.type === 'rect'){
+    ctx.clearRect(b.x, b.y, b.w, b.h);
+  } else {
+    ctx.save();
+    ctx.globalCompositeOperation = 'destination-out';
+    ctx.beginPath();
+    st.sel.points.forEach((p,i) => i===0 ? ctx.moveTo(p.x,p.y) : ctx.lineTo(p.x,p.y));
+    ctx.closePath(); ctx.fill();
+    ctx.restore();
+  }
+  // Update layer image
+  const newImg = new Image();
+  newImg.onload = () => {
+    layer.img = newImg;
+    // Update thumb
+    layer.thumb = document.createElement('canvas');
+    layer.thumb.width=64; layer.thumb.height=64;
+    layer.thumb.getContext('2d').drawImage(newImg,0,0,64,64);
+    st.float = {canvas: floatC, x: b.x, y: b.y};
+    st.sel = null;
+    hideSelButtons(panel);
+    renderLayerList(panel);
+    flattenLayers(panel);
+    leRender(panel);
+  };
+  newImg.src = src.toDataURL();
+}
+
+
+function leRender(panel){
+  const st = LE[panel];
+  const canvas = document.getElementById('lec-'+panel);
+  const overlay = document.getElementById('leo-'+panel);
+  if(!canvas) return;
+  // Resize canvas to match composite
+  const flat = S[panel];
+  if(flat){
+    canvas.width = flat.width;
+    canvas.height = flat.height;
+    overlay.width = flat.width;
+    overlay.height = flat.height;
+  }
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  // Draw composite
+  if(flat) ctx.drawImage(flat, 0, 0);
+  // Draw float
+  if(st && st.float){
+    ctx.drawImage(st.float.canvas, st.float.x, st.float.y);
+  }
+  // Draw overlay
+  const octx = overlay.getContext('2d');
+  octx.clearRect(0,0,overlay.width,overlay.height);
+  // Blueprint
+  if(st && st.blueprint) drawBlueprint(panel, octx, overlay.width, overlay.height);
+  // Selection
+  if(st && st.sel) drawSelection(st, octx);
+}
+
+function drawSelection(st, ctx){
+  ctx.save();
+  ctx.strokeStyle = '#00d4ff';
+  ctx.lineWidth = 1.5;
+  ctx.setLineDash([4,3]);
+  ctx.lineDashOffset = Date.now()/50%7;
+  if(st.sel.type === 'rect' && st.sel.start && st.sel.end){
+    const x1=Math.min(st.sel.start.x,st.sel.end.x), y1=Math.min(st.sel.start.y,st.sel.end.y);
+    const w=Math.abs(st.sel.end.x-st.sel.start.x), h=Math.abs(st.sel.end.y-st.sel.start.y);
+    ctx.strokeRect(x1,y1,w,h);
+    ctx.fillStyle='rgba(0,212,255,0.08)';
+    ctx.fillRect(x1,y1,w,h);
+  } else if(st.sel.type === 'lasso' && st.sel.points.length > 1){
+    ctx.beginPath();
+    st.sel.points.forEach((p,i) => i===0 ? ctx.moveTo(p.x,p.y) : ctx.lineTo(p.x,p.y));
+    if(!st.drawing) ctx.closePath();
+    ctx.stroke();
+    if(!st.drawing){ ctx.fillStyle='rgba(0,212,255,0.08)'; ctx.fill(); }
+  }
+  ctx.restore();
+}
+
+// Blueprint face regions for PT2 1024x1024
+const BP_SHIRT = [
+  {label:'T_R',x:350,y:103,w:89,h:290,c:'#f05e8c'},
+  {label:'T_F',x:439,y:104,w:146,h:289,c:'#3ecf8e'},
+  {label:'T_L',x:585,y:104,w:87,h:288,c:'#f05e8c'},
+  {label:'T_Top',x:439,y:7,w:146,h:97,c:'#f0d03e'},
+  {label:'T_Bot',x:439,y:394,w:146,h:94,c:'#c87840'},
+  {label:'T_Bk',x:439,y:519,w:146,h:290,c:'#3ecfcf'},
+  {label:'RA_L',x:7,y:71,w:65,h:290,c:'#f05e8c'},
+  {label:'RA_B',x:72,y:71,w:66,h:290,c:'#3ecfcf'},
+  {label:'RA_R',x:138,y:71,w:66,h:290,c:'#b07cfc'},
+  {label:'RA_F',x:204,y:71,w:66,h:290,c:'#3ecf8e'},
+  {label:'RA_T',x:204,y:7,w:66,h:64,c:'#f0d03e'},
+  {label:'RA_B2',x:204,y:362,w:66,h:63,c:'#c87840'},
+  {label:'LA_F',x:754,y:71,w:66,h:290,c:'#3ecf8e'},
+  {label:'LA_L',x:820,y:71,w:65,h:290,c:'#f05e8c'},
+  {label:'LA_B',x:885,y:71,w:66,h:290,c:'#3ecfcf'},
+  {label:'LA_R',x:951,y:71,w:67,h:290,c:'#b07cfc'},
+  {label:'LA_T',x:754,y:7,w:66,h:64,c:'#f0d03e'},
+  {label:'LA_B2',x:754,y:362,w:66,h:63,c:'#c87840'},
+];
+const BP_PANTS = [
+  {label:'RL_T',x:206,y:597,w:64,h:64,c:'#f0d03e'},
+  {label:'RL_L',x:14,y:661,w:64,h:292,c:'#f05e8c'},
+  {label:'RL_B',x:78,y:661,w:64,h:292,c:'#3ecfcf'},
+  {label:'RL_R',x:142,y:661,w:64,h:292,c:'#b07cfc'},
+  {label:'RL_F',x:206,y:661,w:64,h:292,c:'#3ecf8e'},
+  {label:'RL_Bt',x:206,y:954,w:64,h:63,c:'#c87840'},
+  {label:'LL_T',x:754,y:597,w:64,h:64,c:'#f0d03e'},
+  {label:'LL_F',x:754,y:661,w:64,h:292,c:'#3ecf8e'},
+  {label:'LL_L',x:818,y:661,w:63,h:292,c:'#f05e8c'},
+  {label:'LL_B',x:881,y:661,w:65,h:292,c:'#3ecfcf'},
+  {label:'LL_R',x:946,y:661,w:64,h:292,c:'#b07cfc'},
+  {label:'LL_Bt',x:754,y:954,w:64,h:63,c:'#c87840'},
+];
+
+function drawBlueprint(panel, ctx, cw, ch){
+  const faces = MODE==='pants' ? BP_PANTS : BP_SHIRT;
+  const scaleX = cw/1024, scaleY = ch/1024;
+  ctx.save();
+  faces.forEach(f => {
+    const x=f.x*scaleX, y=f.y*scaleY, w=f.w*scaleX, h=f.h*scaleY;
+    ctx.fillStyle = f.c+'33';
+    ctx.fillRect(x,y,w,h);
+    ctx.strokeStyle = f.c;
+    ctx.lineWidth = 1;
+    ctx.setLineDash([]);
+    ctx.strokeRect(x,y,w,h);
+    ctx.fillStyle = f.c;
+    ctx.font = `bold ${Math.max(7,Math.min(10,w/4))}px JetBrains Mono,monospace`;
+    ctx.fillText(f.label, x+2, y+10);
+  });
+  ctx.restore();
+}
+
+function toggleBlueprint(panel){
+  const st = LE[panel]; if(!st) return;
+  st.blueprint = !st.blueprint;
+  const btn = document.getElementById('le-bp-'+panel);
+  if(btn) btn.classList.toggle('active', st.blueprint);
+  leRender(panel);
+}
+
+function setLeTool(panel, tool){
+  const st = LE[panel]; if(!st) return;
+  st.tool = tool;
+  ['pointer','rect','lasso'].forEach(t => {
+    const el = document.getElementById('let-'+panel+'-'+t);
+    if(el) el.classList.toggle('active', t===tool);
+  });
+  const canvas = document.getElementById('lec-'+panel);
+  if(canvas){ canvas.className = 'le-canvas tool-'+tool; }
+  // If switching away from select tools, clear selection
+  if(tool==='pointer' && st.sel){ leDeselect(panel); }
+}
+
+// Animate marching ants selection
+(function marchingAnts(){
+  Object.keys(LE).forEach(panel => {
+    const st = LE[panel];
+    if(st && st.sel && document.getElementById('leo-'+panel)){
+      const overlay = document.getElementById('leo-'+panel);
+      const octx = overlay.getContext('2d');
+      octx.clearRect(0,0,overlay.width,overlay.height);
+      if(st.blueprint) drawBlueprint(panel, octx, overlay.width, overlay.height);
+      drawSelection(st, octx);
+    }
+  });
+  requestAnimationFrame(marchingAnts);
+})();
+
+// ══════════════════════════════════════
+// LAYER SYSTEM
+// ══════════════════════════════════════
+const LAYERS = { rbx:[], old:[], pt2rbx:[], ptmk:[], mk:[] };
+const BLEND_MODES = ['source-over','multiply','screen','overlay','darken','lighten','color-dodge','color-burn','hard-light','soft-light','difference','exclusion'];
+let _layerDragSrc = null;
+let _layerDragPanel = null;
+
+function _layerMakeId(){ return 'l' + Date.now() + Math.random().toString(36).slice(2,6); }
+
+function addLayerFromImg(panel, img, name){
+  const id = _layerMakeId();
+  const thumb = document.createElement('canvas');
+  thumb.width = 64; thumb.height = 64;
+  thumb.getContext('2d').drawImage(img, 0, 0, 64, 64);
+  LAYERS[panel].push({ id, img, thumb, name: name||'Layer '+(LAYERS[panel].length+1), opacity:1, blend:'source-over', visible:true });
+  leInit(panel);
+  renderLayerList(panel);
+  flattenLayers(panel);
+  // Show editor in advanced mode
+  const editor = document.getElementById('le-'+panel);
+  if(editor) editor.style.display = '';
+}
+
+function addLayerFile(panel){
+  const inp = document.createElement('input');
+  inp.type = 'file'; inp.accept = 'image/*';
+  inp.onchange = e => {
+    const f = e.target.files[0]; if(!f) return;
+    const r = new FileReader();
+    r.onload = ev => {
+      const img = new Image();
+      img.onload = () => addLayerFromImg(panel, img, f.name.replace(/\.\w+$/,''));
+      img.src = ev.target.result;
+    };
+    r.readAsDataURL(f);
+  };
+  inp.click();
+}
+
+function removeLayer(panel, id){
+  LAYERS[panel] = LAYERS[panel].filter(l => l.id !== id);
+  renderLayerList(panel);
+  flattenLayers(panel);
+}
+
+function moveLayer(panel, id, dir){
+  const arr = LAYERS[panel];
+  const i = arr.findIndex(l => l.id === id);
+  const ni = i + dir;
+  if(ni < 0 || ni >= arr.length) return;
+  [arr[i], arr[ni]] = [arr[ni], arr[i]];
+  renderLayerList(panel);
+  flattenLayers(panel);
+}
+
+function setLayerProp(panel, id, prop, val){
+  const l = LAYERS[panel].find(l => l.id === id);
+  if(!l) return;
+  l[prop] = val;
+  flattenLayers(panel);
+}
+
+function toggleLayerVis(panel, id){
+  const l = LAYERS[panel].find(l => l.id === id);
+  if(!l) return;
+  l.visible = !l.visible;
+  renderLayerList(panel);
+  flattenLayers(panel);
+}
+
+function flattenLayers(panel){
+  const layers = LAYERS[panel];
+  if(!layers.length){ S[panel]=null; return; }
+  // Use size of first layer as canvas size
+  const w = layers[0].img.width, h = layers[0].img.height;
+  const flat = mkOut(w, h);
+  const ctx = flat.getContext('2d');
+  // Draw bottom to top (layers array is top-to-bottom visually, so reverse)
+  for(let i = layers.length-1; i >= 0; i--){
+    const l = layers[i];
+    if(!l.visible) continue;
+    ctx.globalAlpha = l.opacity;
+    ctx.globalCompositeOperation = l.blend;
+    ctx.drawImage(l.img, 0, 0, w, h);
+  }
+  ctx.globalAlpha = 1;
+  ctx.globalCompositeOperation = 'source-over';
+  S[panel] = flat;
+  // Save layers to localStorage
+  saveLayersToStorage(panel);
+  leRender(panel);
+  // Enable convert button
+  const btn = document.getElementById('btn-'+panel);
+  if(btn) btn.disabled = false;
+}
+
+function renderLayerList(panel){
+  const wrap = document.getElementById('layers-'+panel);
+  const addBtn = document.getElementById('layers-add-'+panel);
+  if(!wrap) return;
+  wrap.innerHTML = '';
+  const layers = LAYERS[panel];
+  if(addBtn) addBtn.style.display = layers.length > 0 ? 'block' : 'none';
+  layers.forEach((l, i) => {
+    const row = document.createElement('div');
+    row.className = 'layer-row';
+    row.draggable = true;
+    row.dataset.id = l.id;
+    // Drag handle
+    const handle = document.createElement('div');
+    handle.className = 'layer-drag-handle';
+    handle.innerHTML = '<span></span><span></span><span></span>';
+    handle.addEventListener('mousedown', () => row.draggable = true);
+    // Drag events
+    row.addEventListener('dragstart', e => {
+      _layerDragSrc = l.id; _layerDragPanel = panel;
+      e.dataTransfer.effectAllowed = 'move';
+      setTimeout(() => row.classList.add('dragging'), 0);
+    });
+    row.addEventListener('dragend', () => row.classList.remove('dragging'));
+    row.addEventListener('dragover', e => { e.preventDefault(); row.classList.add('drag-over'); });
+    row.addEventListener('dragleave', () => row.classList.remove('drag-over'));
+    row.addEventListener('drop', e => {
+      e.preventDefault(); row.classList.remove('drag-over');
+      if(_layerDragSrc && _layerDragPanel === panel && _layerDragSrc !== l.id){
+        const arr = LAYERS[panel];
+        const fi = arr.findIndex(x => x.id === _layerDragSrc);
+        const ti = arr.findIndex(x => x.id === l.id);
+        const [moved] = arr.splice(fi, 1);
+        arr.splice(ti, 0, moved);
+        renderLayerList(panel);
+        flattenLayers(panel);
+      }
+    });
+    // Thumb
+    const thumbWrap = document.createElement('div');
+    thumbWrap.className = 'layer-thumb';
+    const tc = document.createElement('canvas');
+    tc.width = 64; tc.height = 64;
+    tc.getContext('2d').drawImage(l.thumb, 0, 0);
+    thumbWrap.appendChild(tc);
+    // Info
+    const info = document.createElement('div');
+    info.className = 'layer-info';
+    const name = document.createElement('div');
+    name.className = 'layer-name';
+    name.textContent = l.name;
+    name.title = l.name;
+    info.appendChild(name);
+    // Controls
+    const ctrl = document.createElement('div');
+    ctrl.className = 'layer-controls';
+    // Blend mode
+    const blend = document.createElement('select');
+    blend.className = 'layer-blend';
+    BLEND_MODES.forEach(m => {
+      const o = document.createElement('option');
+      o.value = m; o.textContent = m.replace(/-/g,' ');
+      if(m === l.blend) o.selected = true;
+      blend.appendChild(o);
+    });
+    blend.onchange = () => setLayerProp(panel, l.id, 'blend', blend.value);
+    // Opacity
+    const slider = document.createElement('input');
+    slider.type = 'range'; slider.min = 0; slider.max = 1; slider.step = 0.01;
+    slider.value = l.opacity; slider.className = 'layer-op-slider';
+    const opVal = document.createElement('span');
+    opVal.className = 'layer-op-val';
+    opVal.textContent = Math.round(l.opacity*100)+'%';
+    slider.oninput = () => {
+      opVal.textContent = Math.round(slider.value*100)+'%';
+      setLayerProp(panel, l.id, 'opacity', parseFloat(slider.value));
+    };
+    // Buttons
+    const visBtn = document.createElement('button');
+    visBtn.className = 'layer-vis-btn' + (l.visible ? '' : ' hidden-layer');
+    visBtn.textContent = l.visible ? '👁' : '🚫';
+    visBtn.title = 'Toggle visibility';
+    visBtn.onclick = () => toggleLayerVis(panel, l.id);
+    const upBtn = document.createElement('button');
+    upBtn.className = 'layer-up-btn'; upBtn.textContent = '↑'; upBtn.title = 'Move up';
+    upBtn.onclick = () => moveLayer(panel, l.id, -1);
+    upBtn.disabled = i === 0;
+    const dnBtn = document.createElement('button');
+    dnBtn.className = 'layer-dn-btn'; dnBtn.textContent = '↓'; dnBtn.title = 'Move down';
+    dnBtn.onclick = () => moveLayer(panel, l.id, 1);
+    dnBtn.disabled = i === layers.length-1;
+    const delBtn = document.createElement('button');
+    delBtn.className = 'layer-del-btn'; delBtn.textContent = '✕'; delBtn.title = 'Delete layer';
+    delBtn.onclick = () => removeLayer(panel, l.id);
+    ctrl.append(blend, slider, opVal, visBtn, upBtn, dnBtn, delBtn);
+    row.append(handle, thumbWrap, info, ctrl);
+    wrap.appendChild(row);
+  });
+}
+
+// ── CONTENT EDITING ──
+const CONTENT_DEFAULTS = {
+  'credits-name':    'Scoofyx',
+  'credits-title':   'Creator of PT Clothing Converter',
+  'kofi-url':        'https://ko-fi.com/YOURNAMEHERE',
+  'web-url':         'https://scoofy.xyz',
+  'credits-footer':  'Scoofy™ 2026 · Made with ❤️ for the Polytoria community',
+  'credits-about':   'PT Clothing Converter is a free, browser-based tool for converting Roblox clothing templates to Polytoria 2.0 format — and back. No uploads, no sign-in, runs entirely on your device.',
+};
+
+function saveContent(){
+  Object.keys(CONTENT_DEFAULTS).forEach(key => {
+    const el = document.getElementById('se-'+key);
+    if(el) try{ localStorage.setItem('ptcontent_'+key, el.value); }catch(e){}
+  });
+  applyContent();
+}
+
+function loadContent(){
+  Object.keys(CONTENT_DEFAULTS).forEach(key => {
+    const el = document.getElementById('se-'+key);
+    if(!el) return;
+    try{
+      const saved = localStorage.getItem('ptcontent_'+key);
+      el.value = saved !== null ? saved : CONTENT_DEFAULTS[key];
+    }catch(e){ el.value = CONTENT_DEFAULTS[key]; }
+  });
+  applyContent();
+}
+
+function resetContent(){
+  if(!confirm('Reset all content to defaults?')) return;
+  Object.keys(CONTENT_DEFAULTS).forEach(key => {
+    try{ localStorage.removeItem('ptcontent_'+key); }catch(e){}
+    const el = document.getElementById('se-'+key);
+    if(el) el.value = CONTENT_DEFAULTS[key];
+  });
+  applyContent();
+  showToast('Content reset to defaults');
+}
+
+function applyContent(){
+  function get(key){ 
+    try{ return localStorage.getItem('ptcontent_'+key) || CONTENT_DEFAULTS[key]; }
+    catch(e){ return CONTENT_DEFAULTS[key]; }
+  }
+  // Credits name & title
+  const nameEl = document.getElementById('credits-name');
+  if(nameEl) nameEl.textContent = get('credits-name');
+  const titleEl = document.getElementById('credits-title');
+  if(titleEl) titleEl.textContent = get('credits-title');
+  // Footer
+  const footerEl = document.getElementById('credits-footer');
+  if(footerEl) footerEl.textContent = get('credits-footer');
+  // About
+  const aboutEl = document.getElementById('credits-about');
+  if(aboutEl) aboutEl.textContent = get('credits-about');
+  // Ko-fi link
+  const kofiLink = document.querySelector('.credits-link.kofi');
+  if(kofiLink) kofiLink.href = get('kofi-url');
+  // Website link
+  const webLink = document.querySelector('.credits-link.web');
+  if(webLink) webLink.href = get('web-url');
+  const webSub = webLink ? webLink.querySelector('.credits-link-sub') : null;
+  if(webSub){
+    try{ webSub.textContent = get('web-url').replace(/^https?:\/\//,''); }catch(e){}
+  }
+}
+
+// ── LAYER LOCALSTORAGE ──
+function saveLayersToStorage(panel){
+  try{
+    const data = LAYERS[panel].map(l => ({
+      name: l.name, opacity: l.opacity, blend: l.blend, visible: l.visible,
+      src: l.img.src || (()=>{ const c=mkSrc(l.img); return c.toDataURL(); })()
+    }));
+    localStorage.setItem('ptlayers_'+panel, JSON.stringify(data));
+  }catch(e){ console.warn('Layer save failed (storage full?)', e); }
+}
+function loadLayersFromStorage(panel){
+  try{
+    const raw = localStorage.getItem('ptlayers_'+panel);
+    if(!raw) return;
+    const data = JSON.parse(raw);
+    let loaded = 0;
+    data.forEach(d => {
+      const img = new Image();
+      img.onload = () => {
+        const thumb = document.createElement('canvas');
+        thumb.width=64; thumb.height=64;
+        thumb.getContext('2d').drawImage(img,0,0,64,64);
+        LAYERS[panel].push({id:_layerMakeId(), img, thumb, name:d.name, opacity:d.opacity, blend:d.blend, visible:d.visible});
+        loaded++;
+        if(loaded === data.length){
+          leInit(panel);
+          renderLayerList(panel);
+          flattenLayers(panel);
+          const addBtn = document.getElementById('layers-add-'+panel);
+          if(addBtn) addBtn.style.display='block';
+          const editor = document.getElementById('le-'+panel);
+          if(editor) editor.style.display='';
+        }
+      };
+      img.src = d.src;
+    });
+  }catch(e){}
+}
+
 // ── INIT ──
 loadSettings();
+loadContent();
+buildTemplates();
+// Load saved layers
+['rbx','old','pt2rbx','ptmk','mk'].forEach(p => loadLayersFromStorage(p));
 // Apply user-settings constants to DOM
 (function applyUserSettings(){
   try{
@@ -2389,4 +3365,3 @@ loadSettings();
 </script>
 </body>
 </html>
-
