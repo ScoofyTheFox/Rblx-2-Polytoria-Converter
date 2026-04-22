@@ -17,7 +17,7 @@ No installs. Open the file, use it in browser, done.
 |---|---|
 |  **Roblox → PT 2.0** | Converts Roblox shirt/pants templates to the new PT 2.0 format |
 |  **Old PT → PT 2.0** | Upgrades your old Polytoria templates to the current standard |
-|  **etc etc, not rlly that important**| 
+|  **etc etc, not rlly that important** | yap yap yap... | 
 ---
 
 ## 📥 How to Download Roblox Clothing Templates
@@ -29,7 +29,7 @@ The easiest way is using **[thecsdev Roblox Tools](https://thecsdev.com/tool/rob
 ### Step by step
 
 1. Find the shirt or pants you want on the [Roblox catalog](https://www.roblox.com/catalog) or someone's avatar
-2. Copy the item's URL — it'll look like `https://www.roblox.com/catalog/12345678/...`
+2. Copy the item's URL, it'll look like `https://www.roblox.com/catalog/12345678/...`
 3. Go to **[thecsdev.com/tool/roblox-tools](https://thecsdev.com/tool/roblox-tools/)**
 4. Paste the item URL or asset ID into the tool
 5. Download the template PNG, this is the file you'll drop into the converter
@@ -46,7 +46,7 @@ The easiest way is using **[thecsdev Roblox Tools](https://thecsdev.com/tool/rob
 4. Hit **Convert** output appears on the right instantly
 5. Download the file, or let auto-download handle it automatically
 
-> 💡 You can load a new file at any time without refreshing — just drop another image onto the drop zone.
+> 💡 You can load a new file at any time without refreshing, just drop another image onto the drop zone.
 
 <img width="2559" height="1350" alt="Screenshot 2026-03-31 021411" src="https://github.com/user-attachments/assets/b2714553-632b-4585-8cbe-51c92279312d" />
 
