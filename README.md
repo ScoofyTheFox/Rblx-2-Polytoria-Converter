@@ -87,3 +87,5 @@ Open the ⚙ menu in the top right. A few things you'll want to configure:
 If this tool saved you time, showing some support genuinely means a lot!!!!!!💜❤️
 
 ### 👉 [My links](https://scoofy.xyz) 🔔
+
+<img width="1000" height="1000" alt="Untitled-1" src="https://github.com/user-attachments/assets/375f211e-824a-4838-a415-3b9eefad2158" />
