@@ -1495,21 +1495,20 @@ const RBXS={
   RABk:{x:440,y:355,w:64,h:128},RAR:{x:506,y:355,w:64,h:128},RAB:{x:308,y:485,w:64,h:64},
 };
 const RBXP={
-  TF:{x:231,y:74,w:128,h:128},
-  // Right leg — LEFT cluster in Roblox pants template (faces L B R F left→right)
-  RLT:{x:200,y:204,w:64,h:64},   // top cap (above front face)
-  RLL:{x:8,y:268,w:64,h:128},    // Left face
-  RLBk:{x:72,y:268,w:64,h:128},  // Back face
-  RLR:{x:136,y:268,w:64,h:128},  // Right face
-  RLF:{x:200,y:268,w:64,h:128},  // Front face
-  RLB:{x:200,y:396,w:64,h:64},   // bottom cap
-  // Left leg — RIGHT cluster in Roblox pants template (faces F L B R left→right)
-  LLT:{x:264,y:204,w:64,h:64},   // top cap (above front face)
-  LLF:{x:264,y:268,w:64,h:128},  // Front face
-  LLL:{x:328,y:268,w:64,h:128},  // Left face
-  LLBk:{x:392,y:268,w:64,h:128}, // Back face
-  LLR:{x:456,y:268,w:64,h:128},  // Right face
-  LLB:{x:264,y:396,w:64,h:64},   // bottom cap
+  // Right leg = Left Arm region (L→R order: L, Bk, R, F)
+  RLT:{x:217,y:289,w:64,h:64},
+  RLL:{x:19,y:355,w:64,h:128},
+  RLBk:{x:85,y:355,w:64,h:128},
+  RLR:{x:151,y:355,w:64,h:128},
+  RLF:{x:217,y:355,w:64,h:128},
+  RLB:{x:217,y:485,w:64,h:64},
+  // Left leg = Right Arm region (L→R order: F, L, Bk, R)
+  LLT:{x:308,y:289,w:64,h:64},
+  LLF:{x:308,y:355,w:64,h:128},
+  LLL:{x:374,y:355,w:64,h:128},
+  LLBk:{x:440,y:355,w:64,h:128},
+  LLR:{x:506,y:355,w:64,h:128},
+  LLB:{x:308,y:485,w:64,h:64},
 };
 const PTOLD={
   TF:{x:199,y:184,w:202,h:202},TT:{x:199,y:74,w:202,h:102},TB:{x:199,y:395,w:202,h:102},
@@ -1650,7 +1649,9 @@ function applyShirtFromRbx(src,ctx){
 }
 function applyPantsFromRbx(src,ctx){
   const R=RBXP,P=PT2P,cp=(s,d)=>cr(src,s.x,s.y,s.w,s.h,ctx,d.x,d.y,d.w,d.h);
-  cp(R.RLT,P.RLT);cp(R.RLF,P.RL_F);cp(R.RLL,P.RL_L);cp(R.RLBk,P.RL_B);cp(R.RLR,P.RL_R);cp(R.RLB,P.RL_Bt);
+  // Right leg = Left Arm region in Roblox template
+  cp(R.RLT,P.RLT);cp(R.RLL,P.RL_L);cp(R.RLBk,P.RL_B);cp(R.RLR,P.RL_R);cp(R.RLF,P.RL_F);cp(R.RLB,P.RL_Bt);
+  // Left leg = Right Arm region in Roblox template
   cp(R.LLT,P.LLT);cp(R.LLF,P.LL_F);cp(R.LLL,P.LL_L);cp(R.LLBk,P.LL_B);cp(R.LLR,P.LL_R);cp(R.LLB,P.LL_Bt);
 }
 function applyShirtFromOld(src,ctx){
@@ -1708,8 +1709,10 @@ function applyShirtToRbx(src,ctx){
 }
 function applyPantsToRbx(src,ctx){
   const R=RBXP,P=PT2P,cp=(s,d)=>cr(src,s.x,s.y,s.w,s.h,ctx,d.x,d.y,d.w,d.h);
-  cp(P.RLT,R.RLT); cp(P.RL_F,R.RLF); cp(P.RL_L,R.RLL); cp(P.RL_B,R.RLBk); cp(P.RL_R,R.RLR); cp(P.RL_Bt,R.RLB);
-  cp(P.LLT,R.LLT); cp(P.LL_F,R.LLF); cp(P.LL_L,R.LLL); cp(P.LL_B,R.LLBk); cp(P.LL_R,R.LLR); cp(P.LL_Bt,R.LLB);
+  // Right leg
+  cp(P.RLT,R.RLT);cp(P.RL_L,R.RLL);cp(P.RL_B,R.RLBk);cp(P.RL_R,R.RLR);cp(P.RL_F,R.RLF);cp(P.RL_Bt,R.RLB);
+  // Left leg
+  cp(P.LLT,R.LLT);cp(P.LL_F,R.LLF);cp(P.LL_L,R.LLL);cp(P.LL_B,R.LLBk);cp(P.LL_R,R.LLR);cp(P.LL_Bt,R.LLB);
 }
 function convPt2rbx(){
   if(!S.pt2rbx)return;
@@ -2386,3 +2389,4 @@ loadSettings();
 </script>
 </body>
 </html>
+
