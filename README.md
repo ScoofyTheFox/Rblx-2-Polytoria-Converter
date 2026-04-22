@@ -7,7 +7,7 @@
 I didn't want to gatekeep this so I made it public for everyone to use
 No installs. Open the file, use it in browser, done.
 
-<img width="2559" height="1349" alt="Screenshot 2026-03-31 020714" src="https://github.com/user-attachments/assets/04576521-7432-4772-bfd4-aafd26c5c7a0" />
+<img width="2559" height="1261" alt="Screenshot 2026-04-22 232118" src="https://github.com/user-attachments/assets/4b6d61e3-1a01-4ff9-9159-833795658a2b" />
 
 ---
 
